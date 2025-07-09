@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金融指标传导链条 - 中国建设银行</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .transmission-chain {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0;
+            position: relative;
+        }
+        .indicator {
+            width: 18%;
+            text-align: center;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 2;
+        }
+        .indicator h3 {
+            color: #003366;
+            margin-top: 0;
+        }
+        .bp-range {
+            background-color: #003366;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 24px;
+            z-index: 1;
+        }
+        .explanation {
+            background-color: #e6f2ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #003366;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .scenario {
+            margin: 30px 0;
+            padding: 15px;
+            border-left: 4px solid;
+        }
+        .up-scenario {
+            border-color: #d9534f;
+            background-color: #fef0ef;
+        }
+        .down-scenario {
+            border-color: #5cb85c;
+            background-color: #f0f9f0;
+        }
+        .scenario-title {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+        .up-arrow {
+            color: #d9534f;
+            margin-right: 8px;
+        }
+        .down-arrow {
+            color: #5cb85c;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>金融指标传导链条分析</h1>
+        <p>中国建设银行 - 含合理bp区间范围</p>
+    </header>
+
+    <div class="card">
+        <h2>核心传导链条</h2>
+        <p>国债收益率 → 存款利率 → 贷款利率 → 银行净息差 → 股息率</p>
+        
+        <div class="transmission-chain">
+            <div class="indicator">
+                <h3>国债收益率</h3>
+                <div class="bp-range">市场基准</div>
+                <p>10年期国债收益率<br>2.5%-3.5%</p>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <div class="indicator">
+                <h3>存款利率</h3>
+                <div class="bp-range">+30-80bp</div>
+                <p>1年期定存利率<br>2.75%-3.25%</p>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <div class="indicator">
+                <h3>贷款利率</h3>
+                <div class="bp-range">+120-250bp</div>
+                <p>1年期LPR<br>3.45%-4.35%</p>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <div class="indicator">
+                <h3>银行净息差</h3>
+                <div class="bp-range">150-220bp</div>
+                <p>行业平均水平<br>1.7%-2.2%</p>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <div class="indicator">
+                <h3>股息率</h3>
+                <div class="bp-range">60-80% payout</div>
+                <p>上市银行平均<br>4.5%-6.5%</p>
+            </div>
+        </div>
+        
+        <div class="explanation">
+            <h4>bp区间说明：</h4>
+            <ul>
+                <li><strong>存款利率加成（+30-80bp）</strong>：覆盖银行运营成本（20-30bp）和适度利润空间</li>
+                <li><strong>贷款利率加成（+120-250bp）</strong>：包含风险溢价（50-150bp）和资本回报要求</li>
+                <li><strong>净息差（150-220bp）</strong>：需覆盖信用成本（30-50bp）和经营成本（70-100bp）</li>
+                <li><strong>股息支付率</strong>：监管要求不低于30%，银行通常维持60-80%的稳定分红</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>情景模拟分析</h2>
+        
+        <div class="scenario up-scenario">
+            <div class="scenario-title">
+                <span class="up-arrow">↑</span>
+                <h3>情景1：国债收益率上升50bp</h3>
+            </div>
+            <table>
+                <tr>
+                    <th>传导环节</th>
+                    <th>调整幅度</th>
+                    <th>建行应对措施</th>
+                </tr>
+                <tr>
+                    <td>存款利率</td>
+                    <td>+30-40bp<br>(部分传导)</td>
+                    <td>优先调整大额存单利率，活期存款保持稳定</td>
+                </tr>
+                <tr>
+                    <td>贷款利率</td>
+                    <td>+20-30bp<br>(滞后调整)</td>
+                    <td>对公贷款先行调整，零售贷款通过风险定价差异化</td>
+                </tr>
+                <tr>
+                    <td>净息差</td>
+                    <td>短期收窄10-15bp</td>
+                    <td>增加票据贴现等短期资产配置</td>
+                </tr>
+                <tr>
+                    <td>股息率</td>
+                    <td>维持稳定</td>
+                    <td>通过利润平滑机制保持分红连续性</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="scenario down-scenario">
+            <div class="scenario-title">
+                <span class="down-arrow">↓</span>
+                <h3>情景2：国债收益率下降50bp</h3>
+            </div>
+            <table>
+                <tr>
+                    <th>传导环节</th>
+                    <th>调整幅度</th>
+                    <th>建行应对措施</th>
+                </tr>
+                <tr>
+                    <td>存款利率</td>
+                    <td>-30-50bp<br>(完全传导)</td>
+                    <td>阶梯式下调各期限利率，加强财富管理替代</td>
+                </tr>
+                <tr>
+                    <td>贷款利率</td>
+                    <td>-40-50bp<br>(政策驱动)</td>
+                    <td>响应LPR下调，重点发展消费金融等零售业务</td>
+                </tr>
+                <tr>
+                    <td>净息差</td>
+                    <td>先降后升<br>(3-6个月后改善)</td>
+                    <td>扩大信贷规模对冲利率下行</td>
+                </tr>
+                <tr>
+                    <td>股息率</td>
+                    <td>相对吸引力提升</td>
+                    <td>适度提高分红比例吸引长期投资者</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>关键管理指标参考值</h2>
+        <table>
+            <tr>
+                <th>指标关系</th>
+                <th>健康区间</th>
+                <th>预警阈值</th>
+                <th>调节工具</th>
+            </tr>
+            <tr>
+                <td>存贷利差</td>
+                <td>180-250bp</td>
+                <td>&lt;150bp</td>
+                <td>FTP定价调整、客户结构优化</td>
+            </tr>
+            <tr>
+                <td>存款利率/国债收益率</td>
+                <td>+30-50bp</td>
+                <td>&gt;+80bp</td>
+                <td>负债产品创新、同业融资替代</td>
+            </tr>
+            <tr>
+                <td>股息率-国债收益率</td>
+                <td>+150-200bp</td>
+                <td>&lt;+100bp</td>
+                <td>股票回购、分红政策调整</td>
+            </tr>
+            <tr>
+                <td>净息差/NIM</td>
+                <td>1.8%-2.2%</td>
+                <td>&lt;1.6%</td>
+                <td>资产负债久期匹配、业务结构转型</td>
+            </tr>
+        </table>
+        
+        <div class="explanation">
+            <h4>业务决策要点：</h4>
+            <ol>
+                <li><strong>存款利率定价：</strong>当国债收益率突破3%时，启动大额存单利率上调机制（每次不超过15bp）</li>
+                <li><strong>贷款定价底线：</strong>最低贷款利率=存款成本+120bp+风险成本</li>
+                <li><strong>股息政策：</strong>确保股息率始终高于10年期国债收益率至少100bp</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
