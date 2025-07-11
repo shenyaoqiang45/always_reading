@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美国国债介绍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #5a67d8;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .card p {
+            margin-bottom: 15px;
+            color: #4a5568;
+            font-size: 1.1em;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #5a67d8;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #5a67d8;
+            display: block;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #5a67d8;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            width: 45%;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 55%;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: #5a67d8;
+            border-radius: 50%;
+        }
+
+        .timeline-item:nth-child(odd)::before {
+            right: -31px;
+        }
+
+        .timeline-item:nth-child(even)::before {
+            left: -31px;
+        }
+
+        .interactive-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .toggle-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .hidden-content {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            padding: 20px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                width: calc(100% - 60px);
+                left: 40px !important;
+            }
+            
+            .timeline-item::before {
+                left: -31px !important;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ 美国国债</h1>
+            <p>全球最重要的金融工具之一</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h2>💰 什么是美国国债</h2>
+                <p>美国国债是美国财政部发行的债务凭证，是美国政府向投资者借款的工具。它被认为是世界上最安全的投资之一，因为有美国政府的信用担保。</p>
+                <div class="highlight">
+                    <strong>核心特点：</strong>美国政府从未违约，历史信用记录完美
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📊 主要类型</h2>
+                <p><strong>短期国债（T-Bills）：</strong>期限1年以内，以折价发行</p>
+                <p><strong>中期国债（T-Notes）：</strong>期限2-10年，定期付息</p>
+                <p><strong>长期国债（T-Bonds）：</strong>期限20-30年，定期付息</p>
+                <p><strong>通胀保护债券（TIPS）：</strong>本金随通胀调整</p>
+            </div>
+
+            <div class="card">
+                <h2>🌍 全球影响力</h2>
+                <p>美国国债是全球金融市场的基准，其收益率被视为"无风险利率"。全球央行、养老基金、保险公司等都大量持有美国国债作为储备资产。</p>
+                <div class="highlight">
+                    <strong>特殊地位：</strong>美元储备货币地位 + 最大经济体信用
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>⚙️ 运行机制</h2>
+                <p>财政部定期拍卖国债，一级交易商参与竞标，然后在二级市场自由交易。美联储通过买卖国债来调节货币供应量，实现货币政策目标。</p>
+            </div>
+
+            <div class="card">
+                <h2>📈 无风险利率基准</h2>
+                <p><strong>短期基准：</strong>3个月期国债收益率，用于短期投资决策</p>
+                <p><strong>长期基准：</strong>10年期国债收益率，最常用的基准利率</p>
+                <p><strong>应用场景：</strong>股票估值、企业融资成本计算的重要参考</p>
+                <div class="highlight">
+                    <strong>为什么重要：</strong>作为全球金融资产定价的基础，影响所有风险资产的估值
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🏛️ 财政部与美联储</h2>
+                <p><strong>财政部职责：</strong>发行国债、管理政府财政、制定财政政策</p>
+                <p><strong>美联储职责：</strong>货币政策、银行监管、金融稳定</p>
+                <p><strong>合作机制：</strong>通过国债市场实现财政政策与货币政策协调</p>
+                <div class="highlight">
+                    <strong>关键平衡：</strong>美联储保持货币政策独立性，同时在危机时期密切配合财政政策
+                </div>
+            </div>
+        </div>
+
+        <div class="interactive-section">
+            <h2>📈 关键数据</h2>
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-number">$33+</span>
+                    <div class="stat-label">万亿美元总规模</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">240+</span>
+                    <div class="stat-label">年历史传统</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">24/7</span>
+                    <div class="stat-label">全球交易时间</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">0%</span>
+                    <div class="stat-label">历史违约率</div>
+                </div>
+            </div>
+
+            <button class="toggle-btn" onclick="toggleContent('timeline-content')">
+                📅 查看发展历程
+            </button>
+            <button class="toggle-btn" onclick="toggleContent('investment-content')">
+                💡 投资价值分析
+            </button>
+            <button class="toggle-btn" onclick="toggleContent('mechanism-content')">
+                🔧 运行机制详解
+            </button>
+        </div>
+
+        <div id="timeline-content" class="hidden-content">
+            <h3>🕐 美国国债发展历程</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>1789年</h4>
+                    <p>美国建国初期，为偿还独立战争债务，开始发行国债</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>1917年</h4>
+                    <p>第一次世界大战期间，开始大规模发行"自由债券"</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>1935年</h4>
+                    <p>社会保障体系建立，国债成为信托基金投资工具</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>1970年代</h4>
+                    <p>布雷顿森林体系崩溃后，美债地位进一步巩固</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>1997年</h4>
+                    <p>推出通胀保护债券（TIPS），创新产品设计</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>2008年</h4>
+                    <p>金融危机期间，美债成为全球"避风港"</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="investment-content" class="hidden-content">
+            <h3>💰 投资价值分析</h3>
+            <div class="content-grid">
+                <div class="card">
+                    <h4>✅ 优势</h4>
+                    <p>• 极高的安全性和流动性</p>
+                    <p>• 全球基准利率，价格透明</p>
+                    <p>• 多种期限选择，满足不同需求</p>
+                    <p>• 通胀保护品种可对冲通胀风险</p>
+                </div>
+                <div class="card">
+                    <h4>⚠️ 考虑因素</h4>
+                    <p>• 利率风险：利率上升时价格下跌</p>
+                    <p>• 通胀风险：固定利率可能被通胀侵蚀</p>
+                    <p>• 汇率风险：非美元投资者面临汇率波动</p>
+                    <p>• 收益率相对较低</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="mechanism-content" class="hidden-content">
+            <h3>🔧 运行机制详解</h3>
+            
+            <div class="card">
+                <h4>🎯 无风险利率基准体系</h4>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <span class="stat-number">3M</span>
+                        <div class="stat-label">短期基准 - 货币市场</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">10Y</span>
+                        <div class="stat-label">长期基准 - 最常用</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">CAPM</span>
+                        <div class="stat-label">资产定价模型基础</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">WACC</span>
+                        <div class="stat-label">企业融资成本计算</div>
+                    </div>
+                </div>
+                <p><strong>应用场景：</strong></p>
+                <p>• 股票估值：DCF模型中的贴现率基础</p>
+                <p>• 债券定价：其他债券的风险溢价基准</p>
+                <p>• 企业融资：计算加权平均资本成本(WACC)</p>
+                <p>• 投资决策：评估项目投资回报率的最低要求</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="card">
+                    <h4>🏛️ 财政部角色</h4>
+                    <p><strong>主要职责：</strong></p>
+                    <p>• 制定国债发行计划和规模</p>
+                    <p>• 管理政府现金流和债务结构</p>
+                    <p>• 执行财政政策，调节经济</p>
+                    <p>• 维护政府信用评级</p>
+                    <div class="highlight">
+                        <strong>2024年数据：</strong>美债总额已超过36万亿美元，创历史新高
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h4>🏦 美联储角色</h4>
+                    <p><strong>主要职责：</strong></p>
+                    <p>• 通过公开市场操作买卖国债</p>
+                    <p>• 调节货币供应量和利率水平</p>
+                    <p>• 维护金融系统稳定</p>
+                    <p>• 保持货币政策独立性</p>
+                    <div class="highlight">
+                        <strong>独立性原则：</strong>美联储不受政府直接指令，基于经济数据独立决策
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4>🤝 协调合作机制</h4>
+                <p><strong>正常时期：</strong></p>
+                <p>• 财政部定期发行国债，美联储通过市场操作影响收益率</p>
+                <p>• 两者通过市场机制实现政策协调，避免直接干预</p>
+                <p>• 保持政策独立性，各自履行职责</p>
+                
+                <p><strong>危机时期：</strong></p>
+                <p>• 2008年金融危机：美联储实施量化宽松，大量购买国债</p>
+                <p>• 2020年疫情期间：财政刺激与货币宽松政策密切配合</p>
+                <p>• 美联储作为"最后贷款人"，提供流动性支持</p>
+                
+                <div class="highlight">
+                    <strong>当前挑战：</strong>债务规模快速增长，政策协调重要性日益增强
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📚 美国国债：连接政府融资需求与全球投资需求的重要桥梁</p>
+            <p>🔗 影响着全球利率水平和金融市场稳定</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleContent(contentId) {
+            const content = document.getElementById(contentId);
+            const allContents = document.querySelectorAll('.hidden-content');
+            
+            // 隐藏所有其他内容
+            allContents.forEach(item => {
+                if (item.id !== contentId) {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // 切换当前内容
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+            } else {
+                content.style.display = 'none';
+            }
+        }
+
+        // 添加滚动动画效果
+        window.addEventListener('scroll', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // 页面加载动画
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.animationDelay = `${index * 0.2}s`;
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
