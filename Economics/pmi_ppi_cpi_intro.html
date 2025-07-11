@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMI、PPI、CPI经济指标科普介绍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .card h2 {
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #74b9ff;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h2::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+        }
+
+        .card h3 {
+            color: #636e72;
+            margin: 20px 0 10px 0;
+            font-size: 1.3em;
+        }
+
+        .card p {
+            margin-bottom: 15px;
+            color: #2d3436;
+            text-align: justify;
+        }
+
+        .card ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .card li {
+            margin-bottom: 8px;
+            color: #636e72;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8e6cf 0%, #dcedc8 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #00b894;
+        }
+
+        .highlight h3 {
+            color: #00b894;
+            margin-bottom: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #f1f2f6;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: white;
+            color: #0984e3;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .back-link:hover {
+            background: #0984e3;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 PMI、PPI、CPI 经济指标科普</h1>
+            <p>理解宏观经济的三大重要指标</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h2>PMI - 采购经理人指数</h2>
+                <p><strong>PMI (Purchasing Managers' Index)</strong> 是反映制造业在生产、新订单、商品价格、存货、雇员、订单交货、新出口订单和进口等各个方面状况的晴雨表。</p>
+                
+                <h3>🎯 核心特点</h3>
+                <ul>
+                    <li>50为荣枯分界线，高于50表示扩张，低于50表示收缩</li>
+                    <li>月度发布，是经济活动的先行指标</li>
+                    <li>分为制造业PMI和非制造业PMI</li>
+                </ul>
+
+                <h3>📈 主要作用</h3>
+                <p>PMI能够提前反映经济走势变化，通常领先GDP增长2-3个月，是央行制定货币政策的重要参考指标。</p>
+
+                <div class="highlight">
+                    <h3>实际应用</h3>
+                    <p>当PMI连续数月高于50时，通常预示着经济增长；当PMI连续数月低于50时，可能预示着经济衰退。</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>PPI - 生产者价格指数</h2>
+                <p><strong>PPI (Producer Price Index)</strong> 是衡量工业企业产品出厂价格变动趋势和变动程度的指数，是反映某一时期生产领域价格变动情况的重要经济指标。</p>
+
+                <h3>🎯 核心特点</h3>
+                <ul>
+                    <li>反映生产环节价格水平的变动情况</li>
+                    <li>是通胀预期的重要先行指标</li>
+                    <li>分为工业生产者出厂价格指数和购进价格指数</li>
+                </ul>
+
+                <h3>📈 主要作用</h3>
+                <p>PPI上升往往预示着通胀压力增大，PPI的变化会逐步传导至CPI，影响最终消费价格。</p>
+
+                <div class="highlight">
+                    <h3>传导机制</h3>
+                    <p>PPI → 企业成本 → 商品零售价格 → CPI，这个传导过程通常需要2-3个月的时间。</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>CPI - 消费者价格指数</h2>
+                <p><strong>CPI (Consumer Price Index)</strong> 是反映消费者支付商品和服务价格变化情况的宏观经济指标，是衡量通胀水平的关键指标。</p>
+
+                <h3>🎯 核心特点</h3>
+                <ul>
+                    <li>直接反映消费者的生活成本变化</li>
+                    <li>是货币政策制定的重要依据</li>
+                    <li>包括食品、居住、交通、教育等八大类消费品</li>
+                </ul>
+
+                <h3>📈 主要作用</h3>
+                <p>CPI是衡量通胀水平的最直接指标，央行通常以CPI为目标制定货币政策，维护价格稳定。</p>
+
+                <div class="highlight">
+                    <h3>政策意义</h3>
+                    <p>大多数国家央行将CPI增长率控制在2-3%作为货币政策目标，过高或过低都会引发政策调整。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📊 三大指标对比分析</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>中文名称</th>
+                        <th>主要功能</th>
+                        <th>发布时间</th>
+                        <th>影响范围</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>PMI</strong></td>
+                        <td>采购经理人指数</td>
+                        <td>预测经济活动</td>
+                        <td>月初</td>
+                        <td>制造业活动</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PPI</strong></td>
+                        <td>生产者价格指数</td>
+                        <td>预测通胀趋势</td>
+                        <td>月中</td>
+                        <td>生产成本</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CPI</strong></td>
+                        <td>消费者价格指数</td>
+                        <td>衡量通胀水平</td>
+                        <td>月中</td>
+                        <td>生活成本</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight">
+                <h3>💡 关键洞察</h3>
+                <p>这三个指标形成了一个完整的经济监测体系：PMI预测经济活动 → PPI反映成本压力 → CPI体现最终影响。投资者和政策制定者需要综合分析这三个指标来判断经济走势。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🔍 实际应用案例</h2>
+            <h3>场景一：经济过热</h3>
+            <p>当PMI持续高于55，PPI快速上升，CPI超过3%时，通常表明经济过热，央行可能采取紧缩货币政策。</p>
+
+            <h3>场景二：经济衰退</h3>
+            <p>当PMI连续低于45，PPI下降，CPI接近0%或负值时，表明经济衰退风险加大，需要刺激政策。</p>
+
+            <h3>场景三：滞胀风险</h3>
+            <p>当PMI低于50（经济放缓），但PPI和CPI仍然高企时，表明可能面临滞胀风险，政策选择较为困难。</p>
+        </div>
+
+        <a href="../index.html" class="back-link">← 返回首页</a>
+
+        <div class="footer">
+            <p>© 2025 Always Reading - 让经济数据更易懂</p>
+        </div>
+    </div>
+</body>
+</html>
