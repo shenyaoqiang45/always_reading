@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>货币供应量M0、M1、M2科普介绍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #0984e3;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .card p {
+            margin-bottom: 15px;
+            color: #4a5568;
+            font-size: 1.1em;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #0984e3;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #0984e3;
+            display: block;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .comparison-table {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #0984e3, #74b9ff);
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:hover {
+            background: #f7fafc;
+        }
+
+        .interactive-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .toggle-btn {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .hidden-content {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .formula-box {
+            background: #f8f9fa;
+            border: 2px solid #0984e3;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            .card {
+                padding: 20px;
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 货币供应量科普</h1>
+            <p>深入理解M0、M1、M2的含义与作用</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h2>🎯 什么是货币供应量</h2>
+                <p>货币供应量是指一个国家或地区在某一时点上由家庭和厂商持有的政府和银行系统以外的货币总和。它是衡量货币政策松紧程度的重要指标。</p>
+                <div class="highlight">
+                    <strong>核心作用：</strong>央行通过调节货币供应量来影响利率、通胀和经济增长
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🏛️ M0：流通中货币</h2>
+                <p><strong>定义：</strong>指流通于银行体系之外的现钞，包括企业、机关团体、个人持有的现钞和商业银行的库存现金。</p>
+                <p><strong>特点：</strong>流动性最强，可立即用于交易</p>
+                <p><strong>组成：</strong>纸币 + 硬币 + 银行库存现金</p>
+                <div class="highlight">
+                    <strong>实际应用：</strong>反映经济活动中的现金需求，是最狭义的货币概念
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>💳 M1：狭义货币</h2>
+                <p><strong>定义：</strong>M0 + 单位活期存款 + 个人持有的信用卡类存款</p>
+                <p><strong>特点：</strong>具有很强的流动性，主要用于日常交易</p>
+                <p><strong>意义：</strong>反映社会的直接购买能力</p>
+                <div class="formula-box">
+                    M1 = M0 + 活期存款
+                </div>
+                <div class="highlight">
+                    <strong>经济含义：</strong>M1增长过快可能导致通胀压力上升
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🏦 M2：广义货币</h2>
+                <p><strong>定义：</strong>M1 + 单位定期存款 + 个人储蓄存款 + 其他存款</p>
+                <p><strong>特点：</strong>流动性相对较弱，但是货币政策的重要观测指标</p>
+                <p><strong>作用：</strong>反映社会总的购买潜力</p>
+                <div class="formula-box">
+                    M2 = M1 + 定期存款 + 储蓄存款 + 其他存款
+                </div>
+                <div class="highlight">
+                    <strong>政策意义：</strong>各国央行最常关注的货币指标，用于制定货币政策
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📊 三者关系</h2>
+                <p>M0、M1、M2之间是层层包含的关系：</p>
+                <p><strong>包含关系：</strong>M2 ⊃ M1 ⊃ M0</p>
+                <p><strong>流动性：</strong>M0 > M1 > M2（流动性依次递减）</p>
+                <p><strong>规模：</strong>M2 > M1 > M0（数量依次递增）</p>
+                <div class="highlight">
+                    <strong>记忆技巧：</strong>数字越大，包含范围越广，但流动性越弱
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🎭 货币政策工具</h2>
+                <p><strong>存款准备金率：</strong>影响银行可贷资金，直接影响M1和M2</p>
+                <p><strong>利率调整：</strong>通过调节存贷款利率影响货币供应量</p>
+                <p><strong>公开市场操作：</strong>央行买卖债券调节市场流动性</p>
+                <div class="highlight">
+                    <strong>传导机制：</strong>央行政策 → 银行放贷 → 货币供应量 → 经济活动
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-table">
+            <h2 style="color: #0984e3; text-align: center; margin-bottom: 20px;">📋 M0、M1、M2对比表</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>M0</th>
+                        <th>M1</th>
+                        <th>M2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>流动性</strong></td>
+                        <td>最强</td>
+                        <td>很强</td>
+                        <td>较强</td>
+                    </tr>
+                    <tr>
+                        <td><strong>主要成分</strong></td>
+                        <td>现钞</td>
+                        <td>现钞+活期存款</td>
+                        <td>现钞+活期+定期存款</td>
+                    </tr>
+                    <tr>
+                        <td><strong>经济意义</strong></td>
+                        <td>即时购买力</td>
+                        <td>直接购买力</td>
+                        <td>潜在购买力</td>
+                    </tr>
+                    <tr>
+                        <td><strong>政策关注度</strong></td>
+                        <td>一般</td>
+                        <td>重要</td>
+                        <td>最重要</td>
+                    </tr>
+                    <tr>
+                        <td><strong>数量规模</strong></td>
+                        <td>最小</td>
+                        <td>中等</td>
+                        <td>最大</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="interactive-section">
+            <h2>📈 中国货币供应量数据</h2>
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-number">11+</span>
+                    <div class="stat-label">万亿元 M0规模</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">69+</span>
+                    <div class="stat-label">万亿元 M1规模</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">270+</span>
+                    <div class="stat-label">万亿元 M2规模</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">8-12%</span>
+                    <div class="stat-label">M2年增长目标</div>
+                </div>
+            </div>
+            
+            <button class="toggle-btn" onclick="toggleContent('advanced')">显示高级概念</button>
+            
+            <div id="advanced" class="hidden-content">
+                <h3>🔬 高级概念解析</h3>
+                <p><strong>M3概念：</strong>一些国家还会统计M3，包括M2加上大额定期存单、银行债券等</p>
+                <p><strong>货币乘数：</strong>央行基础货币通过银行信贷扩张产生的倍数效应</p>
+                <p><strong>流动性陷阱：</strong>当利率降至极低水平时，货币政策效果减弱的现象</p>
+                <p><strong>量化宽松：</strong>当传统货币政策失效时，央行直接购买长期证券增加流动性</p>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h2>⚡ 实际应用案例</h2>
+                <p><strong>通胀预警：</strong>当M2增速远超GDP增速时，可能出现通胀压力</p>
+                <p><strong>流动性危机：</strong>M1增速下降可能反映企业和个人持币意愿下降</p>
+                <p><strong>政策调控：</strong>央行根据M2增速调整货币政策力度</p>
+                <div class="highlight">
+                    <strong>重要比率：</strong>M1/M2比率上升通常意味着经济活跃度提升
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🌍 国际比较</h2>
+                <p><strong>美国：</strong>更关注M1和基础货币，M2重要性相对较低</p>
+                <p><strong>欧洲：</strong>欧央行主要关注M3，包含更广泛的金融工具</p>
+                <p><strong>中国：</strong>M2是货币政策的重要中间目标</p>
+                <div class="highlight">
+                    <strong>差异原因：</strong>各国金融体系结构和发展阶段不同
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>💡 投资者启示</h2>
+                <p><strong>股市影响：</strong>M2快速增长通常利好股市，但要警惕通胀风险</p>
+                <p><strong>债市影响：</strong>货币供应量增加会推低利率，利好债券市场</p>
+                <p><strong>汇率影响：</strong>货币供应量过快增长可能导致本币贬值压力</p>
+                <div class="highlight">
+                    <strong>投资策略：</strong>关注M2增速变化，提前布局相关投资机会
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔮 未来趋势</h2>
+                <p><strong>数字货币：</strong>央行数字货币（DCEP）可能改变货币统计口径</p>
+                <p><strong>金融创新：</strong>支付工具创新对传统货币分类提出挑战</p>
+                <p><strong>政策演进：</strong>从数量型调控向价格型调控转变</p>
+                <div class="highlight">
+                    <strong>关键变化：</strong>货币政策框架将更加注重利率传导机制
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleContent(id) {
+            const content = document.getElementById(id);
+            const button = event.target;
+            
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                button.textContent = '隐藏高级概念';
+            } else {
+                content.style.display = 'none';
+                button.textContent = '显示高级概念';
+            }
+        }
+
+        // 页面滚动动画
+        window.addEventListener('scroll', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // 页面加载动画
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.animationDelay = `${index * 0.2}s`;
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
