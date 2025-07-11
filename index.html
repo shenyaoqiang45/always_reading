@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Always Reading - 持续阅读学习平台</title>
+    <style>
+        :root {
+            --vscode-editor-background: #1e1e1e;
+            --vscode-editor-foreground: #d4d4d4;
+            --vscode-sideBar-background: #252526;
+            --vscode-sideBar-foreground: #cccccc;
+            --vscode-activityBar-background: #333333;
+            --vscode-panel-background: #1e1e1e;
+            --vscode-panel-border: #2d2d30;
+            --vscode-button-background: #0e639c;
+            --vscode-button-hoverBackground: #1177bb;
+            --vscode-list-hoverBackground: #2a2d2e;
+            --vscode-list-activeSelectionBackground: #094771;
+            --vscode-textLink-foreground: #3794ff;
+            --vscode-textLink-activeForeground: #4daafc;
+            --vscode-focusBorder: #007acc;
+            --vscode-input-background: #3c3c3c;
+            --vscode-input-border: #464647;
+            --vscode-badge-background: #4d4d4d;
+            --vscode-badge-foreground: #ffffff;
+            --vscode-progressBar-background: #0e70c0;
+            --vscode-tree-indentGuidesStroke: #585858;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+            background: var(--vscode-editor-background);
+            color: var(--vscode-editor-foreground);
+            min-height: 100vh;
+            line-height: 1.6;
+            font-size: 13px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        .title-bar {
+            background: var(--vscode-sideBar-background);
+            border-bottom: 1px solid var(--vscode-panel-border);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: var(--vscode-sideBar-foreground);
+        }
+        
+        .title-bar-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            background: var(--vscode-textLink-foreground);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .header {
+            background: var(--vscode-panel-background);
+            border-bottom: 1px solid var(--vscode-panel-border);
+            padding: 32px 24px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            color: var(--vscode-editor-foreground);
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: var(--vscode-sideBar-foreground);
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+        
+        .description {
+            font-size: 14px;
+            color: var(--vscode-sideBar-foreground);
+            max-width: 600px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            min-height: calc(100vh - 120px);
+        }
+        
+        .sidebar {
+            width: 240px;
+            background: var(--vscode-sideBar-background);
+            border-right: 1px solid var(--vscode-panel-border);
+            padding: 16px 0;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+        
+        .sidebar-title {
+            font-size: 11px;
+            color: var(--vscode-sideBar-foreground);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding: 0 16px;
+            opacity: 0.8;
+        }
+        
+        .sidebar-item {
+            padding: 6px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: var(--vscode-sideBar-foreground);
+        }
+        
+        .sidebar-item:hover {
+            background: var(--vscode-list-hoverBackground);
+        }
+        
+        .sidebar-item.active {
+            background: var(--vscode-list-activeSelectionBackground);
+            color: var(--vscode-editor-foreground);
+        }
+        
+        .sidebar-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        .content-area {
+            flex: 1;
+            background: var(--vscode-editor-background);
+            padding: 24px;
+            overflow-y: auto;
+        }
+        
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .category-card {
+            background: var(--vscode-sideBar-background);
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 4px;
+            padding: 24px;
+            transition: all 0.2s ease;
+        }
+        
+        .category-card:hover {
+            border-color: var(--vscode-focusBorder);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .category-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--vscode-button-background);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 14px;
+            color: white;
+        }
+        
+        .category-title {
+            font-size: 16px;
+            color: var(--vscode-editor-foreground);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .category-description {
+            color: var(--vscode-sideBar-foreground);
+            margin-bottom: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        
+        .file-list {
+            list-style: none;
+        }
+        
+        .file-item {
+            margin-bottom: 4px;
+        }
+        
+        .file-link {
+            color: var(--vscode-textLink-foreground);
+            text-decoration: none;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        
+        .file-link:hover {
+            color: var(--vscode-textLink-activeForeground);
+            background: var(--vscode-list-hoverBackground);
+        }
+        
+        .file-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            font-size: 12px;
+        }
+        
+        .stats {
+            background: var(--vscode-sideBar-background);
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .stats h3 {
+            font-size: 16px;
+            color: var(--vscode-editor-foreground);
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+        }
+        
+        .stat-item {
+            background: var(--vscode-input-background);
+            border: 1px solid var(--vscode-input-border);
+            border-radius: 4px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--vscode-editor-foreground);
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: var(--vscode-sideBar-foreground);
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+        
+        .footer {
+            background: var(--vscode-sideBar-background);
+            border-top: 1px solid var(--vscode-panel-border);
+            padding: 16px 24px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--vscode-sideBar-foreground);
+        }
+        
+        .no-content {
+            color: var(--vscode-sideBar-foreground);
+            font-style: italic;
+            opacity: 0.7;
+            font-size: 13px;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            padding: 8px 24px;
+            background: var(--vscode-editor-background);
+            border-bottom: 1px solid var(--vscode-panel-border);
+            font-size: 12px;
+            color: var(--vscode-sideBar-foreground);
+        }
+        
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .breadcrumb-separator {
+            margin: 0 8px;
+            opacity: 0.6;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--vscode-panel-border);
+            }
+            
+            .categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-bar">
+            <div class="title-bar-icon">AR</div>
+            <span>Always Reading - 持续阅读学习平台</span>
+        </div>
+        
+        <div class="breadcrumb">
+            <div class="breadcrumb-item">
+                <span>📁 Always Reading</span>
+            </div>
+            <span class="breadcrumb-separator">›</span>
+            <div class="breadcrumb-item">
+                <span>🏠 首页</span>
+            </div>
+        </div>
+        
+        <div class="header">
+            <h1>Always Reading</h1>
+            <p class="subtitle">持续阅读 · 深度思考 · 知识积累</p>
+            <p class="description">
+                这里是一个专注于深度阅读和知识积累的平台。我们关注人工智能、商业分析、经济学等多个领域，
+                通过持续的学习和思考，构建系统性的知识体系。
+            </p>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">目录</div>
+                    <div class="sidebar-item active">
+                        <div class="sidebar-icon">🏠</div>
+                        <span>首页</span>
+                    </div>
+                    <div class="sidebar-item">
+                        <div class="sidebar-icon">🤖</div>
+                        <span>AI 素养</span>
+                    </div>
+                    <div class="sidebar-item">
+                        <div class="sidebar-icon">📈</div>
+                        <span>商业分析</span>
+                    </div>
+                    <div class="sidebar-item">
+                        <div class="sidebar-icon">💰</div>
+                        <span>经济学</span>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-title">最近文档</div>
+                    <div class="sidebar-item">
+                        <div class="sidebar-icon">📄</div>
+                        <span>巴菲特房地产分析</span>
+                    </div>
+                    <div class="sidebar-item">
+                        <div class="sidebar-icon">📊</div>
+                        <span>房地产市场分析</span>
+                    </div>
+                    <div class="sidebar-item">
+                        <div class="sidebar-icon">🏦</div>
+                        <span>银行视角分析</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <div class="categories">
+                    <div class="category-card">
+                        <div class="category-header">
+                            <div class="category-icon">🤖</div>
+                            <h2 class="category-title">AI 素养</h2>
+                        </div>
+                        <p class="category-description">
+                            人工智能时代的核心技能，包括AI工具使用、机器学习基础、大语言模型应用等内容。
+                        </p>
+                        <ul class="file-list">
+                            <li class="file-item">
+                                <span class="no-content">暂无内容，敬请期待...</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="category-card">
+                        <div class="category-header">
+                            <div class="category-icon">📈</div>
+                            <h2 class="category-title">商业分析</h2>
+                        </div>
+                        <p class="category-description">
+                            商业模式分析、投资策略、市场研究等商业领域的深度内容。
+                        </p>
+                        <ul class="file-list">
+                            <li class="file-item">
+                                <span class="no-content">暂无内容，敬请期待...</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="category-card">
+                        <div class="category-header">
+                            <div class="category-icon">💰</div>
+                            <h2 class="category-title">经济学</h2>
+                        </div>
+                        <p class="category-description">
+                            宏观经济分析、投资理论、市场动态等经济学相关的深度研究。
+                        </p>
+                        <ul class="file-list">
+                            <li class="file-item">
+                                <a href="Economics/buffett_housing_analysis.html" class="file-link">
+                                    <span class="file-icon">🏠</span>
+                                    <span>巴菲特视角：中国房地产市场分析</span>
+                                </a>
+                            </li>
+                            <li class="file-item">
+                                <a href="Economics/property_market_analysis.html" class="file-link">
+                                    <span class="file-icon">📊</span>
+                                    <span>房地产市场深度分析</span>
+                                </a>
+                            </li>
+                            <li class="file-item">
+                                <a href="Economics/bank_view.html" class="file-link">
+                                    <span class="file-icon">🏦</span>
+                                    <span>银行视角：金融指标传导链条分析</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <h3>项目统计</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">研究领域</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">分析报告</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">2025</span>
+                            <span class="stat-label">创建年份</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">MIT</span>
+                            <span class="stat-label">开源协议</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 Always Reading. 基于 MIT 协议开源</p>
+        </div>
+    </div>
+</body>
+</html>
