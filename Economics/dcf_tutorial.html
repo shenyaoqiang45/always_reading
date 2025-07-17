@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCF估值法科普教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section-title {
+            color: #4a5568;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #764ba2;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .concept-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .concept-box h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .formula-box {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .step-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+
+        .calculator {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            min-width: 150px;
+            font-weight: bold;
+            color: #4a5568;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .result-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .example-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .example-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .example-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .example-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .pros, .cons {
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .pros {
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8a3 100%);
+        }
+
+        .cons {
+            background: linear-gradient(135deg, #ffd3e1 0%, #fd79a8 100%);
+        }
+
+        .pros h4, .cons h4 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            color: #2d3748;
+        }
+
+        .pros ul, .cons ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pros li, .cons li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .pros li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .cons li::before {
+            content: "✗";
+            position: absolute;
+            left: 0;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content-card {
+                padding: 20px;
+            }
+            
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .input-group label {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 DCF估值法科普教程</h1>
+            <p>学会用现金流给企业估值</p>
+        </div>
+
+        <div class="content-card">
+            <h2 class="section-title">💡 什么是DCF？</h2>
+            <div class="concept-box">
+                <h3>DCF = Discounted Cash Flow（折现现金流）</h3>
+                <p>DCF是一种评估企业内在价值的方法，基于一个简单的理念：企业的价值等于它未来能够产生的所有现金流的现值总和。</p>
+            </div>
+
+            <div class="formula-box">
+                企业价值 = 未来现金流₁/(1+r)¹ + 未来现金流₂/(1+r)² + ... + 未来现金流ₙ/(1+r)ⁿ
+            </div>
+
+            <p><strong>其中：</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><span class="highlight">未来现金流</span>：企业在未来各年度产生的自由现金流</li>
+                <li><span class="highlight">r</span>：折现率（投资者要求的回报率）</li>
+                <li><span class="highlight">n</span>：预测年数</li>
+            </ul>
+        </div>
+
+        <div class="content-card">
+            <h2 class="section-title">🔧 DCF估值步骤</h2>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4>预测未来现金流</h4>
+                    <p>分析企业历史财务数据，预测未来5-10年的自由现金流</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4>确定折现率</h4>
+                    <p>根据企业风险水平确定适当的折现率（WACC）</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4>计算现值</h4>
+                    <p>将未来现金流折现到当前价值</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h4>计算终值</h4>
+                    <p>估算预测期后的永续价值</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h4>求和得出企业价值</h4>
+                    <p>现值总和 + 终值现值 = 企业总价值</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2 class="section-title">📊 实际案例：小明科技公司</h2>
+            
+            <table class="example-table">
+                <thead>
+                    <tr>
+                        <th>年份</th>
+                        <th>预测现金流（万元）</th>
+                        <th>折现率</th>
+                        <th>现值（万元）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>第1年</td>
+                        <td>220</td>
+                        <td>10%</td>
+                        <td>200</td>
+                    </tr>
+                    <tr>
+                        <td>第2年</td>
+                        <td>240</td>
+                        <td>10%</td>
+                        <td>198</td>
+                    </tr>
+                    <tr>
+                        <td>第3年</td>
+                        <td>260</td>
+                        <td>10%</td>
+                        <td>195</td>
+                    </tr>
+                    <tr>
+                        <td>第4年</td>
+                        <td>280</td>
+                        <td>10%</td>
+                        <td>191</td>
+                    </tr>
+                    <tr>
+                        <td>第5年</td>
+                        <td>300</td>
+                        <td>10%</td>
+                        <td>186</td>
+                    </tr>
+                    <tr style="background: #fff3cd;">
+                        <td colspan="4"><strong>前5年现值总和 = 970万元</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="concept-box" style="background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%); color: #2d3748;">
+                <h3>🧮 终值计算详解</h3>
+                <p><strong>步骤1：计算第6年现金流</strong></p>
+                <p>第6年现金流 = 第5年现金流 × (1 + 永续增长率)</p>
+                <p>= 300万 × (1 + 3%) = 300万 × 1.03 = <span style="background: #fff; padding: 2px 6px; border-radius: 3px;">309万元</span></p>
+                
+                <p><strong>步骤2：计算终值（第6年开始的永续价值）</strong></p>
+                <p>终值 = 第6年现金流 ÷ (折现率 - 永续增长率)</p>
+                <p>= 309万 ÷ (10% - 3%) = 309万 ÷ 7% = <span style="background: #fff; padding: 2px 6px; border-radius: 3px;">4,414万元</span></p>
+                
+                <p><strong>步骤3：将终值折现到现在</strong></p>
+                <p>终值现值 = 4,414万 ÷ (1 + 10%)⁵ = 4,414万 ÷ 1.61 = <span style="background: #fff; padding: 2px 6px; border-radius: 3px;">2,740万元</span></p>
+            </div>
+
+            <div class="result-box show">
+                <h3>企业总价值 = 970万 + 2,740万 = 3,710万元</h3>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2 class="section-title">🧮 DCF计算器</h2>
+            <div class="calculator">
+                <div class="input-group">
+                    <label>第1年现金流（万元）:</label>
+                    <input type="number" id="cf1" value="220" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label>第2年现金流（万元）:</label>
+                    <input type="number" id="cf2" value="240" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label>第3年现金流（万元）:</label>
+                    <input type="number" id="cf3" value="260" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label>第4年现金流（万元）:</label>
+                    <input type="number" id="cf4" value="280" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label>第5年现金流（万元）:</label>
+                    <input type="number" id="cf5" value="300" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label>折现率（%）:</label>
+                    <input type="number" id="discount" value="10" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label>永续增长率（%）:</label>
+                    <input type="number" id="growth" value="3" step="0.1">
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateDCF()">计算企业价值</button>
+                
+                <div id="result" class="result-box">
+                    <div id="resultText"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2 class="section-title">⚖️ DCF的优缺点</h2>
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>🚀 优点</h4>
+                    <ul>
+                        <li>基于企业基本面，关注内在价值</li>
+                        <li>不受市场情绪影响</li>
+                        <li>理论基础扎实，逻辑清晰</li>
+                        <li>适用于成熟、稳定的企业</li>
+                        <li>巴菲特等价值投资者常用</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>⚠️ 缺点</h4>
+                    <ul>
+                        <li>预测未来现金流困难</li>
+                        <li>对假设变化敏感</li>
+                        <li>不适用于亏损企业</li>
+                        <li>忽视市场定价效率</li>
+                        <li>计算复杂，耗时较长</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2 class="section-title">💡 使用建议</h2>
+            <div class="concept-box">
+                <h3>什么时候使用DCF？</h3>
+                <p>✅ 成熟稳定的企业<br>
+                ✅ 现金流可预测的公司<br>
+                ✅ 长期投资决策<br>
+                ✅ 作为其他估值方法的补充</p>
+            </div>
+            
+            <div style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #667eea;">
+                <h4 style="color: #4a5568; margin-bottom: 10px;">💡 实用提示</h4>
+                <p><strong>敏感性分析很重要：</strong>尝试不同的增长率和折现率假设，看看估值如何变化。</p>
+                <p><strong>结合其他方法：</strong>DCF不是万能的，可以配合P/E、P/B等相对估值方法使用。</p>
+                <p><strong>关注假设合理性：</strong>过于乐观的假设会导致估值过高，要保持谨慎。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateDCF() {
+            // 获取输入值
+            const cf1 = parseFloat(document.getElementById('cf1').value) || 0;
+            const cf2 = parseFloat(document.getElementById('cf2').value) || 0;
+            const cf3 = parseFloat(document.getElementById('cf3').value) || 0;
+            const cf4 = parseFloat(document.getElementById('cf4').value) || 0;
+            const cf5 = parseFloat(document.getElementById('cf5').value) || 0;
+            const discount = parseFloat(document.getElementById('discount').value) / 100 || 0.1;
+            const growth = parseFloat(document.getElementById('growth').value) / 100 || 0.03;
+
+            // 计算现值
+            const pv1 = cf1 / Math.pow(1 + discount, 1);
+            const pv2 = cf2 / Math.pow(1 + discount, 2);
+            const pv3 = cf3 / Math.pow(1 + discount, 3);
+            const pv4 = cf4 / Math.pow(1 + discount, 4);
+            const pv5 = cf5 / Math.pow(1 + discount, 5);
+
+            // 计算前5年现值总和
+            const sumPV = pv1 + pv2 + pv3 + pv4 + pv5;
+
+            // 计算终值
+            const cf6 = cf5 * (1 + growth);
+            const terminalValue = cf6 / (discount - growth);
+            const terminalPV = terminalValue / Math.pow(1 + discount, 5);
+
+            // 计算企业总价值
+            const totalValue = sumPV + terminalPV;
+
+            // 显示结果
+            const resultDiv = document.getElementById('result');
+            const resultText = document.getElementById('resultText');
+            
+            resultText.innerHTML = `
+                <h3>计算结果</h3>
+                <p>前5年现值总和：${sumPV.toFixed(1)} 万元</p>
+                <p>终值现值：${terminalPV.toFixed(1)} 万元</p>
+                <p><strong>企业总价值：${totalValue.toFixed(1)} 万元</strong>
+            `;
+            
+            resultDiv.classList.add('show');
+        }
+
+        // 页面加载时的动画效果
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.content-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+        // 步骤卡片点击效果
+        document.querySelectorAll('.step-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1.05)';
+                }, 100);
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>
