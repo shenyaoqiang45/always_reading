@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI领导者眼中的AGI - 通用人工智能的未来定义</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .intro-section h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .intro-section p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .ceo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .ceo-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ceo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .ceo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), transparent);
+        }
+
+        .ceo-card.openai {
+            border-left-color: #10a37f;
+            --accent-color: #10a37f;
+        }
+
+        .ceo-card.deepmind {
+            border-left-color: #4285f4;
+            --accent-color: #4285f4;
+        }
+
+        .ceo-card.anthropic {
+            border-left-color: #ff6b35;
+            --accent-color: #ff6b35;
+        }
+
+        .ceo-card.xai {
+            border-left-color: #1da1f2;
+            --accent-color: #1da1f2;
+        }
+
+        .ceo-card.nvidia {
+            border-left-color: #76b900;
+            --accent-color: #76b900;
+        }
+
+        .ceo-card.microsoft {
+            border-left-color: #0078d4;
+            --accent-color: #0078d4;
+        }
+
+        .ceo-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .ceo-number {
+            background: var(--accent-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .ceo-info h3 {
+            color: var(--accent-color);
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .ceo-info .company {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .definition {
+            background: #e8f5e8;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .definition h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #ddd;
+        }
+
+        .details {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .details h5 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .details ul {
+            margin-left: 20px;
+        }
+
+        .details li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .analysis-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .analysis-section h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .analysis-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .analysis-card h3 {
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .analysis-card p {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .ceo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 AI领导者眼中的AGI</h1>
+            <p>探索顶尖科技公司CEO对通用人工智能的定义与愿景</p>
+        </div>
+
+        <div class="content">
+            <div class="intro-section">
+                <h2>什么是AGI？</h2>
+                <p>AGI（Artificial General Intelligence，通用人工智能）是指具有与人类相当或超越人类智能的AI系统，能够在各种认知任务中表现出色。不同于现今的专用AI，AGI具备跨领域的通用问题解决能力。</p>
+            </div>
+
+            <div class="ceo-grid">
+                <div class="ceo-card openai">
+                    <div class="ceo-header">
+                        <div class="ceo-number">1</div>
+                        <div class="ceo-info">
+                            <h3>Sam Altman</h3>
+                            <div class="company">OpenAI CEO</div>
+                        </div>
+                    </div>
+                    <div class="definition">
+                        <h4>🎯 核心定义</h4>
+                        <div class="quote">"AGI是一个能够在智力上做任何人类能做的事情的系统。"</div>
+                    </div>
+                    <div class="details">
+                        <h5>🔍 详细阐述</h5>
+                        <ul>
+                            <li>OpenAI将AGI定义为<span class="highlight">"在大多数经济价值工作中超越人类的高度自主系统"</span></li>
+                            <li>强调<span class="highlight">安全性、对齐性和社会效益</span>是AGI实现后的关键优先事项</li>
+                            <li>认为AGI不是单一时刻，而是<span class="highlight">能力阈值的逐步跨越</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ceo-card deepmind">
+                    <div class="ceo-header">
+                        <div class="ceo-number">2</div>
+                        <div class="ceo-info">
+                            <h3>Demis Hassabis</h3>
+                            <div class="company">DeepMind CEO</div>
+                        </div>
+                    </div>
+                    <div class="definition">
+                        <h4>🎯 核心定义</h4>
+                        <div class="quote">"AGI是能够解决跨领域广泛问题的能力，包括系统从未见过的问题。"</div>
+                    </div>
+                    <div class="details">
+                        <h5>🔍 详细阐述</h5>
+                        <ul>
+                            <li>DeepMind将AGI视为<span class="highlight">科学和工程挑战</span></li>
+                            <li>强调<span class="highlight">泛化能力、迁移学习和跨任务规划</span></li>
+                            <li>认为AGI应该<span class="highlight">匹配或超越人类的灵活性和适应性</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ceo-card anthropic">
+                    <div class="ceo-header">
+                        <div class="ceo-number">3</div>
+                        <div class="ceo-info">
+                            <h3>Dario Amodei</h3>
+                            <div class="company">Anthropic CEO</div>
+                        </div>
+                    </div>
+                    <div class="definition">
+                        <h4>🎯 核心定义</h4>
+                        <div class="quote">"AGI是具有与人类相当或更高通用智能的系统，能够在多项任务中进行泛化。"</div>
+                    </div>
+                    <div class="details">
+                        <h5>🔍 详细阐述</h5>
+                        <ul>
+                            <li>Anthropic专注于<span class="highlight">对齐性和可解释性</span>作为AGI发展的重点</li>
+                            <li>Dario强调<span class="highlight">渐进式出现</span>而非突然转换</li>
+                            <li>认为AGI可能通过<span class="highlight">扩展定律和更大规模的语言模型</span>实现</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ceo-card xai">
+                    <div class="ceo-header">
+                        <div class="ceo-number">4</div>
+                        <div class="ceo-info">
+                            <h3>Elon Musk</h3>
+                            <div class="company">xAI CEO / OpenAI联合创始人</div>
+                        </div>
+                    </div>
+                    <div class="definition">
+                        <h4>🎯 核心定义</h4>
+                        <div class="quote">"AGI是比地球上最聪明的人类更聪明的AI。"</div>
+                    </div>
+                    <div class="details">
+                        <h5>🔍 详细阐述</h5>
+                        <ul>
+                            <li>Musk经常用<span class="highlight">存在主义术语</span>描述AGI，警告失控的风险</li>
+                            <li>称AGI为潜在的<span class="highlight">"召唤恶魔"</span>如果不加控制</li>
+                            <li>xAI旨在构建<span class="highlight">"真实的"AI</span>，作为通往AGI的更安全路径</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ceo-card nvidia">
+                    <div class="ceo-header">
+                        <div class="ceo-number">5</div>
+                        <div class="ceo-info">
+                            <h3>Jensen Huang</h3>
+                            <div class="company">NVIDIA CEO</div>
+                        </div>
+                    </div>
+                    <div class="definition">
+                        <h4>🎯 核心定义</h4>
+                        <div class="quote">"AGI是AI能够以开放式方式进行推理和学习的系统。"</div>
+                    </div>
+                    <div class="details">
+                        <h5>🔍 详细阐述</h5>
+                        <ul>
+                            <li>Huang强调<span class="highlight">硬件扩展、计算效率和基础模型</span>是AGI的驱动力</li>
+                            <li>倾向于将AGI视为<span class="highlight">有足够数据和计算能力就不可避免</span></li>
+                            <li>态度<span class="highlight">更务实、更专注于工程实现</span>而非哲学思考</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ceo-card microsoft">
+                    <div class="ceo-header">
+                        <div class="ceo-number">6</div>
+                        <div class="ceo-info">
+                            <h3>Satya Nadella</h3>
+                            <div class="company">Microsoft CEO</div>
+                        </div>
+                    </div>
+                    <div class="definition">
+                        <h4>🎯 核心定义</h4>
+                        <div class="quote">"AGI是能够像人类一样理解、学习和推理，但具有规模化力量的AI。"</div>
+                    </div>
+                    <div class="details">
+                        <h5>🔍 详细阐述</h5>
+                        <ul>
+                            <li>Microsoft通过与OpenAI的合作，大力投资AGI的<span class="highlight">基础设施建设</span></li>
+                            <li>Nadella专注于<span class="highlight">用例对齐、负责任发展</span></li>
+                            <li>重点关注<span class="highlight">集成到生产力工具</span>中的实际应用</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-section">
+                <h2>🔍 深度分析</h2>
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <h3>📊 共同主题</h3>
+                        <p>• 人类级别或超人类能力作为基准<br>
+                           • 跨领域泛化而非窄任务特化<br>
+                           • 无需人类指导的自主推理学习<br>
+                           • 经济/实用影响作为关键衡量标准</p>
+                    </div>
+                    <div class="analysis-card">
+                        <h3>🎯 发展理念</h3>
+                        <p>• 安全优先 vs 能力优先的不同路径<br>
+                           • 渐进式发展 vs 突破性跃进<br>
+                           • 扩展定律和计算力作为核心驱动<br>
+                           • 基础设施和负责任发展的重要性</p>
+                    </div>
+                    <div class="analysis-card">
+                        <h3>🔮 未来展望</h3>
+                        <p>• 定义差异反映不同战略重点<br>
+                           • OpenAI关注经济颠覆<br>
+                           • DeepMind采用科学方法<br>
+                           • Anthropic坚持安全第一</p>
+                    </div>
+                    <div class="analysis-card">
+                        <h3>⚡ 关键挑战</h3>
+                        <p>• 如何确保AGI与人类价值对齐<br>
+                           • 避免潜在的存在性风险<br>
+                           • 平衡创新速度与安全考量<br>
+                           • 建立全球治理框架</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🚀 人工智能的未来正在被这些远见卓识的领导者们定义和塑造</p>
+            <p>理解AGI的不同定义，有助于我们更好地准备迎接这个变革性的未来</p>
+        </div>
+    </div>
+
+    <script>
+        // 添加滚动动画效果
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // 初始化动画
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.ceo-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                observer.observe(card);
+            });
+        });
+
+        // 添加点击效果
+        document.querySelectorAll('.ceo-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    card.style.transform = 'translateY(-5px)';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
