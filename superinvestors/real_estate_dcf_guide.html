@@ -314,6 +314,100 @@
             </div>
             
             <div class="section">
+                <h2>💰 什么是风险溢价？</h2>
+                <div class="concept-card">
+                    <p><strong>风险溢价（Risk Premium）</strong>是投资者为承担额外风险而要求的补偿回报率，它反映了房产投资相对于无风险投资的额外风险。</p>
+                    <br>
+                    <p><span class="highlight">计算公式</span>：贴现率 = 无风险利率 + 风险溢价</p>
+                    <br>
+                    <p><strong>无风险利率通常参考：</strong></p>
+                    <ul style="margin: 15px 0 0 20px; line-height: 1.8;">
+                        <li>10年期国债收益率</li>
+                        <li>央行基准利率</li>
+                        <li>银行定期存款利率</li>
+                    </ul>
+                </div>
+                
+                <h3 style="color: #2196F3; margin: 30px 0 20px 0; font-size: 1.5em;">🏘️ 不同房产类型的风险溢价</h3>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>房产类型</th>
+                            <th>风险溢价范围</th>
+                            <th>主要风险因素</th>
+                            <th>投资特点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>核心区住宅</strong></td>
+                            <td>2-4%</td>
+                            <td>政策调控、市场波动</td>
+                            <td>流动性好，抗跌性强</td>
+                        </tr>
+                        <tr>
+                            <td><strong>郊区住宅</strong></td>
+                            <td>4-6%</td>
+                            <td>配套发展、交通便利性</td>
+                            <td>增值潜力大，但风险较高</td>
+                        </tr>
+                        <tr>
+                            <td><strong>核心商办</strong></td>
+                            <td>3-5%</td>
+                            <td>经济周期、租户稳定性</td>
+                            <td>租金稳定，但投资门槛高</td>
+                        </tr>
+                        <tr>
+                            <td><strong>社区商铺</strong></td>
+                            <td>5-8%</td>
+                            <td>消费习惯、电商冲击</td>
+                            <td>租金回报高，但经营风险大</td>
+                        </tr>
+                        <tr>
+                            <td><strong>工业厂房</strong></td>
+                            <td>6-10%</td>
+                            <td>产业政策、环保要求</td>
+                            <td>收益率高，但专业性强</td>
+                        </tr>
+                        <tr>
+                            <td><strong>旅游地产</strong></td>
+                            <td>8-12%</td>
+                            <td>季节性、政策限制</td>
+                            <td>波动性大，投机性强</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="example">
+                    <h3>风险溢价评估示例</h3>
+                    <p><strong>假设条件：</strong></p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li>当前10年期国债收益率：2.8%</li>
+                        <li>投资标的：市中心优质住宅</li>
+                        <li>风险评估：政策风险中等，流动性良好</li>
+                    </ul>
+                    <div class="formula" style="margin: 15px 0;">
+贴现率计算：
+无风险利率：2.8%
++ 风险溢价：3.0%（市中心住宅）
+= 贴现率：5.8%
+                    </div>
+                    <p><strong>风险溢价考虑因素：</strong></p>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>✅ 地段优质，需求稳定 (-0.5%)</li>
+                        <li>⚠️ 房产调控政策风险 (+1.0%)</li>
+                        <li>✅ 流动性较好 (-0.5%)</li>
+                        <li>⚠️ 市场周期性波动 (+1.0%)</li>
+                        <li>⚠️ 维护和管理成本 (+0.5%)</li>
+                        <li>⚠️ 通胀和利率风险 (+0.5%)</li>
+                        <li>✅ 品质住宅保值性强 (-0.5%)</li>
+                        <li><strong>综合风险溢价：3.0%</strong></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
                 <h2>📋 计算步骤</h2>
                 <div class="steps">
                     <div class="step">
@@ -401,8 +495,22 @@
                         <input type="number" id="finalValue" value="70" step="0.1">
                     </div>
                     <div class="input-group">
+                        <label>无风险利率（%）：</label>
+                        <input type="number" id="riskFreeRate" value="2.8" step="0.1" min="0.1" max="10">
+                    </div>
+                    <div class="input-group">
+                        <label>风险溢价（%）：</label>
+                        <input type="number" id="riskPremium" value="3.0" step="0.1" min="0.1" max="15">
+                        <small style="opacity: 0.8; font-size: 0.9em; display: block; margin-top: 5px;">
+                            参考：核心住宅2-4%，郊区住宅4-6%，商铺5-8%
+                        </small>
+                    </div>
+                    <div class="input-group">
                         <label>贴现率（%）：</label>
-                        <input type="number" id="discountRate" value="5" step="0.1" min="0.1" max="20">
+                        <input type="number" id="discountRate" value="5.8" step="0.1" min="0.1" max="20" readonly style="background-color: #f0f0f0;">
+                        <small style="opacity: 0.8; font-size: 0.9em; display: block; margin-top: 5px;">
+                            自动计算：无风险利率 + 风险溢价
+                        </small>
                     </div>
                     <button class="calc-button" onclick="calculateDCF()">计算现值</button>
                     <div class="result" id="result" style="display: none;"></div>
@@ -416,24 +524,50 @@
                     <ul style="margin: 15px 0 0 20px; line-height: 1.8;">
                         <li><strong>预测不确定性：</strong>未来租金和房价预测存在较大不确定性</li>
                         <li><strong>贴现率选择：</strong>贴现率的微小变化会显著影响估值结果</li>
+                        <li><strong>风险溢价评估：</strong>不同投资者对风险的认知和承受能力不同</li>
                         <li><strong>市场因素：</strong>政策变化、区域发展等因素难以量化</li>
                         <li><strong>流动性考虑：</strong>房产变现能力不如金融资产</li>
                     </ul>
                     <br>
-                    <p><span class="highlight">建议</span>：DCF估值应结合市场比较法、成本法等多种方法综合判断，并进行敏感性分析。</p>
+                    <p><strong>风险溢价评估要点：</strong></p>
+                    <ul style="margin: 15px 0 0 20px; line-height: 1.8;">
+                        <li><strong>地段评估：</strong>核心区域风险溢价较低，偏远地区较高</li>
+                        <li><strong>政策风险：</strong>限购、税收政策变化对不同类型房产影响不同</li>
+                        <li><strong>市场周期：</strong>房地产周期性波动，不同阶段风险不同</li>
+                        <li><strong>个人因素：</strong>投资经验、资金实力、风险偏好影响风险溢价</li>
+                        <li><strong>宏观环境：</strong>利率环境、经济增长预期等宏观因素</li>
+                    </ul>
+                    <br>
+                    <p><span class="highlight">建议</span>：DCF估值应结合市场比较法、成本法等多种方法综合判断，并进行敏感性分析。对于风险溢价的确定，建议参考同类型房产的历史收益率数据，并根据当前市场环境进行调整。</p>
                 </div>
             </div>
         </div>
     </div>
     
     <script>
+        // 自动计算贴现率
+        function updateDiscountRate() {
+            const riskFreeRate = parseFloat(document.getElementById('riskFreeRate').value) || 0;
+            const riskPremium = parseFloat(document.getElementById('riskPremium').value) || 0;
+            const discountRate = riskFreeRate + riskPremium;
+            document.getElementById('discountRate').value = discountRate.toFixed(1);
+        }
+        
+        // 添加事件监听器
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('riskFreeRate').addEventListener('input', updateDiscountRate);
+            document.getElementById('riskPremium').addEventListener('input', updateDiscountRate);
+        });
+        
         function calculateDCF() {
             const annualRent = parseFloat(document.getElementById('annualRent').value) * 10000;
             const years = parseInt(document.getElementById('years').value);
             const finalValue = parseFloat(document.getElementById('finalValue').value) * 10000;
-            const discountRate = parseFloat(document.getElementById('discountRate').value) / 100;
+            const riskFreeRate = parseFloat(document.getElementById('riskFreeRate').value) / 100;
+            const riskPremium = parseFloat(document.getElementById('riskPremium').value) / 100;
+            const discountRate = riskFreeRate + riskPremium;
             
-            if (isNaN(annualRent) || isNaN(years) || isNaN(finalValue) || isNaN(discountRate)) {
+            if (isNaN(annualRent) || isNaN(years) || isNaN(finalValue) || isNaN(riskFreeRate) || isNaN(riskPremium)) {
                 alert('请输入有效的数值');
                 return;
             }
@@ -450,6 +584,10 @@
             
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = `
+                <div style="margin-bottom: 10px;">
+                    <strong>贴现率构成：</strong><br>
+                    无风险利率 ${(riskFreeRate * 100).toFixed(1)}% + 风险溢价 ${(riskPremium * 100).toFixed(1)}% = ${(discountRate * 100).toFixed(1)}%
+                </div>
                 <div>租金收入现值：${(rentPV / 10000).toFixed(1)}万元</div>
                 <div>期末市值现值：${(finalValuePV / 10000).toFixed(1)}万元</div>
                 <div style="font-size: 1.3em; margin-top: 10px; color: #4CAF50;">
