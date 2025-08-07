@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>松禾资本估值方法 - 科普介绍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(-50px) translateY(-50px); }
+            100% { transform: translateX(0px) translateY(0px); }
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .intro {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .intro h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .method-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-top: 4px solid;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+        }
+        
+        .method-card.tech { border-top-color: #e74c3c; }
+        .method-card.industry { border-top-color: #f39c12; }
+        .method-card.team { border-top-color: #27ae60; }
+        .method-card.value { border-top-color: #9b59b6; }
+        .method-card.strategy { border-top-color: #34495e; }
+        
+        .method-card.tech::before { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .method-card.industry::before { background: linear-gradient(45deg, #f39c12, #e67e22); }
+        .method-card.team::before { background: linear-gradient(45deg, #27ae60, #229954); }
+        .method-card.value::before { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+        .method-card.strategy::before { background: linear-gradient(45deg, #34495e, #2c3e50); }
+        
+        .method-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .method-card .icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .tech .icon { background: #e74c3c; }
+        .industry .icon { background: #f39c12; }
+        .team .icon { background: #27ae60; }
+        .value .icon { background: #9b59b6; }
+        .strategy .icon { background: #34495e; }
+        
+        .method-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .method-card ul li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .method-card ul li:hover {
+            padding-left: 30px;
+            color: #3498db;
+        }
+        
+        .method-card ul li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            color: #3498db;
+            font-size: 0.8em;
+            transition: all 0.2s ease;
+        }
+        
+        .method-card ul li:hover::before {
+            transform: scale(1.2);
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 2px, transparent 2px);
+            background-size: 30px 30px;
+            animation: shine 15s infinite linear;
+        }
+        
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .highlight-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .highlight-box p {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .companies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .company-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .company-tag:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>松禾资本估值方法</h1>
+            <p>深度解析中国本土顶级创投机构的估值逻辑</p>
+        </header>
+        
+        <main class="content">
+            <section class="intro">
+                <h2>🏢 关于松禾资本</h2>
+                <p>松禾资本作为中国本土历史最悠久的创业投资机构之一，专注于早期和成长期投资，重点布局数字科技、精准医疗、创新材料三大硬科技领域。经过20多年的发展，形成了独特而成熟的公司估值方法论。</p>
+            </section>
+            
+            <h2 style="text-align: center; color: #2c3e50; margin: 40px 0 30px 0; font-size: 2em;">核心估值方法</h2>
+            
+            <div class="method-grid">
+                <div class="method-card tech">
+                    <h3><span class="icon">🔬</span>技术驱动估值框架</h3>
+                    <p>基于"科技趋势、平台型技术、中产需求、企业家素质"四大核心要素进行估值评估。</p>
+                    <ul>
+                        <li>技术先进性与壁垒分析</li>
+                        <li>技术平台化潜力评估</li>
+                        <li>市场需求持续性判断</li>
+                        <li>创始团队执行能力考量</li>
+                    </ul>
+                </div>
+                
+                <div class="method-card industry">
+                    <h3><span class="icon">🔗</span>产业链整合视角</h3>
+                    <p>注重产业上下游协同，通过多元化股东结构实现资源整合和价值放大。</p>
+                    <ul>
+                        <li>产业协同价值挖掘</li>
+                        <li>股东资源加持评估</li>
+                        <li>生态战略价值分析</li>
+                        <li>产业链地位判断</li>
+                    </ul>
+                </div>
+                
+                <div class="method-card team">
+                    <h3><span class="icon">👥</span>团队综合能力评估</h3>
+                    <p>强调技术与工艺结合，注重团队的产业化经验和创始人的行业洞察力。</p>
+                    <ul>
+                        <li>技术工艺结合能力</li>
+                        <li>团队产业化经验</li>
+                        <li>创始人行业洞察</li>
+                        <li>核心团队完整性</li>
+                    </ul>
+                </div>
+                
+                <div class="method-card value">
+                    <h3><span class="icon">💎</span>长期价值投资逻辑</h3>
+                    <p>秉承逆向思维，挖掘隐藏价值，注重长期持有的价值实现。</p>
+                    <ul>
+                        <li>隐藏价值深度挖掘</li>
+                        <li>逆向思维价值判断</li>
+                        <li>长期价值实现路径</li>
+                        <li>市场认知差异利用</li>
+                    </ul>
+                </div>
+                
+                <div class="method-card strategy">
+                    <h3><span class="icon">🎯</span>"2+2+N"投资策略</h3>
+                    <p>一硬一软底层基础设施布局，通过多元化投资实现协同效应。</p>
+                    <ul>
+                        <li>硬科技基础设施价值</li>
+                        <li>软实力生态建设能力</li>
+                        <li>多元化布局协同效应</li>
+                        <li>底层技术长期价值</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>🏆 投资成果验证</h3>
+                <p>松禾资本的估值方法效果显著，投资组合包含多家行业领军企业，充分验证了其估值体系的有效性和前瞻性。</p>
+                <div class="companies">
+                    <span class="company-tag">商汤科技</span>
+                    <span class="company-tag">华大基因</span>
+                    <span class="company-tag">开拓药业</span>
+                    <span class="company-tag">德方纳米</span>
+                    <span class="company-tag">大疆创新</span>
+                    <span class="company-tag">更多优秀企业...</span>
+                </div>
+            </div>
+            
+            <section class="intro">
+                <h2>💡 总结</h2>
+                <p>松禾资本的估值方法体现了其深耕科技投资20多年的专业积累和独特洞察。通过技术创新的长期价值评估、产业生态的协同效应分析，以及团队综合实力的深度考量，形成了一套完整而有效的估值体系，为科技创新企业的价值发现和培育提供了重要参考。</p>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>© 2025 松禾资本估值方法科普 | 仅供学习参考</p>
+        </footer>
+    </div>
+</body>
+</html>
