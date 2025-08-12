@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>认知偏差思维导图</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#60a5fa;--muted:#9ca3af;--text:#e6eef8}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;background:linear-gradient(180deg,#071129 0%, #0e1a2b 100%);color:var(--text)}
+    .wrap{padding:28px;box-sizing:border-box;height:100%;display:flex;flex-direction:column;gap:16px}
+    header{display:flex;align-items:center;gap:12px}
+    .title{font-size:18px;font-weight:700}
+    .subtitle{color:var(--muted);font-size:13px}
+
+    .canvas{flex:1;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 6px 30px rgba(2,6,23,0.6);padding:20px;position:relative;overflow:hidden}
+
+    /* node styles */
+    .node{position:absolute;min-width:180px;max-width:260px;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 8px 20px rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.03)}
+    .node h3{margin:0 0 6px 0;font-size:15px}
+    .node p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+    .node .list{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+    .pill{display:inline-block;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:12px;color:var(--muted)}
+
+    /* controls */
+    .controls{display:flex;gap:8px;margin-left:auto}
+    button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:8px 10px;border-radius:8px;cursor:pointer}
+    button:hover{border-color:var(--accent)}
+
+    /* lines */
+    svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+    /* small screens */
+    @media (max-width:800px){.node{min-width:150px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <div class="title">认知偏差思维导图</div>
+        <div class="subtitle">按类别组织：信息筛选 / 概率判断 / 自我认知 / 记忆与回顾 / 社会影响</div>
+      </div>
+      <div class="controls">
+        <button id="resetBtn">重置位置</button>
+        <button id="downloadBtn">下载为 HTML 文件</button>
+      </div>
+    </header>
+
+    <div class="canvas" id="canvas">
+      <svg id="lines"></svg>
+
+      <!-- 中心节点 -->
+      <div class="node" id="center" style="left:40%;top:40%;background:linear-gradient(135deg,#0b1220,#071637);border:1px solid rgba(96,165,250,0.14)">
+        <h3>认知偏差</h3>
+        <p>人类在获取、加工信息与决策时系统性偏离理性的模式。</p>
+        <div class="list"><span class="pill">点击任意分支节点可折叠/展开</span></div>
+      </div>
+
+      <!-- 分支节点：信息筛选 -->
+      <div class="node branch" id="info" style="left:6%;top:8%">
+        <h3>信息筛选相关</h3>
+        <p>如何选择与注意信息，容易导致偏见。</p>
+        <div class="list">
+          <span class="pill">确认偏差</span>
+          <span class="pill">可得性偏差</span>
+          <span class="pill">选择性注意</span>
+          <span class="pill">幸存者偏差</span>
+        </div>
+      </div>
+
+      <!-- 分支节点：概率判断 -->
+      <div class="node branch" id="prob" style="left:78%;top:6%">
+        <h3>概率与判断</h3>
+        <p>关于概率或统计信息的误判。</p>
+        <div class="list">
+          <span class="pill">代表性偏差</span>
+          <span class="pill">赌徒谬误</span>
+          <span class="pill">锚定效应</span>
+          <span class="pill">基率忽视</span>
+        </div>
+      </div>
+
+      <!-- 分支节点：自我认知 -->
+      <div class="node branch" id="self" style="left:6%;top:66%">
+        <h3>自我认知相关</h3>
+        <p>人与自己能力与结果归因的偏差。</p>
+        <div class="list">
+          <span class="pill">达克效应 (Dunning-Kruger)</span>
+          <span class="pill">自利性偏差</span>
+          <span class="pill">控制错觉</span>
+          <span class="pill">乐观偏差</span>
+        </div>
+      </div>
+
+      <!-- 分支节点：记忆与事后 -->
+      <div class="node branch" id="memory" style="left:78%;top:66%">
+        <h3>记忆与事后</h3>
+        <p>记忆方式与事后归因影响我们回顾过去。</p>
+        <div class="list">
+          <span class="pill">事后偏差</span>
+          <span class="pill">峰终定律</span>
+          <span class="pill">虚假记忆</span>
+        </div>
+      </div>
+
+      <!-- 分支节点：社会影响 -->
+      <div class="node branch" id="social" style="left:40%;top:0%">
+        <h3>社会影响相关</h3>
+        <p>社会与权威导致的群体或从众行为。</p>
+        <div class="list">
+          <span class="pill">从众效应</span>
+          <span class="pill">权威效应</span>
+          <span class="pill">光环效应</span>
+          <span class="pill">社会认同 (Social Proof)</span>
+        </div>
+      </div>
+
+      <!-- 解释面板（点击节点时出现） -->
+      <div class="node" id="detail" style="left:14%;top:44%;display:none;min-width:320px">
+        <h3 id="d_title">标题</h3>
+        <p id="d_desc">说明</p>
+        <div class="list" id="d_examples"></div>
+      </div>
+
+    </div>
+
+    <footer style="color:var(--muted);font-size:13px">提示：拖动任意卡片可调整位置。点击分支节点查看详细解释。可下载当前 HTML 文件并在本地打开或分享。</footer>
+  </div>
+
+  <script>
+    // 基本交互：画连线，拖动，点击展示详情
+    const center = document.getElementById('center');
+    const branches = Array.from(document.querySelectorAll('.branch'));
+    const svg = document.getElementById('lines');
+    const canvas = document.getElementById('canvas');
+    const detail = document.getElementById('detail');
+    const d_title = document.getElementById('d_title');
+    const d_desc = document.getElementById('d_desc');
+    const d_examples = document.getElementById('d_examples');
+
+    // 偏差详细字典
+    const db = {
+      'info':{title:'信息筛选相关',desc:'只关注/记住部分信息，导致判断偏差。',examples:['确认偏差：只找支持自己观点的信息。','可得性偏差：更容易想起的事被认为更常见。','选择性注意：只看到自己关注的事。','幸存者偏差：只看幸存者忽略失败者。']},
+      'prob':{title:'概率与判断',desc:'对概率或统计信息的误判。',examples:['代表性偏差：以表面相似性判断概率。','赌徒谬误：误认为独立事件受历史影响。','锚定效应：被初始信息锚定。','基率忽视：忽略总体概率。']},
+      'self':{title:'自我认知相关',desc:'关于能力与归因的系统性偏差。',examples:['达克效应：能力低的人高估自己。','自利性偏差：成功归因于自身，失败推给外界。','控制错觉：高估对随机事件的控制能力。','乐观偏差：低估负面事件的概率。']},
+      'memory':{title:'记忆与事后',desc:'影响我们回忆与解释过去的方式。',examples:['事后偏差：事后觉得事件显而易见。','峰终定律：记忆由高峰与结尾主导。','虚假记忆：记住未发生或被扭曲的事。']},
+      'social':{title:'社会影响相关',desc:'他人和权威影响决策与判断。',examples:['从众效应：人们随大流。','权威效应：过度信任权威意见。','光环效应：一个优点扩展到整体印象。','社会认同：别人做我也做。']}
+    };
+
+    function getCenter(el){const r=el.getBoundingClientRect();const c=canvas.getBoundingClientRect();return {x:r.left - c.left + r.width/2, y:r.top - c.top + r.height/2}};
+
+    function drawLines(){svg.innerHTML='';const cpos=getCenter(center);branches.forEach(b=>{const bpos=getCenter(b);const path=document.createElementNS('http://www.w3.org/2000/svg','path');const dx=bpos.x-cpos.x;const dy=bpos.y-cpos.y;const hx=cpos.x+dx*0.35;const hy=cpos.y+dy*0.35;const sx=bpos.x-dx*0.15;const sy=bpos.y-dy*0.15;path.setAttribute('d',`M ${cpos.x} ${cpos.y} C ${hx} ${hy} ${sx} ${sy} ${bpos.x} ${bpos.y}`);path.setAttribute('stroke','rgba(96,165,250,0.14)');path.setAttribute('fill','none');path.setAttribute('stroke-width','2');svg.appendChild(path)})}
+
+    window.addEventListener('resize',drawLines);
+    drawLines();
+
+    // 可拖动节点
+    const draggables = [center,...branches];
+    draggables.forEach(node=>{
+      node.style.touchAction='none';
+      node.onpointerdown = function(e){
+        node.setPointerCapture(e.pointerId);
+        const rect = canvas.getBoundingClientRect();
+        const startX = e.clientX; const startY = e.clientY;
+        const origLeft = parseFloat(node.style.left); const origTop = parseFloat(node.style.top);
+        function move(ev){
+          const dx = (ev.clientX - startX) / rect.width * 100; // 使用百分比移动
+          const dy = (ev.clientY - startY) / rect.height * 100;
+          node.style.left = `calc(${origLeft}% + ${dx}%)`;
+          node.style.top = `calc(${origTop}% + ${dy}%)`;
+          drawLines();
+        }
+        function up(ev){
+          node.releasePointerCapture(e.pointerId);
+          window.removeEventListener('pointermove', move);
+          window.removeEventListener('pointerup', up);
+        }
+        window.addEventListener('pointermove', move);
+        window.addEventListener('pointerup', up);
+      }
+    });
+
+    // 点击展示详情并折叠/展开
+    branches.forEach(b=>{
+      b.addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        const id = b.id;
+        const info = db[id];
+        if(!info) return;
+        // 填充详情
+        d_title.textContent = info.title;
+        d_desc.textContent = info.desc;
+        d_examples.innerHTML = '';
+        info.examples.forEach(t=>{const s = document.createElement('span'); s.className='pill'; s.textContent=t; d_examples.appendChild(s)});
+        detail.style.display='block';
+        // 把 detail 置于靠近节点的位置
+        const br = b.getBoundingClientRect(); const cn = canvas.getBoundingClientRect();
+        let left = Math.min(Math.max(br.left - cn.left + br.width + 16, 12), cn.width - 340);
+        let top = Math.min(Math.max(br.top - cn.top, 12), cn.height - 160);
+        detail.style.left = left + 'px';
+        detail.style.top = top + 'px';
+      })
+    })
+
+    // 点击空白关闭详情
+    canvas.addEventListener('click', ()=>{detail.style.display='none'})
+
+    // 下载当前 HTML（生成 blob 并触发下载）
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      const html = '<!doctype html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([html], {type: 'text/html'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = '认知偏差思维导图.html'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    })
+
+    // 重置位置
+    document.getElementById('resetBtn').addEventListener('click', ()=>{
+      document.getElementById('info').style.left='6%';document.getElementById('info').style.top='8%';
+      document.getElementById('prob').style.left='78%';document.getElementById('prob').style.top='6%';
+      document.getElementById('self').style.left='6%';document.getElementById('self').style.top='66%';
+      document.getElementById('memory').style.left='78%';document.getElementById('memory').style.top='66%';
+      document.getElementById('social').style.left='40%';document.getElementById('social').style.top='0%';
+      detail.style.display='none';drawLines();
+    })
+
+    // 初次绘制微小延时
+    setTimeout(drawLines,120);
+  </script>
+</body>
+</html>
