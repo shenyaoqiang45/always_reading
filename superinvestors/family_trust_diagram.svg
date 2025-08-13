@@ -1,0 +1,94 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="800" height="600" fill="#f8f9fa"/>
+  
+  <!-- 标题 -->
+  <text x="400" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#2c3e50">家族信托运作示意图</text>
+  
+  <!-- 委托人/设立人 -->
+  <rect x="50" y="80" width="120" height="80" rx="10" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+  <text x="110" y="110" text-anchor="middle" font-size="14" font-weight="bold" fill="white">委托人</text>
+  <text x="110" y="130" text-anchor="middle" font-size="12" fill="white">(Grantor)</text>
+  <text x="110" y="145" text-anchor="middle" font-size="11" fill="white">企业家/富豪</text>
+  
+  <!-- 受托人/信托公司 -->
+  <rect x="340" y="80" width="120" height="80" rx="10" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+  <text x="400" y="110" text-anchor="middle" font-size="14" font-weight="bold" fill="white">受托人</text>
+  <text x="400" y="130" text-anchor="middle" font-size="12" fill="white">(Trustee)</text>
+  <text x="400" y="145" text-anchor="middle" font-size="11" fill="white">信托公司</text>
+  
+  <!-- 受益人 -->
+  <rect x="630" y="80" width="120" height="80" rx="10" fill="#27ae60" stroke="#229954" stroke-width="2"/>
+  <text x="690" y="110" text-anchor="middle" font-size="14" font-weight="bold" fill="white">受益人</text>
+  <text x="690" y="130" text-anchor="middle" font-size="12" fill="white">(Beneficiary)</text>
+  <text x="690" y="145" text-anchor="middle" font-size="11" fill="white">家族成员</text>
+  
+  <!-- 信托财产池 -->
+  <ellipse cx="400" cy="280" rx="150" ry="80" fill="#f39c12" stroke="#e67e22" stroke-width="3"/>
+  <text x="400" y="270" text-anchor="middle" font-size="16" font-weight="bold" fill="white">信托财产池</text>
+  <text x="400" y="290" text-anchor="middle" font-size="12" fill="white">(Trust Fund)</text>
+  
+  <!-- 信托财产类型 -->
+  <rect x="280" y="320" width="80" height="40" rx="5" fill="#9b59b6" stroke="#8e44ad" stroke-width="1"/>
+  <text x="320" y="335" text-anchor="middle" font-size="10" fill="white">股权</text>
+  <text x="320" y="348" text-anchor="middle" font-size="10" fill="white">资产</text>
+  
+  <rect x="370" y="320" width="80" height="40" rx="5" fill="#9b59b6" stroke="#8e44ad" stroke-width="1"/>
+  <text x="410" y="335" text-anchor="middle" font-size="10" fill="white">现金</text>
+  <text x="410" y="348" text-anchor="middle" font-size="10" fill="white">基金</text>
+  
+  <rect x="460" y="320" width="80" height="40" rx="5" fill="#9b59b6" stroke="#8e44ad" stroke-width="1"/>
+  <text x="500" y="335" text-anchor="middle" font-size="10" fill="white">房产</text>
+  <text x="500" y="348" text-anchor="middle" font-size="10" fill="white">其他</text>
+  
+  <!-- 防火墙 -->
+  <rect x="180" y="200" width="20" height="160" fill="#e74c3c" opacity="0.8"/>
+  <rect x="185" y="200" width="10" height="160" fill="#c0392b"/>
+  <text x="210" y="280" font-size="12" font-weight="bold" fill="#e74c3c">防火墙</text>
+  <text x="210" y="295" font-size="10" fill="#e74c3c">债务隔离</text>
+  
+  <rect x="600" y="200" width="20" height="160" fill="#e74c3c" opacity="0.8"/>
+  <rect x="605" y="200" width="10" height="160" fill="#c0392b"/>
+  <text x="570" y="280" font-size="12" font-weight="bold" fill="#e74c3c">防火墙</text>
+  <text x="570" y="295" font-size="10" fill="#e74c3c">风险隔离</text>
+  
+  <!-- 箭头和流程 -->
+  <!-- 委托人到受托人 -->
+  <path d="M170 120 L340 120" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="255" y="115" text-anchor="middle" font-size="10" fill="#34495e">设立信托</text>
+  
+  <!-- 受托人到受益人 -->
+  <path d="M460 120 L630 120" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="545" y="115" text-anchor="middle" font-size="10" fill="#34495e">分配收益</text>
+  
+  <!-- 委托人到信托财产 -->
+  <path d="M110 160 L320 240" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="180" y="190" font-size="10" fill="#34495e">转移资产</text>
+  
+  <!-- 信托财产到受益人 -->
+  <path d="M480 240 L690 160" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="600" y="190" font-size="10" fill="#34495e">收益分配</text>
+  
+  <!-- 受托人管理信托财产 -->
+  <path d="M400 160 L400 200" stroke="#34495e" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="420" y="180" font-size="10" fill="#34495e">管理投资</text>
+  
+  <!-- 主要功能说明 -->
+  <rect x="50" y="420" width="700" height="150" rx="10" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+  <text x="400" y="440" text-anchor="middle" font-size="14" font-weight="bold" fill="#2c3e50">家族信托主要功能</text>
+  
+  <!-- 功能列表 -->
+  <text x="70" y="465" font-size="12" fill="#34495e">🛡️ 资产保护：隔离个人债务风险，保护家族财富</text>
+  <text x="70" y="485" font-size="12" fill="#34495e">💰 税务筹划：合理避税，优化财富传承税负</text>
+  <text x="70" y="505" font-size="12" fill="#34495e">👨‍👩‍👧‍👦 财富传承：跨代传承，避免家族财产分散</text>
+  <text x="70" y="525" font-size="12" fill="#34495e">⚖️ 法律保护：专业管理，符合法规要求</text>
+  <text x="70" y="545" font-size="12" fill="#34495e">🎯 灵活分配：根据家族需要灵活调整分配方案</text>
+  
+  <!-- 箭头标记定义 -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+     refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#34495e"/>
+    </marker>
+  </defs>
+</svg>
