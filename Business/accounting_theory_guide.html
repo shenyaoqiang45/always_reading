@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会计学基本理论 - 科普指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,120L1200,0L1200,120Z" fill="%23ffffff" fill-opacity="0.95"/></svg>');
+            background-size: cover;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .intro {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .intro h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .intro p {
+            color: #34495e;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .theory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .theory-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 5px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theory-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: inherit;
+        }
+
+        .theory-card:nth-child(1) {
+            border-left-color: #e74c3c;
+        }
+        .theory-card:nth-child(1)::before {
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+        }
+
+        .theory-card:nth-child(2) {
+            border-left-color: #3498db;
+        }
+        .theory-card:nth-child(2)::before {
+            background: linear-gradient(90deg, #3498db, #9b59b6);
+        }
+
+        .theory-card:nth-child(3) {
+            border-left-color: #2ecc71;
+        }
+        .theory-card:nth-child(3)::before {
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+        }
+
+        .theory-card:nth-child(4) {
+            border-left-color: #f39c12;
+        }
+        .theory-card:nth-child(4)::before {
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+        }
+
+        .theory-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .theory-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+        }
+
+        .theory-card h3::before {
+            content: '📊';
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .theory-card:nth-child(1) h3::before { content: '🏢'; }
+        .theory-card:nth-child(2) h3::before { content: '⚖️'; }
+        .theory-card:nth-child(3) h3::before { content: '🎯'; }
+        .theory-card:nth-child(4) h3::before { content: '📈'; }
+
+        .assumption-list, .principle-list {
+            list-style: none;
+        }
+
+        .assumption-list li, .principle-list li {
+            background: #f8f9fa;
+            margin: 8px 0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 3px solid #007bff;
+            transition: background 0.2s ease;
+        }
+
+        .assumption-list li:hover, .principle-list li:hover {
+            background: #e9ecef;
+        }
+
+        .assumption-list li strong, .principle-list li strong {
+            color: #495057;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .equation-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .equation {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 15px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .footer h3 {
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .theory-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>会计学基本理论</h1>
+            <p>轻松理解会计世界的基础规则</p>
+        </div>
+
+        <div class="content">
+            <div class="intro">
+                <h2>🤔 什么是会计学？</h2>
+                <p>会计学就像企业的"记录员"和"分析师"，它帮助我们记录、分析和报告企业的经济活动。想象一下，如果企业是一个人，那么会计就是这个人的健康体检报告，告诉我们身体（企业）的各项指标是否正常。</p>
+            </div>
+
+            <!-- 六大要素关系图 -->
+            <div style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%); padding: 30px; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);">
+                <h2 style="text-align: center; color: #2c3e50; margin-bottom: 25px; font-size: 1.8em;">🔗 会计六大要素关系图</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;">
+                    <!-- 静态要素 -->
+                    <div style="background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+                        <h3 style="color: #e74c3c; margin-bottom: 10px;">🏠 资产</h3>
+                        <p style="color: #34495e; font-size: 0.9em;">企业拥有的资源<br>（现金、设备、库存等）</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+                        <h3 style="color: #3498db; margin-bottom: 10px;">💳 负债</h3>
+                        <p style="color: #34495e; font-size: 0.9em;">企业欠别人的债务<br>（贷款、应付账款等）</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+                        <h3 style="color: #2ecc71; margin-bottom: 10px;">👑 所有者权益</h3>
+                        <p style="color: #34495e; font-size: 0.9em;">股东真正拥有的部分<br>（投资+累积利润）</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                    <!-- 动态要素 -->
+                    <div style="background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+                        <h3 style="color: #f39c12; margin-bottom: 10px;">💰 收入</h3>
+                        <p style="color: #34495e; font-size: 0.9em;">企业赚到的钱<br>（销售商品、提供服务）</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+                        <h3 style="color: #e67e22; margin-bottom: 10px;">💸 费用</h3>
+                        <p style="color: #34495e; font-size: 0.9em;">企业花掉的钱<br>（工资、租金、原材料）</p>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+                        <h3 style="color: #9b59b6; margin-bottom: 10px;">📈 利润</h3>
+                        <p style="color: #34495e; font-size: 0.9em;">最终赚了多少<br>（收入 - 费用）</p>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 15px; margin-top: 25px;">
+                    <h4 style="color: #2c3e50; margin-bottom: 15px; text-align: center;">🔄 六大要素之间的关系</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h5 style="color: #34495e; margin-bottom: 10px;">📊 静态关系（资产负债表）</h5>
+                            <div style="background: #ecf0f1; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #2c3e50;">
+                                资产 = 负债 + 所有者权益
+                            </div>
+                            <p style="color: #7f8c8d; font-size: 0.9em; margin-top: 8px;">反映企业在某一时点的财务状况</p>
+                        </div>
+                        <div>
+                            <h5 style="color: #34495e; margin-bottom: 10px;">📈 动态关系（利润表）</h5>
+                            <div style="background: #ecf0f1; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; color: #2c3e50;">
+                                收入 - 费用 = 利润
+                            </div>
+                            <p style="color: #7f8c8d; font-size: 0.9em; margin-top: 8px;">反映企业在一段时间内的经营成果</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="theory-grid">
+                <div class="theory-card">
+                    <h3>会计基本假设</h3>
+                    <p style="margin-bottom: 15px; color: #6c757d;">就像游戏规则一样，会计也需要一些基本的"游戏设定"：</p>
+                    <ul class="assumption-list">
+                        <li>
+                            <strong>会计主体假设</strong>
+                            为谁记账？就像每个人都有自己的银行账户一样
+                        </li>
+                        <li>
+                            <strong>持续经营假设</strong>
+                            企业会一直经营下去，不是"一锤子买卖"
+                        </li>
+                        <li>
+                            <strong>会计分期假设</strong>
+                            把时间切成片段，通常一年算一次账
+                        </li>
+                        <li>
+                            <strong>货币计量假设</strong>
+                            用钱来衡量一切，统一"语言"便于比较
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="theory-card">
+                    <h3>会计基本公式</h3>
+                    <p style="margin-bottom: 15px; color: #6c757d;">会计世界的两大核心公式，就像数学的加减法一样基础：</p>
+                    <div class="equation-box">
+                        <div class="equation">资产 = 负债 + 所有者权益</div>
+                        <p style="font-size: 0.9em; opacity: 0.9;">你拥有的 = 欠别人的 + 真正属于你的</p>
+                    </div>
+                    <div class="equation-box" style="background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); margin-top: 15px;">
+                        <div class="equation">收入 - 费用 = 利润</div>
+                        <p style="font-size: 0.9em; opacity: 0.9;">赚了多少 - 花了多少 = 最终盈利</p>
+                    </div>
+                    <p style="color: #6c757d;">第一个公式告诉我们企业有什么，第二个公式告诉我们企业赚了多少。</p>
+                </div>
+
+                <div class="theory-card">
+                    <h3>会计信息质量要求</h3>
+                    <p style="margin-bottom: 15px; color: #6c757d;">好的会计信息应该像好的新闻报道一样：</p>
+                    <ul class="principle-list">
+                        <li>
+                            <strong>可靠性</strong>
+                            信息要真实可信，不能造假
+                        </li>
+                        <li>
+                            <strong>相关性</strong>
+                            对决策有用，不是废话
+                        </li>
+                        <li>
+                            <strong>可理解性</strong>
+                            大家都能看懂，不故弄玄虚
+                        </li>
+                        <li>
+                            <strong>可比性</strong>
+                            能够横向纵向对比分析
+                        </li>
+                        <li>
+                            <strong>及时性</strong>
+                            信息要新鲜，过期作废
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="theory-card">
+                    <h3>复式记账法</h3>
+                    <p style="margin-bottom: 15px; color: #6c757d;">会计的"双重保险"制度，确保账目平衡：</p>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <h4 style="color: #495057; margin-bottom: 10px;">🔄 基本原理</h4>
+                        <p style="color: #6c757d; line-height: 1.6;">每笔业务至少要在两个账户中记录，就像跷跷板一样，一边增加，另一边也要相应变化，保持平衡。</p>
+                    </div>
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #2196f3;">
+                        <strong style="color: #1976d2;">💡 生活化例子：</strong>
+                        <br>买文具花了100元 → 文具增加100元，现金减少100元
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>💡 六大要素的生活化理解</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #3498db; margin-bottom: 10px;">🏠 家庭财务类比</h4>
+                    <p style="line-height: 1.6; font-size: 0.95em;">资产像你的房子车子，负债像房贷车贷，净资产就是真正属于你的财富。收入是你的工资，支出是生活费用，结余就是你的储蓄增长。</p>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #e74c3c; margin-bottom: 10px;">🏪 小店经营类比</h4>
+                    <p style="line-height: 1.6; font-size: 0.95em;">开个小面馆：店面设备是资产，向银行贷款是负债，自己投入的钱是权益。卖面条的钱是收入，买面粉付工资是费用，月底算算赚了多少就是利润。</p>
+                </div>
+            </div>
+            <p style="line-height: 1.8; font-size: 1.05em;">这六大要素相互关联，共同描绘出企业的完整财务画像。静态三要素告诉我们企业"现在有什么"，动态三要素告诉我们企业"这段时间干得怎么样"。掌握了它们的关系，你就拥有了解读企业财务报表的钥匙！🔑</p>
+        </div>
+    </div>
+</body>
+</html>
