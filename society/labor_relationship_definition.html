@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>劳动关系的定义与三要素</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 25px;
+            padding: 45px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+        }
+        
+        .definition-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 20px;
+            border-left: 6px solid #2196f3;
+            position: relative;
+        }
+        
+        .definition-section::before {
+            content: "📖";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .definition-section h2 {
+            color: #1976d2;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-left: 15px;
+        }
+        
+        .definition-text {
+            font-size: 1.1rem;
+            color: #424242;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .legal-basis {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+            font-style: italic;
+            color: #495057;
+        }
+        
+        .three-elements {
+            margin-top: 40px;
+        }
+        
+        .elements-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .elements-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .elements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .element-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        
+        .element-card:nth-child(2) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .element-card:nth-child(3) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .element-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transition: transform 0.6s ease;
+            transform: scale(0);
+        }
+        
+        .element-card:hover::before {
+            transform: scale(1);
+        }
+        
+        .element-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .element-number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3rem;
+            font-weight: bold;
+            opacity: 0.3;
+        }
+        
+        .element-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .element-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .element-description {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .element-details {
+            list-style: none;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .element-details li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .element-details li:last-child {
+            border-bottom: none;
+        }
+        
+        .element-details li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .comprehensive-analysis {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 35px;
+            border-radius: 20px;
+            margin-top: 40px;
+            position: relative;
+        }
+        
+        .comprehensive-analysis::before {
+            content: "🎯";
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            background: white;
+            padding: 12px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .comprehensive-analysis h3 {
+            color: #d63031;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            padding-left: 15px;
+        }
+        
+        .analysis-point {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #e17055;
+        }
+        
+        .analysis-point:last-child {
+            margin-bottom: 0;
+        }
+        
+        .analysis-point strong {
+            color: #2d3436;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .highlight {
+            background: rgba(255, 235, 59, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #f57c00;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 25px;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .elements-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .element-card {
+                padding: 25px;
+            }
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>劳动关系的定义与三要素</h1>
+            <p>深入理解劳动关系的法律内涵</p>
+            <p style="font-size: 1rem; opacity: 0.8;">Labor Relationship Definition & Three Elements</p>
+        </div>
+        
+        <div class="content">
+            <div class="definition-section fade-in">
+                <h2>劳动关系的定义</h2>
+                <div class="definition-text">
+                    <p><strong>劳动关系</strong>是指用人单位与劳动者在实现劳动过程中建立的社会经济关系。它是劳动者向用人单位提供劳动力，用人单位向劳动者支付劳动报酬并提供劳动条件的法律关系。</p>
+                </div>
+                <div class="legal-basis">
+                    <strong>法律依据：</strong>《中华人民共和国劳动合同法》第二条规定："中华人民共和国境内的企业、个体经济组织、民办非企业单位等组织（以下称用人单位）与劳动者建立劳动关系，订立、履行、变更、解除或者终止劳动合同，适用本法。"
+                </div>
+            </div>
+            
+            <div class="three-elements">
+                <h2 class="elements-title fade-in">劳动关系认定的三要素</h2>
+                
+                <div class="elements-grid">
+                    <div class="element-card fade-in">
+                        <div class="element-number">1</div>
+                        <div class="element-icon">👥</div>
+                        <div class="element-title">主体资格要素</div>
+                        <div class="element-description">用人单位和劳动者的主体身份必须符合法律规定</div>
+                        <ul class="element-details">
+                            <li><span class="highlight">用人单位</span>：企业、个体工商户、民办非企业单位等</li>
+                            <li><span class="highlight">劳动者</span>：年满16周岁，具有劳动能力的自然人</li>
+                            <li>用人单位应当依法取得营业执照或登记证书</li>
+                            <li>劳动者不得是在校学生（实习除外）</li>
+                            <li>劳动者不得超过法定退休年龄（特殊情况除外）</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="element-card fade-in">
+                        <div class="element-number">2</div>
+                        <div class="element-icon">🎯</div>
+                        <div class="element-title">管理从属性要素</div>
+                        <div class="element-description">劳动者接受用人单位的劳动管理，遵守规章制度</div>
+                        <ul class="element-details">
+                            <li>劳动者须遵守用人单位的<span class="highlight">规章制度</span></li>
+                            <li>接受用人单位的工作安排和任务分配</li>
+                            <li>服从用人单位的劳动管理和监督</li>
+                            <li>按照用人单位确定的工作时间、地点工作</li>
+                            <li>使用用人单位提供的生产资料和工具</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="element-card fade-in">
+                        <div class="element-number">3</div>
+                        <div class="element-icon">💰</div>
+                        <div class="element-title">经济从属性要素</div>
+                        <div class="element-description">劳动者提供劳动，用人单位支付劳动报酬</div>
+                        <ul class="element-details">
+                            <li>劳动者向用人单位提供<span class="highlight">有偿劳动</span></li>
+                            <li>用人单位定期支付工资报酬</li>
+                            <li>工资标准由用人单位确定（不低于最低工资）</li>
+                            <li>劳动报酬具有相对固定性和持续性</li>
+                            <li>用人单位承担社会保险缴费义务</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comprehensive-analysis fade-in">
+                <h3>三要素综合判定标准</h3>
+                
+                <div class="analysis-point">
+                    <strong>🔍 同时具备原则：</strong>
+                    劳动关系的认定必须同时具备以上三个要素，缺一不可。只有当主体资格、管理从属性和经济从属性三个要素同时满足时，才能认定为劳动关系。
+                </div>
+                
+                <div class="analysis-point">
+                    <strong>📋 事实认定优于形式：</strong>
+                    在判定劳动关系时，应当以实际履行情况为准，而不仅仅看合同名称。即使双方签订的是"劳务合同"或"合作协议"，如果实际履行符合劳动关系三要素，仍应认定为劳动关系。
+                </div>
+                
+                <div class="analysis-point">
+                    <strong>⚖️ 司法实践标准：</strong>
+                    人力资源社会保障部《关于确立劳动关系有关事项的通知》明确了劳动关系认定的具体标准，各级劳动争议仲裁委员会和人民法院在处理相关纠纷时均以此为依据。
+                </div>
+                
+                <div class="analysis-point">
+                    <strong>🎯 重点关注事项：</strong>
+                    实践中需要特别关注工作的<span class="highlight">独立性</span>、<span class="highlight">持续性</span>、<span class="highlight">专属性</span>等特征。如果劳动者能够自主决定工作方式、时间，同时为多个主体提供服务，通常不构成劳动关系。
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>💡 准确理解劳动关系三要素，是规范用工管理的基础</p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">本内容仅供学习参考，具体应用请咨询专业人士</p>
+        </div>
+    </div>
+    
+    <script>
+        // 添加滚动动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 200);
+                    }
+                });
+            }, observerOptions);
+            
+            // 观察所有需要动画的元素
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // 为卡片添加点击交互效果
+            const cards = document.querySelectorAll('.element-card');
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // 添加点击效果
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+                
+                // 鼠标移入移出效果
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // 为分析要点添加hover效果
+            const analysisPoints = document.querySelectorAll('.analysis-point');
+            analysisPoints.forEach(point => {
+                point.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(10px)';
+                    this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+                });
+                
+                point.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                    this.style.boxShadow = '0 3px 10px rgba(0,0,0,0.05)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

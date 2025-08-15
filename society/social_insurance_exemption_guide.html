@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常见可不缴社保的用工形式科普</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .warning {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .warning h3 {
+            color: #d63031;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .warning h3::before {
+            content: "⚠️";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .employment-types {
+            display: grid;
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .employment-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .employment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .employment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .employment-card:hover::before {
+            opacity: 1;
+        }
+        
+        .employment-card:nth-child(2n) {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .employment-card:nth-child(3n) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .employment-card:nth-child(4n) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .employment-card:nth-child(5n) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title::before {
+            content: "👥";
+            margin-right: 12px;
+            font-size: 1.3em;
+        }
+        
+        .card-description {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            opacity: 0.95;
+        }
+        
+        .card-features {
+            list-style: none;
+        }
+        
+        .card-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .card-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .card-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .important-note {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border-left: 5px solid #ff9f43;
+        }
+        
+        .important-note h3 {
+            color: #e17055;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .important-note h3::before {
+            content: "📋";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .employment-card {
+                padding: 20px;
+            }
+        }
+        
+        .highlight {
+            background: rgba(255, 255, 0, 0.2);
+            padding: 2px 5px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>常见可不缴社保的用工形式</h1>
+            <p>了解合规用工，规避法律风险</p>
+        </div>
+        
+        <div class="content">
+            <div class="warning">
+                <h3>重要提醒</h3>
+                <p>以下用工形式在特定条件下可不缴纳社会保险，但企业在选择时需要严格按照法律法规执行，确保合规操作，避免法律风险。建议咨询专业人士或相关部门确认具体操作。</p>
+            </div>
+            
+            <div class="employment-types">
+                <div class="employment-card">
+                    <div class="card-title">实习生用工</div>
+                    <div class="card-description">在校学生到企业实习，未建立劳动关系</div>
+                    <ul class="card-features">
+                        <li>必须是<span class="highlight">在校学生</span>身份</li>
+                        <li>需要学校出具实习证明</li>
+                        <li>实习期间不建立劳动关系</li>
+                        <li>建议购买商业意外保险</li>
+                        <li>实习协议需明确实习性质</li>
+                    </ul>
+                </div>
+                
+                <div class="employment-card">
+                    <div class="card-title">劳务派遣</div>
+                    <div class="card-description">由劳务派遣公司与劳动者建立劳动关系</div>
+                    <ul class="card-features">
+                        <li>派遣公司负责缴纳社保</li>
+                        <li>用工单位支付服务费给派遣公司</li>
+                        <li>适用于<span class="highlight">临时性、辅助性、替代性</span>岗位</li>
+                        <li>需要选择有资质的派遣公司</li>
+                        <li>派遣员工比例有法定限制</li>
+                    </ul>
+                </div>
+                
+                <div class="employment-card">
+                    <div class="card-title">业务外包</div>
+                    <div class="card-description">将特定业务整体外包给专业服务商</div>
+                    <ul class="card-features">
+                        <li>外包公司对其员工负责</li>
+                        <li>按项目或服务结果付费</li>
+                        <li>适合<span class="highlight">专业性强</span>的业务</li>
+                        <li>需签订明确的外包服务协议</li>
+                        <li>避免对外包人员直接管理</li>
+                    </ul>
+                </div>
+                
+                <div class="employment-card">
+                    <div class="card-title">退休返聘</div>
+                    <div class="card-description">已达到法定退休年龄并享受养老保险待遇的人员</div>
+                    <ul class="card-features">
+                        <li>必须<span class="highlight">已办理退休手续</span></li>
+                        <li>已享受基本养老保险待遇</li>
+                        <li>建立劳务关系而非劳动关系</li>
+                        <li>可购买商业保险保障</li>
+                        <li>薪酬按劳务费处理</li>
+                    </ul>
+                </div>
+                
+                <div class="employment-card">
+                    <div class="card-title">兼职用工</div>
+                    <div class="card-description">非全日制用工形式，灵活就业</div>
+                    <ul class="card-features">
+                        <li>每日工作时间不超过<span class="highlight">4小时</span></li>
+                        <li>每周工作时间不超过24小时</li>
+                        <li>可在多个单位兼职</li>
+                        <li>按小时计酬，结算周期较短</li>
+                        <li>双方可随时终止用工关系</li>
+                    </ul>
+                </div>
+                
+                <div class="employment-card">
+                    <div class="card-title">独立承包商</div>
+                    <div class="card-description">具有独立经营能力的个人或企业提供服务</div>
+                    <ul class="card-features">
+                        <li>具有<span class="highlight">独立经营资格</span></li>
+                        <li>自负盈亏，承担经营风险</li>
+                        <li>按合同约定提供服务</li>
+                        <li>使用自己的工具和设备</li>
+                        <li>可同时为多个客户服务</li>
+                    </ul>
+                </div>
+                
+                <div class="employment-card">
+                    <div class="card-title">季节性临时工</div>
+                    <div class="card-description">因季节性生产需要临时招用的工人</div>
+                    <ul class="card-features">
+                        <li>工作期限通常<span class="highlight">不超过3个月</span></li>
+                        <li>主要用于季节性生产</li>
+                        <li>需明确临时性质</li>
+                        <li>建议购买临时工保险</li>
+                        <li>工资按约定及时结算</li>
+                    </ul>
+                </div>
+                
+                <div class="employment-card">
+                    <div class="card-title">顾问咨询</div>
+                    <div class="card-description">专业人士提供咨询顾问服务</div>
+                    <ul class="card-features">
+                        <li>基于<span class="highlight">专业知识和经验</span>提供服务</li>
+                        <li>通常按项目或按次收费</li>
+                        <li>不参与日常经营管理</li>
+                        <li>保持相对独立性</li>
+                        <li>可签订顾问服务协议</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="important-note">
+                <h3>合规建议</h3>
+                <p><strong>1. 真实性原则：</strong>选择的用工形式必须与实际工作内容和关系性质相符，不能为了规避社保而虚构关系。</p>
+                <p><strong>2. 合同管理：</strong>与各类用工人员签订相应的合同或协议，明确权利义务关系。</p>
+                <p><strong>3. 风险防范：</strong>建议为相关人员购买商业保险，降低用工风险。</p>
+                <p><strong>4. 政策变化：</strong>密切关注相关法律法规的变化，及时调整用工策略。</p>
+                <p><strong>5. 专业咨询：</strong>在实际操作中，建议咨询专业的人力资源或法律专家。</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>⚠️ 本内容仅供参考，具体操作请咨询相关专业人士或政府部门</p>
+        </div>
+    </div>
+    
+    <script>
+        // 添加一些交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.employment-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // 添加滚动动画
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+            
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(50px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
