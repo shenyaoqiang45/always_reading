@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>识别危险意识形态的警告信号</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>') repeat;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-100px) translateY(-100px); }
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border-left: 5px solid #ff6b6b;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .warning-box::before {
+            content: '⚠️';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 60px;
+            opacity: 0.1;
+        }
+        
+        .warning-box h2 {
+            color: #d63031;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            color: #2d3436;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .feature-card p {
+            color: #636e72;
+            margin-bottom: 15px;
+        }
+        
+        .examples {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .examples strong {
+            color: #e17055;
+        }
+        
+        .protection-section {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .protection-section::before {
+            content: '🛡️';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 40px;
+            opacity: 0.3;
+        }
+        
+        .protection-section h2 {
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        
+        .protection-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .protection-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .protection-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00b894;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .quote-section {
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .quote-section::before,
+        .quote-section::after {
+            content: '"';
+            font-size: 80px;
+            color: rgba(255,255,255,0.3);
+            position: absolute;
+            font-family: serif;
+        }
+        
+        .quote-section::before {
+            top: 10px;
+            left: 20px;
+        }
+        
+        .quote-section::after {
+            bottom: 10px;
+            right: 20px;
+        }
+        
+        .quote-text {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .quote-author {
+            margin-top: 15px;
+            color: rgba(255,255,255,0.8);
+            font-weight: bold;
+        }
+        
+        .footer {
+            background: #2d3436;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>危险意识形态的警告信号</h1>
+            <p>保护理性思维，识别极端观念的危险特征</p>
+        </header>
+        
+        <main class="content">
+            <div class="warning-box">
+                <h2>为什么需要警惕？</h2>
+                <p>历史告诉我们，极端意识形态往往以崇高的理想开始，但最终导致巨大的人类悲剧。学会识别这些危险特征，能帮助我们保持独立思考，避免被极端观念操控。</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>绝对化思维</h3>
+                    <p>声称掌握绝对真理，不容任何质疑或讨论。将复杂问题简化为非黑即白的二元对立。</p>
+                    <div class="examples">
+                        <strong>警告信号：</strong>"只有我们是对的""不信我们就是敌人""世界上只有两种人"
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">👑</div>
+                    <h3>权威崇拜</h3>
+                    <p>要求对领袖或教义无条件服从，禁止独立思考和批评。</p>
+                    <div class="examples">
+                        <strong>警告信号：</strong>个人崇拜、神话化领袖、"不许质疑伟大导师"
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">👹</div>
+                    <h3>敌人妖魔化</h3>
+                    <p>将某些群体描绘为邪恶化身，剥夺其人性，为极端行为提供借口。</p>
+                    <div class="examples">
+                        <strong>警告信号：</strong>"害虫""毒瘤""人类公敌""必须消灭的异端"
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏰</div>
+                    <h3>乌托邦幻想</h3>
+                    <p>承诺建立完美社会，但要求采用极端手段，"为了崇高目的可以不择手段"。</p>
+                    <div class="examples">
+                        <strong>警告信号：</strong>"千年王国""人间天堂""完美社会""牺牲是必要的"
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>信息封锁</h3>
+                    <p>控制信息来源，禁止接触外部观点，创造回音室效应。</p>
+                    <div class="examples">
+                        <strong>警告信号：</strong>"只能看我们的资料""外面都是假消息""不许接触异端思想"
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>紧迫感操控</h3>
+                    <p>制造危机感和时间压力，阻止理性思考，促使冲动行动。</p>
+                    <div class="examples">
+                        <strong>警告信号：</strong>"时不我待""机不可失""现在就行动""来不及思考了"
+                    </div>
+                </div>
+            </div>
+            
+            <div class="protection-section">
+                <h2>如何保护自己</h2>
+                <ul class="protection-list">
+                    <li><strong>培养批判性思维：</strong>质疑一切声称绝对正确的观点</li>
+                    <li><strong>多元信息源：</strong>主动寻找不同观点和声音</li>
+                    <li><strong>保持怀疑态度：</strong>对过于简单的解决方案保持警惕</li>
+                    <li><strong>学习历史教训：</strong>了解历史上极端意识形态的危害</li>
+                    <li><strong>独立思考：</strong>不盲从权威，保持理性判断</li>
+                    <li><strong>开放心态：</strong>愿意承认错误并修正观点</li>
+                </ul>
+            </div>
+            
+            <div class="quote-section">
+                <div class="quote-text">
+                    严格的意识形态是最能扭曲人类认知的因素之一。
+                </div>
+                <div class="quote-author">
+                    —— 查理·芒格
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <h2>记住</h2>
+                <p>真正的智慧在于保持开放的心态，承认世界的复杂性，并时刻准备根据新证据修正自己的观点。任何宣称拥有终极答案的体系都值得怀疑。</p>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>保持理性，拒绝极端 | 独立思考，自由精神</p>
+        </footer>
+    </div>
+</body>
+</html>
