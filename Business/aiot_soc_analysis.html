@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>通用 AIoT SoC 竞争对手分析</title>
+<style>
+  body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; background-color: #f9f9f9; }
+  h1, h2, h3 { color: #2c3e50; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  th { background-color: #2c3e50; color: white; }
+  tr:nth-child(even) { background-color: #f2f2f2; }
+  .note { color: #e74c3c; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>通用 AIoT SoC 竞争对手分析</h1>
+
+<h2>1. 市场概览</h2>
+<p>通用 AIoT SoC 指面向边缘计算、智能家居、工业控制、智能摄像头、教育平板等应用的系统级芯片，既支持 CPU/GPU 运算，也内置 NPU/AI 加速器。</p>
+<ul>
+  <li>CPU 性能（多任务处理能力）</li>
+  <li>GPU 能力（图形渲染/视觉计算）</li>
+  <li>NPU 性能（INT8/INT4/FP16 TOPS）</li>
+  <li>视频编解码能力（4K/8K/AV1/H.265 等）</li>
+  <li>功耗与热设计（端侧设备有限制）</li>
+  <li>软件生态支持（AI 框架、SDK、开源社区）</li>
+</ul>
+
+<h2>2. 主要竞争对手及对比</h2>
+<table>
+  <tr>
+    <th>芯片 / 厂商</th>
+    <th>CPU / GPU / NPU</th>
+    <th>功耗</th>
+    <th>视频能力</th>
+    <th>应用场景</th>
+    <th>优势</th>
+    <th>劣势</th>
+  </tr>
+  <tr>
+    <td>瑞芯微 RK3588</td>
+    <td>4×A76+4×A55 / Mali-G610 / NPU 6TOPS</td>
+    <td>中等偏高</td>
+    <td>8K 解码，支持 AV1/H.266</td>
+    <td>工业、教育、AIoT</td>
+    <td>CPU+GPU+NPU 综合平衡，接口丰富，生态成熟</td>
+    <td>成本高于低端芯片</td>
+  </tr>
+  <tr>
+    <td>全志 V853/V821</td>
+    <td>4×A55 / Mali-G57 / NPU 1~2TOPS</td>
+    <td>低</td>
+    <td>4K 编解码</td>
+    <td>AI摄像头、平板</td>
+    <td>成本低、出货量大</td>
+    <td>CPU/NPU 弱，适合低端市场</td>
+  </tr>
+  <tr>
+    <td>Amlogic A311D</td>
+    <td>4×A73+2×A53 / Mali-G52 / NPU 5TOPS</td>
+    <td>中等</td>
+    <td>4K~8K 编解码</td>
+    <td>AI摄像头、OTT盒子</td>
+    <td>视频处理强，功耗适中</td>
+    <td>CPU 处理能力不如 RK3588，生态不如 RK</td>
+  </tr>
+  <tr>
+    <td>安霸 CV2 / CVflow</td>
+    <td>A53/A72 / GPU / NPU 4~15TOPS</td>
+    <td>低功耗</td>
+    <td>4K~8K 编解码</td>
+    <td>高端摄像头、无人机、ADAS</td>
+    <td>视频+AI 算力强</td>
+    <td>通用性不足，接口和生态有限</td>
+  </tr>
+  <tr>
+    <td>NVIDIA Jetson Nano/Xavier NX</td>
+    <td>ARM CPU + CUDA GPU + NPU 21~70TOPS</td>
+    <td>高</td>
+    <td>4K~8K</td>
+    <td>高算力机器人、无人机、边缘 AI</td>
+    <td>高算力，深度学习能力强</td>
+    <td>功耗高，成本高，通用 AIoT 市场不够贴合</td>
+  </tr>
+  <tr>
+    <td>Intel Movidius Myriad X</td>
+    <td>VPU 1~4TOPS</td>
+    <td>极低</td>
+    <td>1080P~4K</td>
+    <td>轻量视觉 AIoT</td>
+    <td>超低功耗，AI 视觉强</td>
+    <td>CPU/GPU 弱，通用场景有限</td>
+  </tr>
+</table>
+
+<h2>3. 竞争维度分析</h2>
+<ul>
+  <li><strong>算力 vs 功耗：</strong>RK3588、Jetson 系列算力高，但功耗较大；安霸、全志、Movidius 功耗低，但算力有限。</li>
+  <li><strong>应用场景匹配度：</strong>通用 AIoT：RK3588 是代表；特定视觉或边缘 AI：安霸、Movidius；低成本 IoT：全志、Amlogic。</li>
+  <li><strong>生态与软件支持：</strong>RK3588 生态完整，支持 Linux / Android / RKNN；Amlogic Android 支持好；Jetson CUDA / TensorRT 强；安霸/Movidius SDK 专注特定应用。</li>
+  <li><strong>成本和可量产性：</strong>低端量产市场全志、Amlogic 有优势；高性能 RK3588、Jetson 成本高，但单机价值高。</li>
+</ul>
+
+<h2>4. 结论</h2>
+<ul>
+  <li>国产通用 AIoT 高端选择：<span class="note">RK3588</span> 最平衡，CPU/GPU/NPU/视频 + 生态完整。</li>
+  <li>低端量产市场：全志、Amlogic 有价格优势，适合大量出货的平板、摄像头、网关。</li>
+  <li>高端计算市场：Jetson、安霸针对无人机、机器人、ADAS 场景强，但通用性低、成本高。</li>
+  <li>潜在趋势：国产厂商未来可能通过新制程 + NPU 强化，进一步挤占中高端通用 AIoT 市场。</li>
+</ul>
+
+</body>
+</html>
