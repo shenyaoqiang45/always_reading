@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IoT 市场与乐鑫 ESP32 科普介绍</title>
+<style>
+    body { font-family: "Microsoft YaHei", sans-serif; line-height: 1.6; margin: 20px; background-color: #f9f9f9; color: #333; }
+    h1, h2, h3 { color: #1e90ff; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background-color: #1e90ff; color: #fff; }
+    tr:nth-child(even) { background-color: #f2f2f2; }
+    .section { background-color: #fff; padding: 20px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+</style>
+</head>
+<body>
+
+<div class="section">
+    <h1>IoT 市场核心客户需求与乐鑫 ESP32 解决方案</h1>
+    <p>随着物联网（IoT）快速发展，设备厂商对无线通信芯片有明确需求。乐鑫 ESP32 凭借高集成度和低成本在市场上占据优势。</p>
+</div>
+
+<div class="section">
+    <h2>1. IoT 市场核心客户需求</h2>
+    <table>
+        <tr>
+            <th>需求类别</th>
+            <th>具体内容</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <td>低成本</td>
+            <td>芯片价格低、BOM 低</td>
+            <td>IoT 设备利润薄，必须控制成本</td>
+        </tr>
+        <tr>
+            <td>低功耗</td>
+            <td>待机功耗低、睡眠模式强</td>
+            <td>设备长时间运行或电池供电，续航要求高</td>
+        </tr>
+        <tr>
+            <td>快速开发</td>
+            <td>SDK/API 完整、易用</td>
+            <td>开发周期短，方便快速迭代</td>
+        </tr>
+        <tr>
+            <td>无线稳定性</td>
+            <td>Wi-Fi / BLE / Zigbee 等可靠通信</td>
+            <td>保证用户体验，减少掉线或配网失败</td>
+        </tr>
+        <tr>
+            <td>协议兼容性</td>
+            <td>802.11 b/g/n/ac、BLE 5.x</td>
+            <td>与现有网络兼容，易接入家庭/企业 Wi-Fi</td>
+        </tr>
+        <tr>
+            <td>安全性</td>
+            <td>WPA2/WPA3、加密、安全启动</td>
+            <td>防止设备被攻击，保护数据安全</td>
+        </tr>
+        <tr>
+            <td>生态与扩展性</td>
+            <td>云平台支持、外设接口丰富</td>
+            <td>便于快速接入云服务和智能家居平台</td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <h2>2. 乐鑫 ESP32 如何满足 IoT 客户需求</h2>
+    <table>
+        <tr>
+            <th>客户需求</th>
+            <th>乐鑫解决方案</th>
+            <th>核心优势</th>
+        </tr>
+        <tr>
+            <td>低成本</td>
+            <td>Wi-Fi + MCU 集成 SoC（ESP32 系列）</td>
+            <td>一颗芯片搞定 MCU + Wi-Fi，降低 BOM</td>
+        </tr>
+        <tr>
+            <td>低功耗</td>
+            <td>多种省电模式（Light Sleep, Deep Sleep）</td>
+            <td>适合电池供电设备，延长续航</td>
+        </tr>
+        <tr>
+            <td>快速开发</td>
+            <td>ESP-IDF / Arduino / MicroPython SDK</td>
+            <td>低门槛、开发社区活跃，快速量产</td>
+        </tr>
+        <tr>
+            <td>无线稳定性</td>
+            <td>自研 802.11 b/g/n 协议栈，支持 STA/AP/Mesh</td>
+            <td>企业级可靠性，减少掉线、丢包</td>
+        </tr>
+        <tr>
+            <td>协议兼容性</td>
+            <td>完全兼容 Wi-Fi 标准 + BLE 5.0</td>
+            <td>设备可直接接入家庭/企业网络</td>
+        </tr>
+        <tr>
+            <td>安全性</td>
+            <td>WPA2/WPA3、TLS/SSL、Secure Boot</td>
+            <td>保障数据和通信安全</td>
+        </tr>
+        <tr>
+            <td>生态与扩展性</td>
+            <td>ESP RainMaker 云平台、丰富外设接口（SPI/I2C/UART）</td>
+            <td>快速接入云端及智能家居、工业场景</td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <h2>3. 不同无线协议核心对比</h2>
+    <table>
+        <tr>
+            <th>指标</th>
+            <th>Wi-Fi</th>
+            <th>蓝牙 / BLE</th>
+            <th>Zigbee / Z-Wave</th>
+            <th>LoRa / NB-IoT</th>
+        </tr>
+        <tr>
+            <td>功耗</td>
+            <td>中</td>
+            <td>极低</td>
+            <td>极低</td>
+            <td>超低</td>
+        </tr>
+        <tr>
+            <td>传输距离</td>
+            <td>10~100 m</td>
+            <td>5~50 m</td>
+            <td>10~100 m</td>
+            <td>几 km~几十 km</td>
+        </tr>
+        <tr>
+            <td>速率</td>
+            <td>高（100 Mbps~10 Gbps）</td>
+            <td>低（1~2 Mbps BLE）</td>
+            <td>低（几十 kbps）</td>
+            <td>很低（几 kbps~几十 kbps）</td>
+        </tr>
+        <tr>
+            <td>网络结构</td>
+            <td>基于 AP / STA</td>
+            <td>点对点或 Mesh</td>
+            <td>Mesh</td>
+            <td>广域网 / 星型</td>
+        </tr>
+        <tr>
+            <td>典型应用</td>
+            <td>视频、IoT 设备</td>
+            <td>可穿戴、智能家居</td>
+            <td>家居自动化、传感器</td>
+            <td>智慧城市、工业物联网</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
