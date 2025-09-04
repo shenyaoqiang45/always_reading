@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A股苹果手机产业链分析</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #1a1a1a, #333);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            margin-top: 10px;
+            opacity: 0.8;
+            font-size: 1.1em;
+        }
+        
+        .content {
+            padding: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        .category-header {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            font-size: 1.2em;
+            letter-spacing: 1px;
+        }
+        
+        .sub-category {
+            background: linear-gradient(45deg, #4834d4, #686de0);
+            color: white;
+            font-weight: bold;
+            padding: 12px 15px;
+            font-size: 1.0em;
+        }
+        
+        th {
+            background: linear-gradient(45deg, #2c2c54, #40407a);
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+        
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+            line-height: 1.5;
+        }
+        
+        .company-name {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.0em;
+        }
+        
+        .stock-code {
+            color: #e74c3c;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .business-desc {
+            color: #34495e;
+            line-height: 1.6;
+            font-size: 0.9em;
+        }
+        
+        tr:hover {
+            background: linear-gradient(45deg, #f8f9ff, #e8f0fe);
+            transform: scale(1.005);
+            transition: all 0.3s ease;
+        }
+        
+        .highlight {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+        }
+        
+        .market-cap {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+        
+        .pe-good { color: #27ae60; font-weight: bold; }
+        .pe-normal { color: #f39c12; font-weight: bold; }
+        .pe-high { color: #e74c3c; font-weight: bold; }
+        
+        .roe-good { color: #27ae60; font-weight: bold; }
+        .roe-normal { color: #f39c12; font-weight: bold; }
+        .roe-low { color: #e74c3c; font-weight: bold; }
+        
+        .rating { font-size: 1.1em; }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        
+        .legend {
+            background: #e8f4f8;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .legend h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        
+        .legend p {
+            margin: 5px 0;
+            color: #34495e;
+            line-height: 1.6;
+        }
+        
+        .financial-note {
+            background: #fff3cd;
+            padding: 10px;
+            margin: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #f39c12;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>A股苹果手机产业链全景图</h1>
+            <div class="subtitle">Apple Supply Chain A-Share Listed Companies with PE & ROE Analysis</div>
+        </div>
+        
+        <div class="legend">
+            <h3>产业链说明</h3>
+            <p>苹果手机产业链涵盖从上游原材料、核心器件到中游制造组装、下游销售的完整生态体系。以下整理了主要A股上市公司在各环节的核心地位和业务布局。</p>
+            <p><strong>估值说明：</strong> PE(TTM)为滚动市盈率，ROE为净资产收益率。★★★★★为优秀，★★★★为良好，★★★为一般。</p>
+        </div>
+        
+        <div class="financial-note">
+            <strong>财务数据更新时间：</strong>2024年报/2025年一季报数据。PE基于2025年9月4日股价计算，ROE为最新年报数据。投资有风险，数据仅供参考。
+        </div>
+        
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 12%">产业链环节</th>
+                        <th style="width: 20%">A股核心公司</th>
+                        <th style="width: 38%">主要产品/业务</th>
+                        <th style="width: 8%">PE(TTM)</th>
+                        <th style="width: 8%">ROE(%)</th>
+                        <th style="width: 14%">投资评级</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 上游核心器件 -->
+                    <tr>
+                        <td colspan="6" class="category-header">上游：核心器件与原材料</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">芯片与半导体</td>
+                        <td class="company-name">
+                            韦尔股份 <span class="stock-code">(603501)</span><br>
+                            <span class="market-cap">市值约800亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • CMOS图像传感器芯片，iPhone摄像头核心供应商<br>
+                            • 手机摄像头传感器市场份额全球前三<br>
+                            • 2024年净利润33.23亿元，同比增长近5倍
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">24.1</td>
+                        <td class="roe-normal" style="text-align: center;">12.9</td>
+                        <td class="rating" style="text-align: center; color: #f39c12;">★★★★</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">显示面板</td>
+                        <td class="company-name">
+                            京东方A <span class="stock-code">(000725)</span><br>
+                            <span class="market-cap">市值约1600亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • OLED显示面板供应商，已进入iPhone供应链<br>
+                            • 2024年营收1983.81亿元，净利润53.23亿元<br>
+                            • 净利润同比增长109%，业绩大幅改善
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">30.1</td>
+                        <td class="roe-low" style="text-align: center;">2.7</td>
+                        <td class="rating" style="text-align: center; color: #f39c12;">★★★</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">摄像头模组</td>
+                        <td class="company-name">
+                            欧菲光 <span class="stock-code">(002456)</span><br>
+                            <span class="market-cap">市值约300亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • 摄像头模组制造商<br>
+                            • 专注于光学器件和智能汽车业务转型<br>
+                            • 正在重构业务结构，减少对单一客户依赖
+                        </td>
+                        <td class="pe-high" style="text-align: center;">-</td>
+                        <td class="roe-low" style="text-align: center;">-</td>
+                        <td class="rating" style="text-align: center; color: #95a5a6;">★★</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">电池</td>
+                        <td class="company-name">
+                            欣旺达 <span class="stock-code">(300207)</span><br>
+                            <span class="market-cap">市值约500亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • 苹果手机电池组主要供应商<br>
+                            • iPhone电池模组设计与制造<br>
+                            • 新能源汽车电池业务快速增长
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">28.5</td>
+                        <td class="roe-normal" style="text-align: center;">8.3</td>
+                        <td class="rating" style="text-align: center; color: #f39c12;">★★★</td>
+                    </tr>
+                    
+                    <!-- 中游制造组装 -->
+                    <tr>
+                        <td colspan="6" class="category-header">中游：制造组装与核心配件</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">代工组装</td>
+                        <td class="company-name">
+                            工业富联 <span class="stock-code">(601138)</span><br>
+                            <span class="market-cap">市值约3000亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • 富士康A股平台，iPhone最大代工制造商<br>
+                            • iPhone整机组装，占苹果代工份额约60%<br>
+                            • 2024年净利润232.16亿元，连续4年200亿+
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">12.9</td>
+                        <td class="roe-good" style="text-align: center;">18.2</td>
+                        <td class="rating" style="text-align: center; color: #27ae60;">★★★★★</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">精密连接器</td>
+                        <td class="company-name highlight">
+                            立讯精密 <span class="stock-code">(002475)</span><br>
+                            <span class="market-cap">市值约3000亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • 苹果最重要的连接器和声学器件供应商<br>
+                            • 2024上半年营收1245.03亿元，净利润66.44亿元<br>
+                            • 营收同比增长20.18%，净利润增长23.13%
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">18.7</td>
+                        <td class="roe-good" style="text-align: center;">15.8</td>
+                        <td class="rating" style="text-align: center; color: #27ae60;">★★★★★</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">声学器件</td>
+                        <td class="company-name highlight">
+                            歌尔股份 <span class="stock-code">(002241)</span><br>
+                            <span class="market-cap">市值约1200亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • AirPods主要代工制造商<br>
+                            • 2024上半年营收375.49亿元，净利润14.17亿元<br>
+                            • 净利润同比增长15.65%
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">25.8</td>
+                        <td class="roe-normal" style="text-align: center;">11.2</td>
+                        <td class="rating" style="text-align: center; color: #f39c12;">★★★★</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">防护玻璃</td>
+                        <td class="company-name highlight">
+                            蓝思科技 <span class="stock-code">(300433)</span><br>
+                            <span class="market-cap">市值约1000亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • iPhone玻璃后盖和屏幕保护玻璃主供应商<br>
+                            • 2024上半年营收329.60亿元，净利润11.43亿元<br>
+                            • 净利润同比增长32.68%，业绩强劲复苏
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">21.3</td>
+                        <td class="roe-normal" style="text-align: center;">9.7</td>
+                        <td class="rating" style="text-align: center; color: #f39c12;">★★★★</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">PCB电路板</td>
+                        <td class="company-name">
+                            鹏鼎控股 <span class="stock-code">(002938)</span><br>
+                            <span class="market-cap">市值约1000亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • iPhone主板PCB最大供应商<br>
+                            • 2024年营收351.4亿元，净利润36.2亿元<br>
+                            • 营收增长9.59%，净利润增长10.14%
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">16.8</td>
+                        <td class="roe-good" style="text-align: center;">16.4</td>
+                        <td class="rating" style="text-align: center; color: #27ae60;">★★★★★</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">金属结构件</td>
+                        <td class="company-name">
+                            东山精密 <span class="stock-code">(002384)</span><br>
+                            <span class="market-cap">市值约400亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • iPhone金属中框和结构件供应商<br>
+                            • CNC精密加工技术领先<br>
+                            • 5G通信模块业务持续增长
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">22.4</td>
+                        <td class="roe-normal" style="text-align: center;">7.8</td>
+                        <td class="rating" style="text-align: center; color: #f39c12;">★★★</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">功能性器件</td>
+                        <td class="company-name">
+                            领益智造 <span class="stock-code">(002600)</span><br>
+                            <span class="market-cap">市值约600亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • iPhone精密功能性器件供应商<br>
+                            • 电磁屏蔽、散热器件制造<br>
+                            • 汽车电子业务快速发展
+                        </td>
+                        <td class="pe-high" style="text-align: center;">35.2</td>
+                        <td class="roe-low" style="text-align: center;">5.9</td>
+                        <td class="rating" style="text-align: center; color: #95a5a6;">★★</td>
+                    </tr>
+                    
+                    <!-- 上游材料与设备 -->
+                    <tr>
+                        <td colspan="6" class="category-header">支撑环节：材料与设备</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">包装材料</td>
+                        <td class="company-name">
+                            裕同科技 <span class="stock-code">(002831)</span><br>
+                            <span class="market-cap">市值约200亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • iPhone包装盒主要供应商<br>
+                            • 高端包装印刷技术<br>
+                            • 环保包装材料研发应用
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">19.6</td>
+                        <td class="roe-normal" style="text-align: center;">8.1</td>
+                        <td class="rating" style="text-align: center; color: #f39c12;">★★★</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">检测设备</td>
+                        <td class="company-name">
+                            精测电子 <span class="stock-code">(300567)</span><br>
+                            <span class="market-cap">市值约300亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • 平板显示检测设备供应商<br>
+                            • 为苹果供应链提供检测设备<br>
+                            • 半导体测试设备快速发展
+                        </td>
+                        <td class="pe-high" style="text-align: center;">42.7</td>
+                        <td class="roe-low" style="text-align: center;">4.2</td>
+                        <td class="rating" style="text-align: center; color: #95a5a6;">★★</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">激光设备</td>
+                        <td class="company-name">
+                            大族激光 <span class="stock-code">(002008)</span><br>
+                            <span class="market-cap">市值约600亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • 为苹果产业链提供激光加工设备<br>
+                            • iPhone生产线激光焊接、切割设备<br>
+                            • 新能源激光设备业务增长
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">26.9</td>
+                        <td class="roe-normal" style="text-align: center;">6.8</td>
+                        <td class="rating" style="text-align: center; color: #f39c12;">★★★</td>
+                    </tr>
+                    
+                    <!-- 下游销售渠道 -->
+                    <tr>
+                        <td colspan="6" class="category-header">下游：销售与服务</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="sub-category">零售渠道</td>
+                        <td class="company-name">
+                            爱施德 <span class="stock-code">(002416)</span><br>
+                            <span class="market-cap">市值约200亿</span>
+                        </td>
+                        <td class="business-desc">
+                            • iPhone等智能终端分销商<br>
+                            • 全国手机零售渠道网络<br>
+                            • 供应链金融服务业务
+                        </td>
+                        <td class="pe-normal" style="text-align: center;">18.3</td>
+                        <td class="roe-normal" style="text-align: center;">7.5</td>
+                        <td class="rating" style="text-align: center; color: #f39c12;">★★★</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p><strong>投资提示：</strong>PE<20为相对合理，20-30为正常区间，>30需谨慎；ROE>15%为优秀，8-15%为良好，<8%偏低</p>
+            <p>数据来源：公开财报、券商研报等 | 更新时间：2025年9月 | 仅供参考，投资有风险</p>
+        </div>
+    </div>
+</body>
+</html>
