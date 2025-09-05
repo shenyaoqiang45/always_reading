@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财务造假快速识别工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #e3e6ea;
+            transition: all 0.3s ease;
+        }
+
+        .input-group:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .input-group h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            margin-right: 10px;
+            font-size: 1.5em;
+        }
+
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .input-row label {
+            flex: 1;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .input-row input {
+            width: 120px;
+            padding: 8px 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-row input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .analyze-btn {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .alert {
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: 2px solid #dc3545;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #ffd93d, #ff9800);
+            color: #333;
+            border: 2px solid #ffc107;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #51cf66, #40c057);
+            color: white;
+            border: 2px solid #28a745;
+        }
+
+        .warning-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .warning-item h4 {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .metric-value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .details-section {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 财务造假快速识别工具</h1>
+            <p class="subtitle">"税收是企业财务真实性的试金石" - 巴菲特式财务分析</p>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <h3><span class="icon">📊</span>利润表数据</h3>
+                <div class="input-row">
+                    <label>营业收入 (万元):</label>
+                    <input type="number" id="revenue" placeholder="100000">
+                </div>
+                <div class="input-row">
+                    <label>净利润 (万元):</label>
+                    <input type="number" id="netProfit" placeholder="10000">
+                </div>
+                <div class="input-row">
+                    <label>所得税费用 (万元):</label>
+                    <input type="number" id="taxExpense" placeholder="2500">
+                </div>
+                <div class="input-row">
+                    <label>营业成本 (万元):</label>
+                    <input type="number" id="operatingCost" placeholder="70000">
+                </div>
+                <div class="input-row">
+                    <label>上年营业收入 (万元):</label>
+                    <input type="number" id="prevRevenue" placeholder="80000">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <h3><span class="icon">💰</span>现金流量表数据</h3>
+                <div class="input-row">
+                    <label>经营现金流净额 (万元):</label>
+                    <input type="number" id="operatingCashFlow" placeholder="8000">
+                </div>
+                <div class="input-row">
+                    <label>支付的税费 (万元):</label>
+                    <input type="number" id="taxPaid" placeholder="2000">
+                </div>
+                <div class="input-row">
+                    <label>销售商品收到现金 (万元):</label>
+                    <input type="number" id="cashFromSales" placeholder="95000">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <h3><span class="icon">🏢</span>资产负债表数据</h3>
+                <div class="input-row">
+                    <label>应收账款 (万元):</label>
+                    <input type="number" id="receivables" placeholder="15000">
+                </div>
+                <div class="input-row">
+                    <label>存货 (万元):</label>
+                    <input type="number" id="inventory" placeholder="12000">
+                </div>
+                <div class="input-row">
+                    <label>上年应收账款 (万元):</label>
+                    <input type="number" id="prevReceivables" placeholder="12000">
+                </div>
+                <div class="input-row">
+                    <label>上年存货 (万元):</label>
+                    <input type="number" id="prevInventory" placeholder="10000">
+                </div>
+            </div>
+        </div>
+
+        <button class="analyze-btn" onclick="analyzeFinancials()">
+            🚀 开始分析
+        </button>
+
+        <div id="results" class="results"></div>
+    </div>
+
+    <script>
+        function analyzeFinancials() {
+            // 获取输入数据
+            const data = {
+                revenue: parseFloat(document.getElementById('revenue').value) || 0,
+                netProfit: parseFloat(document.getElementById('netProfit').value) || 0,
+                taxExpense: parseFloat(document.getElementById('taxExpense').value) || 0,
+                operatingCost: parseFloat(document.getElementById('operatingCost').value) || 0,
+                operatingCashFlow: parseFloat(document.getElementById('operatingCashFlow').value) || 0,
+                taxPaid: parseFloat(document.getElementById('taxPaid').value) || 0,
+                cashFromSales: parseFloat(document.getElementById('cashFromSales').value) || 0,
+                receivables: parseFloat(document.getElementById('receivables').value) || 0,
+                inventory: parseFloat(document.getElementById('inventory').value) || 0,
+                prevReceivables: parseFloat(document.getElementById('prevReceivables').value) || 0,
+                prevInventory: parseFloat(document.getElementById('prevInventory').value) || 0,
+                prevRevenue: parseFloat(document.getElementById('prevRevenue').value) || 0
+            };
+
+            // 计算关键指标
+            const metrics = calculateMetrics(data);
+            
+            // 分析造假风险
+            const analysis = analyzeRisks(metrics, data);
+            
+            // 显示结果
+            displayResults(analysis, metrics);
+        }
+
+        function calculateMetrics(data) {
+            const profitBeforeTax = data.netProfit + data.taxExpense;
+            
+            return {
+                // 税率相关
+                effectiveTaxRate: profitBeforeTax > 0 ? (data.taxExpense / profitBeforeTax * 100) : 0,
+                cashTaxRate: profitBeforeTax > 0 ? (data.taxPaid / profitBeforeTax * 100) : 0,
+                taxGap: Math.abs((data.taxExpense - data.taxPaid) / Math.max(data.taxExpense, 1) * 100),
+                
+                // 现金流相关
+                cashProfitRatio: data.netProfit > 0 ? (data.operatingCashFlow / data.netProfit * 100) : 0,
+                salesCashRatio: data.revenue > 0 ? (data.cashFromSales / data.revenue * 100) : 0,
+                
+                // 资产质量
+                receivablesGrowth: data.prevReceivables > 0 ? ((data.receivables - data.prevReceivables) / data.prevReceivables * 100) : 0,
+                inventoryGrowth: data.prevInventory > 0 ? ((data.inventory - data.prevInventory) / data.prevInventory * 100) : 0,
+                receivablesToSales: data.revenue > 0 ? (data.receivables / data.revenue * 100) : 0,
+                
+                // 收入质量
+                revenueGrowth: data.prevRevenue > 0 ? ((data.revenue - data.prevRevenue) / data.prevRevenue * 100) : 0,
+                
+                // 盈利质量
+                grossMargin: data.revenue > 0 ? ((data.revenue - data.operatingCost) / data.revenue * 100) : 0,
+                netMargin: data.revenue > 0 ? (data.netProfit / data.revenue * 100) : 0
+            };
+        }
+
+        function analyzeRisks(metrics, data) {
+            const warnings = [];
+            let riskLevel = 0;
+
+            // 1. 税收一致性检查
+            if (metrics.taxGap > 30) {
+                warnings.push({
+                    type: '税收异常',
+                    description: '所得税费用与实际支付税费差异过大',
+                    value: `差异率: ${metrics.taxGap.toFixed(1)}%`,
+                    severity: 'high',
+                    implication: '可能存在收入虚增或利润操纵'
+                });
+                riskLevel += 3;
+            }
+
+            // 2. 有效税率异常
+            if (metrics.effectiveTaxRate < 10 || metrics.effectiveTaxRate > 35) {
+                warnings.push({
+                    type: '税率异常',
+                    description: '有效税率异常偏离正常范围(10%-35%)',
+                    value: `有效税率: ${metrics.effectiveTaxRate.toFixed(1)}%`,
+                    severity: 'medium',
+                    implication: '可能存在税收筹划过度或利润调节'
+                });
+                riskLevel += 2;
+            }
+
+            // 3. 现金流与利润背离
+            if (metrics.cashProfitRatio < 70) {
+                warnings.push({
+                    type: '现金流异常',
+                    description: '经营现金流远低于净利润',
+                    value: `现金流/净利润: ${metrics.cashProfitRatio.toFixed(1)}%`,
+                    severity: 'high',
+                    implication: '可能存在收入确认激进或应收账款质量问题'
+                });
+                riskLevel += 3;
+            }
+
+            // 4. 销售现金比异常
+            if (metrics.salesCashRatio < 85) {
+                warnings.push({
+                    type: '销售现金异常',
+                    description: '销售收到现金比例偏低',
+                    value: `销售现金比: ${metrics.salesCashRatio.toFixed(1)}%`,
+                    severity: 'medium',
+                    implication: '可能存在虚构销售或客户质量问题'
+                });
+                riskLevel += 2;
+            }
+
+            // 5. 应收账款异常增长
+            if (metrics.receivablesGrowth > 30 && (data.prevRevenue > 0 ? metrics.receivablesGrowth > metrics.revenueGrowth + 20 : metrics.receivablesGrowth > 25)) {
+                warnings.push({
+                    type: '应收账款异常',
+                    description: '应收账款增长远超收入增长',
+                    value: `应收增长率: ${metrics.receivablesGrowth.toFixed(1)}% vs 收入增长率: ${metrics.revenueGrowth.toFixed(1)}%`,
+                    severity: 'high',
+                    implication: '可能存在收入确认问题或客户信用恶化'
+                });
+                riskLevel += 3;
+            }
+
+            // 6. 存货异常增长
+            if (metrics.inventoryGrowth > 40) {
+                warnings.push({
+                    type: '存货异常',
+                    description: '存货增长过快',
+                    value: `存货增长率: ${metrics.inventoryGrowth.toFixed(1)}%`,
+                    severity: 'medium',
+                    implication: '可能存在成本少计或产品滞销'
+                });
+                riskLevel += 2;
+            }
+
+            // 7. 应收账款占比过高
+            if (metrics.receivablesToSales > 25) {
+                warnings.push({
+                    type: '应收比例异常',
+                    description: '应收账款占销售收入比例过高',
+                    value: `应收/收入: ${metrics.receivablesToSales.toFixed(1)}%`,
+                    severity: 'medium',
+                    implication: '可能存在信用政策过松或收入质量问题'
+                });
+                riskLevel += 1;
+            }
+
+            // 8. 收入增长异常
+            if (data.prevRevenue > 0) {
+                if (metrics.revenueGrowth > 50) {
+                    warnings.push({
+                        type: '收入增长异常',
+                        description: '收入增长过快，需要验证真实性',
+                        value: `收入增长率: ${metrics.revenueGrowth.toFixed(1)}%`,
+                        severity: 'medium',
+                        implication: '可能存在收入确认激进或一次性收入影响'
+                    });
+                    riskLevel += 2;
+                } else if (metrics.revenueGrowth < -20) {
+                    warnings.push({
+                        type: '收入下滑警告',
+                        description: '收入大幅下滑，关注业务基本面',
+                        value: `收入增长率: ${metrics.revenueGrowth.toFixed(1)}%`,
+                        severity: 'medium',
+                        implication: '业务可能面临困难，需要关注后续趋势'
+                    });
+                    riskLevel += 1;
+                }
+            }
+
+            return {
+                riskLevel,
+                warnings,
+                overallAssessment: getRiskAssessment(riskLevel)
+            };
+        }
+
+        function getRiskAssessment(riskLevel) {
+            if (riskLevel >= 8) {
+                return {
+                    level: 'high',
+                    description: '⚠️ 高风险预警',
+                    message: '多项财务指标异常，存在较高造假可能性，建议深度调查！',
+                    recommendation: '建议：立即停止投资考虑，深入调查财务真实性，关注审计报告和管理层解释。'
+                };
+            } else if (riskLevel >= 4) {
+                return {
+                    level: 'medium',
+                    description: '⚡ 中等风险提示',
+                    message: '部分指标存在异常，需要进一步分析验证。',
+                    recommendation: '建议：谨慎投资，重点关注异常指标的合理性解释，对比同行业数据。'
+                };
+            } else {
+                return {
+                    level: 'low',
+                    description: '✅ 财务相对健康',
+                    message: '主要财务指标基本正常，但仍需持续关注。',
+                    recommendation: '建议：可以考虑投资，但要持续监控财务指标变化趋势。'
+                };
+            }
+        }
+
+        function displayResults(analysis, metrics) {
+            const resultsDiv = document.getElementById('results');
+            
+            let alertClass;
+            if (analysis.overallAssessment.level === 'high') {
+                alertClass = 'alert-danger';
+            } else if (analysis.overallAssessment.level === 'medium') {
+                alertClass = 'alert-warning';
+            } else {
+                alertClass = 'alert-success';
+            }
+
+            let warningsHtml = '';
+            if (analysis.warnings.length > 0) {
+                warningsHtml = analysis.warnings.map(warning => `
+                    <div class="warning-item">
+                        <h4>🔍 ${warning.type}</h4>
+                        <p><strong>异常描述：</strong>${warning.description}</p>
+                        <p><strong>数值：</strong><span class="metric-value">${warning.value}</span></p>
+                        <p><strong>可能原因：</strong>${warning.implication}</p>
+                    </div>
+                `).join('');
+            } else {
+                warningsHtml = '<div class="warning-item"><h4>✅ 未发现明显异常</h4><p>主要财务指标基本正常</p></div>';
+            }
+
+            resultsDiv.innerHTML = `
+                <div class="alert ${alertClass}">
+                    <h3>${analysis.overallAssessment.description}</h3>
+                    <p style="margin: 10px 0; font-size: 1.1em;">${analysis.overallAssessment.message}</p>
+                    <p style="margin-top: 15px;"><strong>${analysis.overallAssessment.recommendation}</strong></p>
+                </div>
+
+                ${analysis.warnings.length > 0 ? `
+                <div class="alert alert-warning">
+                    <h3>🚨 异常指标详情</h3>
+                    ${warningsHtml}
+                </div>
+                ` : ''}
+
+                <div class="details-section">
+                    <h3>📈 详细财务指标</h3>
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <h4>有效税率</h4>
+                            <p class="metric-value">${metrics.effectiveTaxRate.toFixed(1)}%</p>
+                            <small>正常范围: 10%-35%</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>现金税率</h4>
+                            <p class="metric-value">${metrics.cashTaxRate.toFixed(1)}%</p>
+                            <small>应接近有效税率</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>现金利润比</h4>
+                            <p class="metric-value">${metrics.cashProfitRatio.toFixed(1)}%</p>
+                            <small>健康水平: >80%</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>销售现金比</h4>
+                            <p class="metric-value">${metrics.salesCashRatio.toFixed(1)}%</p>
+                            <small>良好水平: >90%</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>应收增长率</h4>
+                            <p class="metric-value">${metrics.receivablesGrowth.toFixed(1)}%</p>
+                            <small>应低于收入增长</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>收入增长率</h4>
+                            <p class="metric-value">${metrics.revenueGrowth.toFixed(1)}%</p>
+                            <small>业务增长指标</small>
+                        </div>
+                        <div class="metric-card">
+                            <h4>净利润率</h4>
+                            <p class="metric-value">${metrics.netMargin.toFixed(1)}%</p>
+                            <small>盈利能力指标</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>
