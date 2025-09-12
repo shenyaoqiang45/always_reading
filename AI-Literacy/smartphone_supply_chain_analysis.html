@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手机产业链市场规模预测</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .cagr-input-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .cagr-input-section label {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-right: 15px;
+        }
+        
+        .cagr-input-section input {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1.1em;
+            width: 80px;
+            text-align: center;
+            margin: 0 10px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .cagr-input-section input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+        
+        .cagr-input-section span {
+            font-size: 1.1em;
+            color: #2d3748;
+            margin-right: 15px;
+        }
+        
+        .cagr-input-section button {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .cagr-input-section button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .overview-card {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .overview-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .overview-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .overview-card .unit {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 30px 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            color: white;
+            padding: 20px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.9em;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f7fafc;
+        }
+        
+        tr:hover {
+            background-color: #edf2f7;
+            transition: background-color 0.3s ease;
+        }
+        
+        .segment {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .percentage {
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+        
+        .value-cell {
+            font-weight: 600;
+            color: #2b6cb0;
+        }
+        
+        .total-row {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7) !important;
+            font-weight: bold;
+            border-top: 2px solid #ff6b6b;
+        }
+        
+        .growth-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .growth-card {
+            background: linear-gradient(135deg, #ffa726, #ff7043);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .growth-card h4 {
+            margin: 0 0 15px 0;
+            font-size: 1.1em;
+        }
+        
+        .growth-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .cagr {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .market-info {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .market-info h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+        
+        .brand-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .brand-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        
+        .brand-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .brand-share {
+            font-size: 1.2em;
+            color: #fff;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .overview-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .cagr-input-section {
+                padding: 20px 15px;
+            }
+            
+            .cagr-input-section label {
+                display: block;
+                margin-bottom: 10px;
+                font-size: 1em;
+            }
+            
+            .cagr-input-section input {
+                width: 60px;
+                margin: 0 5px;
+            }
+            
+            .cagr-input-section button {
+                margin-top: 10px;
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+            
+            table {
+                font-size: 0.8em;
+            }
+            
+            th, td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>手机产业链市场规模预测</h1>
+        <div class="subtitle">2025-2030年各环节投资规模详细分析 (单位: 十亿美元)</div>
+        
+        <div class="cagr-input-section">
+            <label for="cagrInput">设置复合增长率 (CAGR):</label>
+            <input type="number" id="cagrInput" value="4.0" step="0.1" min="0" max="100">
+            <span>%</span>
+            <button id="updateBtn" onclick="updateMarketData()">更新数据</button>
+        </div>
+
+        <div class="overview-cards">
+            <div class="overview-card">
+                <h3>2025年市场</h3>
+                <div class="value" id="market2025">$1,450.0</div>
+                <div class="unit">十亿美元</div>
+            </div>
+            <div class="overview-card">
+                <h3>2030年市场</h3>
+                <div class="value" id="market2030">$1,840.2</div>
+                <div class="unit">十亿美元</div>
+            </div>
+            <div class="overview-card">
+                <h3>复合增长率</h3>
+                <div class="value" id="cagrDisplay">5.2%</div>
+                <div class="unit">CAGR</div>
+            </div>
+            <div class="overview-card">
+                <h3>年均出货量</h3>
+                <div class="value">1.35B</div>
+                <div class="unit">台设备</div>
+            </div>
+        </div>
+
+        <div class="market-info">
+            <h3>📊 全球智能手机市场格局 (2024年数据)</h3>
+            <div class="brand-grid">
+                <div class="brand-card">
+                    <div class="brand-name">Samsung</div>
+                    <div class="brand-share">20.6%</div>
+                </div>
+                <div class="brand-card">
+                    <div class="brand-name">Apple</div>
+                    <div class="brand-share">18.7%</div>
+                </div>
+                <div class="brand-card">
+                    <div class="brand-name">Xiaomi</div>
+                    <div class="brand-share">13.2%</div>
+                </div>
+                <div class="brand-card">
+                    <div class="brand-name">OPPO</div>
+                    <div class="brand-share">8.9%</div>
+                </div>
+                <div class="brand-card">
+                    <div class="brand-name">vivo</div>
+                    <div class="brand-share">8.8%</div>
+                </div>
+                <div class="brand-card">
+                    <div class="brand-name">其他品牌</div>
+                    <div class="brand-share">29.8%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>产业链环节</th>
+                        <th>占比区间</th>
+                        <th>2025年</th>
+                        <th>2026年</th>
+                        <th>2027年</th>
+                        <th>2028年</th>
+                        <th>2029年</th>
+                        <th>2030年</th>
+                        <th>6年总计</th>
+                    </tr>
+                </thead>
+                <tbody id="marketTable">
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="growth-indicators">
+            <div class="growth-card">
+                <h4>处理器/芯片6年累计</h4>
+                <div class="growth-value" id="chipTotal">$2.6T</div>
+                <div class="cagr">2025-2030年总投资</div>
+            </div>
+            <div class="growth-card">
+                <h4>显示屏6年累计</h4>
+                <div class="growth-value" id="displayTotal">$2.0T</div>
+                <div class="cagr">2025-2030年总投资</div>
+            </div>
+            <div class="growth-card">
+                <h4>整体市场6年累计</h4>
+                <div class="growth-value" id="totalMarket">$3.28T</div>
+                <div class="cagr">万亿美元级市场</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 基础市场数据 (十亿美元)
+        const baseMarket2025 = 550.0; // 2025年基础市场规模
+        let totalMarketSize = {};
+        
+        // 根据CAGR计算市场规模
+        function calculateMarketSize(cagr) {
+            const cagrDecimal = cagr / 100;
+            return {
+                2025: baseMarket2025,
+                2026: baseMarket2025 * Math.pow(1 + cagrDecimal, 1),
+                2027: baseMarket2025 * Math.pow(1 + cagrDecimal, 2),
+                2028: baseMarket2025 * Math.pow(1 + cagrDecimal, 3),
+                2029: baseMarket2025 * Math.pow(1 + cagrDecimal, 4),
+                2030: baseMarket2025 * Math.pow(1 + cagrDecimal, 5)
+            };
+        }
+        
+        // 初始化市场规模数据
+        function initializeMarketData() {
+            const cagr = parseFloat(document.getElementById('cagrInput').value);
+            totalMarketSize = calculateMarketSize(cagr);
+        }
+        
+        // 更新市场数据
+        function updateMarketData() {
+            const cagr = parseFloat(document.getElementById('cagrInput').value);
+            
+            if (isNaN(cagr) || cagr < 0 || cagr > 100) {
+                alert('请输入有效的复合增长率 (0-100%)');
+                return;
+            }
+            
+            totalMarketSize = calculateMarketSize(cagr);
+            
+            // 更新概览卡片
+            document.getElementById('market2025').textContent = `$${totalMarketSize[2025].toFixed(1)}`;
+            document.getElementById('market2030').textContent = `$${totalMarketSize[2030].toFixed(1)}`;
+            document.getElementById('cagrDisplay').textContent = `${cagr}%`;
+            
+            // 重新生成表格
+            const tbody = document.getElementById('marketTable');
+            tbody.innerHTML = '';
+            generateTable();
+            
+            // 更新增长指标卡片
+            updateGrowthCards();
+        }
+        
+        // 更新增长指标卡片
+        function updateGrowthCards() {
+            const totalMarketSum = Object.values(totalMarketSize).reduce((sum, value) => sum + value, 0);
+            
+            // 计算处理器/芯片6年累计 (25%平均占比)
+            const chipTotal = (totalMarketSum * 0.25 / 1000).toFixed(1);
+            
+            // 计算显示屏6年累计 (20%平均占比)
+            const displayTotal = (totalMarketSum * 0.20 / 1000).toFixed(1);
+            
+            // 更新显示
+            document.getElementById('chipTotal').textContent = `$${chipTotal}T`;
+            document.getElementById('displayTotal').textContent = `$${displayTotal}T`;
+            document.getElementById('totalMarket').textContent = `$${(totalMarketSum / 1000).toFixed(2)}T`;
+        }
+
+        // 手机产业链环节配置
+        const segments = [
+            {
+                name: '处理器/芯片 (SoC/CPU/GPU/AI芯片)',
+                minPercent: 20,
+                maxPercent: 30,
+                avgPercent: 25
+            },
+            {
+                name: '显示屏 (OLED/LCD/触控)',
+                minPercent: 15,
+                maxPercent: 25,
+                avgPercent: 20
+            },
+            {
+                name: '摄像头模组 (CMOS/镜头/ISP)',
+                minPercent: 10,
+                maxPercent: 15,
+                avgPercent: 12.5
+            },
+            {
+                name: '内存/存储 (DRAM/NAND Flash/UFS)',
+                minPercent: 10,
+                maxPercent: 15,
+                avgPercent: 12.5
+            },
+            {
+                name: '机械结构件 (外壳/中框/按键)',
+                minPercent: 8,
+                maxPercent: 12,
+                avgPercent: 10
+            },
+            {
+                name: '电池 (锂电池/无线充电)',
+                minPercent: 5,
+                maxPercent: 8,
+                avgPercent: 6.5
+            },
+            {
+                name: '射频器件 (天线/PA/滤波器)',
+                minPercent: 4,
+                maxPercent: 8,
+                avgPercent: 6
+            },
+            {
+                name: '连接器/声学器件 (Type-C/扬声器)',
+                minPercent: 3,
+                maxPercent: 6,
+                avgPercent: 4.5
+            },
+            {
+                name: '传感器 (陀螺仪/加速度/指纹)',
+                minPercent: 2,
+                maxPercent: 4,
+                avgPercent: 3
+            }
+        ];
+
+        function formatCurrency(value) {
+            return '$' + value.toFixed(1) + 'B';
+        }
+
+        function generateTable() {
+            const tbody = document.getElementById('marketTable');
+            
+            segments.forEach(segment => {
+                const row = document.createElement('tr');
+                
+                // 计算各年份数值
+                const values2025 = [
+                    (totalMarketSize[2025] * segment.minPercent / 100).toFixed(1),
+                    (totalMarketSize[2025] * segment.maxPercent / 100).toFixed(1)
+                ];
+                const values2026 = [
+                    (totalMarketSize[2026] * segment.minPercent / 100).toFixed(1),
+                    (totalMarketSize[2026] * segment.maxPercent / 100).toFixed(1)
+                ];
+                const values2027 = [
+                    (totalMarketSize[2027] * segment.minPercent / 100).toFixed(1),
+                    (totalMarketSize[2027] * segment.maxPercent / 100).toFixed(1)
+                ];
+                const values2028 = [
+                    (totalMarketSize[2028] * segment.minPercent / 100).toFixed(1),
+                    (totalMarketSize[2028] * segment.maxPercent / 100).toFixed(1)
+                ];
+                const values2029 = [
+                    (totalMarketSize[2029] * segment.minPercent / 100).toFixed(1),
+                    (totalMarketSize[2029] * segment.maxPercent / 100).toFixed(1)
+                ];
+                const values2030 = [
+                    (totalMarketSize[2030] * segment.minPercent / 100).toFixed(1),
+                    (totalMarketSize[2030] * segment.maxPercent / 100).toFixed(1)
+                ];
+                
+                // 计算6年总计
+                const totalMarketSum = Object.values(totalMarketSize).reduce((sum, value) => sum + value, 0);
+                const totalMin = (totalMarketSum * segment.minPercent / 100).toFixed(1);
+                const totalMax = (totalMarketSum * segment.maxPercent / 100).toFixed(1);
+                
+                row.innerHTML = `
+                    <td class="segment">${segment.name}</td>
+                    <td class="percentage">${segment.minPercent}%—${segment.maxPercent}%</td>
+                    <td class="value-cell">$${values2025[0]}B—$${values2025[1]}B</td>
+                    <td class="value-cell">$${values2026[0]}B—$${values2026[1]}B</td>
+                    <td class="value-cell">$${values2027[0]}B—$${values2027[1]}B</td>
+                    <td class="value-cell">$${values2028[0]}B—$${values2028[1]}B</td>
+                    <td class="value-cell">$${values2029[0]}B—$${values2029[1]}B</td>
+                    <td class="value-cell">$${values2030[0]}B—$${values2030[1]}B</td>
+                    <td class="value-cell"><strong>$${totalMin}B—$${totalMax}B</strong></td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+            // 添加总计行
+            const totalRow = document.createElement('tr');
+            totalRow.className = 'total-row';
+            const totalMarketSum = Object.values(totalMarketSize).reduce((sum, value) => sum + value, 0);
+            totalRow.innerHTML = `
+                <td class="segment"><strong>总计市场规模</strong></td>
+                <td class="percentage"><strong>100%</strong></td>
+                <td class="value-cell"><strong>${formatCurrency(totalMarketSize[2025])}</strong></td>
+                <td class="value-cell"><strong>${formatCurrency(totalMarketSize[2026])}</strong></td>
+                <td class="value-cell"><strong>${formatCurrency(totalMarketSize[2027])}</strong></td>
+                <td class="value-cell"><strong>${formatCurrency(totalMarketSize[2028])}</strong></td>
+                <td class="value-cell"><strong>${formatCurrency(totalMarketSize[2029])}</strong></td>
+                <td class="value-cell"><strong>${formatCurrency(totalMarketSize[2030])}</strong></td>
+                <td class="value-cell"><strong>${formatCurrency(totalMarketSum)}</strong></td>
+            `;
+            
+            tbody.appendChild(totalRow);
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMarketData();
+            generateTable();
+            updateGrowthCards();
+            
+            // 添加回车键支持
+            document.getElementById('cagrInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    updateMarketData();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
