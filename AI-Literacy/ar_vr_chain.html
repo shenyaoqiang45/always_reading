@@ -1,0 +1,130 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR/VR产业链 - A股与美股企业（含Top3市场占比）</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        caption {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <caption>AR/VR产业链 - A股与美股企业（含Top3市场占比）</caption>
+        <thead>
+            <tr>
+                <th>环节</th>
+                <th>核心企业（A股）</th>
+                <th>核心企业（美股）</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>整机/头显（AR/VR设备）</td>
+                <td>歌尔股份、立讯精密、蓝思科技</td>
+                <td>Meta（Oculus）、Apple、Sony</td>
+                <td>Top3（全球）：Meta ~50%<br>Apple ~10%<br>Pico（字节跳动） ~8%</td>
+            </tr>
+            <tr>
+                <td>显示屏</td>
+                <td>京东方、天马微电子、维信诺</td>
+                <td>Samsung Display、LG Display、Corning</td>
+                <td>Top3（全球）：Samsung ~30%<br>LG ~20%<br>京东方 ~15%</td>
+            </tr>
+            <tr>
+                <td>光学模块</td>
+                <td>舜宇光学、欧菲光、凌云光</td>
+                <td>Lumus、DigiLens、WaveOptics</td>
+                <td>Top3（全球）：Lumus ~25%<br>DigiLens ~20%<br>舜宇光学 ~15%</td>
+            </tr>
+            <tr>
+                <td>传感器</td>
+                <td>歌尔股份、瑞声科技、汇川技术</td>
+                <td>STMicroelectronics、Bosch、Qualcomm</td>
+                <td>Top3（全球）：STM ~25%<br>Bosch ~20%<br>Qualcomm ~15%</td>
+            </tr>
+            <tr>
+                <td>处理器/SoC</td>
+                <td>中芯国际、紫东微、寒武纪</td>
+                <td>Qualcomm、Nvidia、Apple（A/M系列）</td>
+                <td>Top3（全球）：Qualcomm ~35%<br>Nvidia ~20%<br>Apple ~15%</td>
+            </tr>
+            <tr>
+                <td>软件平台</td>
+                <td>中科创达、昆仑万维、完美世界</td>
+                <td>Unity、Epic Games、Meta</td>
+                <td>Top3（全球）：Unity ~40%<br>Epic ~25%<br>Meta ~15%</td>
+            </tr>
+            <tr>
+                <td>内容生态</td>
+                <td>昆仑万维、完美世界、三七互娱</td>
+                <td>Meta、Apple、Sony</td>
+                <td>Top3（全球）：Meta ~45%<br>Apple ~20%<br>Sony ~12%</td>
+            </tr>
+            <tr>
+                <td>AI芯片/算力</td>
+                <td>寒武纪、地平线、瑞芯微</td>
+                <td>Nvidia、Qualcomm、Intel</td>
+                <td>Top3：Nvidia ~75%<br>Qualcomm ~10%<br>Intel ~8%</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>注：市场占比数据为行业公开信息和研报预估值，主要用于参考，非精确财报口径。AR/VR产业链环节基于典型上游零部件和整机品牌划分，部分新兴领域如AI集成以研发投入和技术实力为主要参考指标。数据参考2025年Q1全球市场统计，Meta、Apple和Pico位居头显出货量Top3。</p>
+</body>
+</html>

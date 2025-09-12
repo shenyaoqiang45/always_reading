@@ -1,0 +1,142 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新能源汽车产业链 - A股与美股企业（含Top3市场占比）</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        caption {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <caption>新能源汽车产业链 - A股与美股企业（含Top3市场占比）</caption>
+        <thead>
+            <tr>
+                <th>环节</th>
+                <th>核心企业（A股）</th>
+                <th>核心企业（美股）</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>整车品牌（新能源汽车）</td>
+                <td>比亚迪、上汽集团、长城汽车</td>
+                <td>Tesla、Rivian、Lucid</td>
+                <td>Top3（全球）：BYD ~20%<br>Tesla ~18%<br>Geely ~6%</td>
+            </tr>
+            <tr>
+                <td>动力电池</td>
+                <td>宁德时代、亿纬锂能、国轩高科</td>
+                <td>QuantumScape、Solid Power、Proterra</td>
+                <td>Top3（全球）：CATL ~38%<br>BYD ~18%<br>LG Energy ~11%</td>
+            </tr>
+            <tr>
+                <td>驱动电机</td>
+                <td>卧龙电驱、大洋电机、精进电动</td>
+                <td>BorgWarner、Eaton、Allison Transmission</td>
+                <td>Top3（全球）：Bosch ~20%<br>ZF ~15%<br>Magna ~12%</td>
+            </tr>
+            <tr>
+                <td>电控系统</td>
+                <td>汇川技术、英飞特、圣邦股份</td>
+                <td>Infineon、STMicroelectronics、Texas Instruments</td>
+                <td>Top3（全球）：Infineon ~25%<br>STM ~20%<br>TI ~15%</td>
+            </tr>
+            <tr>
+                <td>充电设备</td>
+                <td>特锐德、许继电气、易事特</td>
+                <td>ChargePoint、Blink Charging、EVgo</td>
+                <td>Top3（全球）：ABB ~20%<br>Siemens ~15%<br>Schneider ~12%</td>
+            </tr>
+            <tr>
+                <td>正极材料</td>
+                <td>当升科技、杉杉股份、厦门钨业</td>
+                <td>Umicore、Albemarle、BASF</td>
+                <td>Top3（全球）：GEM ~25%<br>Ronbay ~20%<br>L&F ~15%</td>
+            </tr>
+            <tr>
+                <td>车用芯片</td>
+                <td>圣邦股份、韦尔股份、兆易创新</td>
+                <td>NXP、Renesas、Microchip</td>
+                <td>Top3（全球）：NXP ~20%<br>Infineon ~18%<br>Renesas ~15%</td>
+            </tr>
+            <tr>
+                <td>传感器</td>
+                <td>歌尔股份、瑞声科技、立讯精密</td>
+                <td>Aptiv、Magna、Continental</td>
+                <td>Top3（全球）：Bosch ~25%<br>Continental ~20%<br>Denso ~15%</td>
+            </tr>
+            <tr>
+                <td>轻量化材料</td>
+                <td>中材科技、碳元科技、方大碳素</td>
+                <td>Hexcel、Toray、SGL Carbon</td>
+                <td>Top3（全球）：Toray ~20%<br>Teijin ~15%<br>Hexcel ~10%</td>
+            </tr>
+            <tr>
+                <td>AI芯片/算力</td>
+                <td>寒武纪、地平线、瑞芯微</td>
+                <td>Nvidia、Qualcomm、Intel</td>
+                <td>Top3：Nvidia ~75%<br>Qualcomm ~10%<br>Intel ~8%</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>注：市场占比数据为行业公开信息和研报预估值，主要用于参考，非精确财报口径。新能源汽车产业链环节基于典型上游零部件和整车品牌划分，部分新兴领域如AI集成以研发投入和技术实力为主要参考指标。数据参考2025年上半年全球市场统计，BYD、Tesla和Geely位居出货量Top3。</p>
+</body>
+</html>
