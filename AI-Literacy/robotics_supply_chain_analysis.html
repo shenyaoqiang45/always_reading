@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>手机产业链市场规模预测</title>
+    <title>机器人产业链市场规模预测</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 20px;
-            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
         
@@ -28,7 +28,7 @@
             color: #2d3748;
             font-size: 2.5em;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -76,8 +76,8 @@
         
         .cagr-input-section input:focus {
             outline: none;
-            border-color: #ff6b6b;
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
         }
         
         .cagr-input-section span {
@@ -87,7 +87,7 @@
         }
         
         .cagr-input-section button {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            background: linear-gradient(135deg, #4299e1, #3182ce);
             color: white;
             border: none;
             padding: 10px 20px;
@@ -100,11 +100,11 @@
         
         .cagr-input-section button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 5px 15px rgba(66, 153, 225, 0.3);
         }
         
         .overview-card {
-            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            background: linear-gradient(135deg, #4299e1, #3182ce);
             color: white;
             padding: 25px;
             border-radius: 15px;
@@ -179,7 +179,7 @@
         }
         
         .percentage {
-            color: #ff6b6b;
+            color: #4299e1;
             font-weight: 600;
         }
         
@@ -191,7 +191,7 @@
         .total-row {
             background: linear-gradient(135deg, #f7fafc, #edf2f7) !important;
             font-weight: bold;
-            border-top: 2px solid #ff6b6b;
+            border-top: 2px solid #4299e1;
         }
         
         .growth-indicators {
@@ -202,7 +202,7 @@
         }
         
         .growth-card {
-            background: linear-gradient(135deg, #ffa726, #ff7043);
+            background: linear-gradient(135deg, #48bb78, #38a169);
             color: white;
             padding: 25px;
             border-radius: 15px;
@@ -239,14 +239,14 @@
             margin-bottom: 20px;
         }
         
-        .brand-grid {
+        .robot-type-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
         
-        .brand-card {
+        .robot-card {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             padding: 15px;
@@ -255,14 +255,46 @@
             font-size: 0.9em;
         }
         
-        .brand-name {
+        .robot-name {
             font-weight: bold;
             margin-bottom: 5px;
         }
         
-        .brand-share {
+        .robot-share {
             font-size: 1.2em;
             color: #fff;
+        }
+        
+        .key-trends {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .trend-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+        }
+        
+        .trend-icon {
+            font-size: 2em;
+            margin-right: 15px;
+        }
+        
+        .trend-text {
+            flex: 1;
+            color: #2d3748;
+        }
+        
+        .trend-title {
+            font-weight: bold;
+            margin-bottom: 5px;
         }
         
         @media (max-width: 768px) {
@@ -312,12 +344,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>手机产业链市场规模预测</h1>
+        <h1>🤖 机器人产业链市场规模预测</h1>
         <div class="subtitle">2025-2030年各环节投资规模详细分析 (单位: 十亿美元)</div>
         
         <div class="cagr-input-section">
             <label for="cagrInput">设置复合增长率 (CAGR):</label>
-            <input type="number" id="cagrInput" value="4.0" step="0.1" min="0" max="100">
+            <input type="number" id="cagrInput" value="12.8" step="0.1" min="0" max="100">
             <span>%</span>
             <button id="updateBtn" onclick="updateMarketData()">更新数据</button>
         </div>
@@ -325,52 +357,84 @@
         <div class="overview-cards">
             <div class="overview-card">
                 <h3>2025年市场</h3>
-                <div class="value" id="market2025">$550.0</div>
+                <div class="value" id="market2025">$50.0</div>
                 <div class="unit">十亿美元</div>
             </div>
             <div class="overview-card">
                 <h3>2030年市场</h3>
-                <div class="value" id="market2030">$669.8</div>
+                <div class="value" id="market2030">$90.7</div>
                 <div class="unit">十亿美元</div>
             </div>
             <div class="overview-card">
                 <h3>复合增长率</h3>
-                <div class="value" id="cagrDisplay">4.0%</div>
+                <div class="value" id="cagrDisplay">12.8%</div>
                 <div class="unit">CAGR</div>
             </div>
             <div class="overview-card">
-                <h3>年均出货量</h3>
-                <div class="value">1.35B</div>
+                <h3>预期年销量</h3>
+                <div class="value">4.2M</div>
                 <div class="unit">台设备</div>
             </div>
         </div>
 
         <div class="market-info">
-            <h3>📊 全球智能手机市场格局 (2024年数据)</h3>
-            <div class="brand-grid">
-                <div class="brand-card">
-                    <div class="brand-name">Samsung</div>
-                    <div class="brand-share">20.6%</div>
+            <h3>🏭 全球机器人市场细分 (2024年数据)</h3>
+            <div class="robot-type-grid">
+                <div class="robot-card">
+                    <div class="robot-name">工业机器人</div>
+                    <div class="robot-share">68.2%</div>
                 </div>
-                <div class="brand-card">
-                    <div class="brand-name">Apple</div>
-                    <div class="brand-share">18.7%</div>
+                <div class="robot-card">
+                    <div class="robot-name">服务机器人</div>
+                    <div class="robot-share">18.5%</div>
                 </div>
-                <div class="brand-card">
-                    <div class="brand-name">Xiaomi</div>
-                    <div class="brand-share">13.2%</div>
+                <div class="robot-card">
+                    <div class="robot-name">协作机器人</div>
+                    <div class="robot-share">6.8%</div>
                 </div>
-                <div class="brand-card">
-                    <div class="brand-name">OPPO</div>
-                    <div class="brand-share">8.9%</div>
+                <div class="robot-card">
+                    <div class="robot-name">特种机器人</div>
+                    <div class="robot-share">4.1%</div>
                 </div>
-                <div class="brand-card">
-                    <div class="brand-name">vivo</div>
-                    <div class="brand-share">8.8%</div>
+                <div class="robot-card">
+                    <div class="robot-name">人形机器人</div>
+                    <div class="robot-share">1.6%</div>
                 </div>
-                <div class="brand-card">
-                    <div class="brand-name">其他品牌</div>
-                    <div class="brand-share">29.8%</div>
+                <div class="robot-card">
+                    <div class="robot-name">其他应用</div>
+                    <div class="robot-share">0.8%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="key-trends">
+            <h3 style="color: #2d3748; margin-bottom: 20px;">📈 机器人产业发展趋势</h3>
+            <div class="trend-item">
+                <div class="trend-icon">🧠</div>
+                <div class="trend-text">
+                    <div class="trend-title">AI智能化升级</div>
+                    <div>大模型+机器人融合，实现更智能的决策和交互</div>
+                </div>
+            </div>
+            <div class="trend-item">
+                <div class="trend-icon">🤝</div>
+                <div class="trend-text">
+                    <div class="trend-title">人机协作普及</div>
+                    <div>协作机器人市场快速增长，安全性和易用性不断提升</div>
+                </div>
+            </div>
+            <div class="trend-item">
+                <div class="trend-icon">🏠</div>
+                <div class="trend-text">
+                    <div class="trend-title">家用服务爆发</div>
+                    <div>清洁、陪护、教育机器人进入千家万户</div>
+                </div>
+            </div>
+            <div class="trend-item">
+                <div class="trend-icon">🚗</div>
+                <div class="trend-text">
+                    <div class="trend-title">移动能力增强</div>
+                    <div>自主导航、路径规划技术成熟，移动机器人应用扩大</div>
                 </div>
             </div>
         </div>
@@ -397,18 +461,18 @@
         
         <div class="growth-indicators">
             <div class="growth-card">
-                <h4>处理器/芯片6年累计</h4>
-                <div class="growth-value" id="chipTotal">$0.9T</div>
+                <h4>控制系统6年累计</h4>
+                <div class="growth-value" id="controlTotal">$380B</div>
                 <div class="cagr">2025-2030年总投资</div>
             </div>
             <div class="growth-card">
-                <h4>显示屏6年累计</h4>
-                <div class="growth-value" id="displayTotal">$0.7T</div>
+                <h4>执行系统6年累计</h4>
+                <div class="growth-value" id="actuatorTotal">$330B</div>
                 <div class="cagr">2025-2030年总投资</div>
             </div>
             <div class="growth-card">
                 <h4>整体市场6年累计</h4>
-                <div class="growth-value" id="totalMarket">$3.61T</div>
+                <div class="growth-value" id="totalMarket">$1.50T</div>
                 <div class="cagr">万亿美元级市场</div>
             </div>
         </div>
@@ -416,7 +480,7 @@
 
     <script>
         // 基础市场数据 (十亿美元)
-        const baseMarket2025 = 550.0; // 2025年基础市场规模
+        const baseMarket2025 = 50; // 2025年基础市场规模
         let totalMarketSize = {};
         
         // 根据CAGR计算市场规模
@@ -467,73 +531,67 @@
         function updateGrowthCards() {
             const totalMarketSum = Object.values(totalMarketSize).reduce((sum, value) => sum + value, 0);
             
-            // 计算处理器/芯片6年累计 (25%平均占比)
-            const chipTotal = (totalMarketSum * 0.25 / 1000).toFixed(1);
+            // 计算控制系统6年累计 (25%平均占比)
+            const controlTotal = (totalMarketSum * 0.25).toFixed(0);
             
-            // 计算显示屏6年累计 (20%平均占比)
-            const displayTotal = (totalMarketSum * 0.20 / 1000).toFixed(1);
+            // 计算执行系统6年累计 (22%平均占比)
+            const actuatorTotal = (totalMarketSum * 0.22).toFixed(0);
             
             // 更新显示
-            document.getElementById('chipTotal').textContent = `$${chipTotal}T`;
-            document.getElementById('displayTotal').textContent = `$${displayTotal}T`;
+            document.getElementById('controlTotal').textContent = `$${controlTotal}B`;
+            document.getElementById('actuatorTotal').textContent = `$${actuatorTotal}B`;
             document.getElementById('totalMarket').textContent = `$${(totalMarketSum / 1000).toFixed(2)}T`;
         }
 
-        // 手机产业链环节配置
+        // 机器人产业链环节配置
         const segments = [
             {
-                name: '处理器/芯片 (SoC/CPU/GPU/AI芯片)',
-                minPercent: 20,
-                maxPercent: 30,
+                name: '控制系统 (主控制器/运动控制器/PLC)',
+                minPercent: 22,
+                maxPercent: 28,
                 avgPercent: 25
             },
             {
-                name: '显示屏 (OLED/LCD/触控)',
-                minPercent: 15,
+                name: '执行系统 (伺服电机/减速器/驱动器)',
+                minPercent: 20,
                 maxPercent: 25,
-                avgPercent: 20
+                avgPercent: 22.5
             },
             {
-                name: '摄像头模组 (CMOS/镜头/ISP)',
-                minPercent: 10,
-                maxPercent: 15,
-                avgPercent: 12.5
+                name: '感知系统 (视觉/激光雷达/力觉传感器)',
+                minPercent: 15,
+                maxPercent: 20,
+                avgPercent: 17.5
             },
             {
-                name: '内存/存储 (DRAM/NAND Flash/UFS)',
-                minPercent: 10,
-                maxPercent: 15,
-                avgPercent: 12.5
+                name: '机械结构 (机身/关节/末端执行器)',
+                minPercent: 12,
+                maxPercent: 18,
+                avgPercent: 15
             },
             {
-                name: '机械结构件 (外壳/中框/按键)',
+                name: '软件算法 (SLAM/路径规划/AI算法)',
                 minPercent: 8,
                 maxPercent: 12,
                 avgPercent: 10
             },
             {
-                name: '电池 (锂电池/无线充电)',
-                minPercent: 5,
-                maxPercent: 8,
-                avgPercent: 6.5
-            },
-            {
-                name: '射频器件 (天线/PA/滤波器)',
-                minPercent: 4,
-                maxPercent: 8,
-                avgPercent: 6
-            },
-            {
-                name: '连接器/声学器件 (Type-C/扬声器)',
+                name: '通信模块 (5G/WiFi/工业以太网)',
                 minPercent: 3,
                 maxPercent: 6,
                 avgPercent: 4.5
             },
             {
-                name: '传感器 (陀螺仪/加速度/指纹)',
+                name: '电源系统 (电池/充电桩/电源管理)',
                 minPercent: 2,
-                maxPercent: 4,
-                avgPercent: 3
+                maxPercent: 5,
+                avgPercent: 3.5
+            },
+            {
+                name: '其他配件 (线缆/连接器/安全设备)',
+                minPercent: 1,
+                maxPercent: 3,
+                avgPercent: 2
             }
         ];
 
