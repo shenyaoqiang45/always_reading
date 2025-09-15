@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDR vs HBM 内存标准对比</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23ffffff" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .memory-section {
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ddr-section {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+        }
+
+        .hbm-section {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            color: white;
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.15);
+            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-item::before {
+            content: '●';
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.5em;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+
+        .use-cases {
+            margin-top: 30px;
+        }
+
+        .use-cases h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .use-case {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 25px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .use-case:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+
+        .comparison-table {
+            margin: 40px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            grid-column: 1 / -1;
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        .table-content {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.1em;
+        }
+
+        th {
+            background: linear-gradient(135deg, #74b9ff 0%, #fd79a8 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.2em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        td {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background-color 0.3s ease;
+        }
+
+        tr:hover td {
+            background-color: #f8f9fa;
+        }
+
+        .ddr-column {
+            background: rgba(116, 185, 255, 0.1);
+        }
+
+        .hbm-column {
+            background: rgba(253, 121, 168, 0.1);
+        }
+
+        .summary {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #00cec9 0%, #55a3ff 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .summary h3 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .summary p {
+            font-size: 1.3em;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .section-title {
+                font-size: 2em;
+            }
+            
+            .memory-section {
+                padding: 30px 20px;
+            }
+            
+            .comparison-table {
+                margin: 20px;
+            }
+        }
+
+        .icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 DDR vs HBM</h1>
+            <p>内存标准全面对比分析</p>
+        </div>
+
+        <div class="comparison-grid">
+            <div class="memory-section ddr-section">
+                <h2 class="section-title">📊 DDR 内存</h2>
+                <p style="font-size: 1.1em; margin-bottom: 30px; opacity: 0.9;">Double Data Rate - 双倍数据速率</p>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">传统并行接口架构</li>
+                    <li class="feature-item">成熟稳定的技术标准</li>
+                    <li class="feature-item">成本效益高</li>
+                    <li class="feature-item">DDR5最高6400MHz</li>
+                    <li class="feature-item">广泛兼容性</li>
+                </ul>
+
+                <div class="use-cases">
+                    <h3>🎯 主要应用场景</h3>
+                    <div class="use-case">💻 个人电脑主内存</div>
+                    <div class="use-case">🖥️ 服务器系统内存</div>
+                    <div class="use-case">📱 移动设备内存</div>
+                    <div class="use-case">🎮 游戏主机内存</div>
+                    <div class="use-case">💼 办公和日常计算</div>
+                </div>
+            </div>
+
+            <div class="memory-section hbm-section">
+                <h2 class="section-title">🚀 HBM 内存</h2>
+                <p style="font-size: 1.1em; margin-bottom: 30px; opacity: 0.9;">High Bandwidth Memory - 高带宽内存</p>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">3D堆叠TSV技术</li>
+                    <li class="feature-item">集成式接口设计</li>
+                    <li class="feature-item">超宽1024位位宽</li>
+                    <li class="feature-item">极高内存带宽</li>
+                    <li class="feature-item">低功耗高效率</li>
+                    <li class="feature-item">紧凑封装设计</li>
+                </ul>
+
+                <div class="use-cases">
+                    <h3>🎯 主要应用场景</h3>
+                    <div class="use-case">🧠 AI/机器学习训练</div>
+                    <div class="use-case">🎮 高端GPU显存</div>
+                    <div class="use-case">⚡ 高性能计算HPC</div>
+                    <div class="use-case">🔬 科学计算仿真</div>
+                    <div class="use-case">📊 大数据分析</div>
+                </div>
+            </div>
+
+            <div class="comparison-table">
+                <div class="table-header">
+                    📈 详细技术参数对比
+                </div>
+                <div class="table-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="background: #2d3436;">对比项目</th>
+                                <th style="background: linear-gradient(135deg, #74b9ff, #0984e3);">DDR内存</th>
+                                <th style="background: linear-gradient(135deg, #fd79a8, #e84393);">HBM内存</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>🏗️ 架构设计</strong></td>
+                                <td class="ddr-column">并行接口，传统2D布局</td>
+                                <td class="hbm-column">3D堆叠，TSV硅通孔技术</td>
+                            </tr>
+                            <tr>
+                                <td><strong>📊 数据位宽</strong></td>
+                                <td class="ddr-column">64位 - 128位</td>
+                                <td class="hbm-column">1024位 - 2048位</td>
+                            </tr>
+                            <tr>
+                                <td><strong>⚡ 带宽性能</strong></td>
+                                <td class="ddr-column">DDR5: ~50-100 GB/s</td>
+                                <td class="hbm-column">HBM3: ~600-900 GB/s</td>
+                            </tr>
+                            <tr>
+                                <td><strong>💰 成本水平</strong></td>
+                                <td class="ddr-column">低成本，批量生产</td>
+                                <td class="hbm-column">高成本，专业级</td>
+                            </tr>
+                            <tr>
+                                <td><strong>🔋 功耗效率</strong></td>
+                                <td class="ddr-column">标准功耗</td>
+                                <td class="hbm-column">更高能效比</td>
+                            </tr>
+                            <tr>
+                                <td><strong>📦 物理尺寸</strong></td>
+                                <td class="ddr-column">标准DIMM模组</td>
+                                <td class="hbm-column">紧凑堆叠封装</td>
+                            </tr>
+                            <tr>
+                                <td><strong>🔧 集成方式</strong></td>
+                                <td class="ddr-column">插槽式，可更换</td>
+                                <td class="hbm-column">板载集成，不可更换</td>
+                            </tr>
+                            <tr>
+                                <td><strong>🎯 目标市场</strong></td>
+                                <td class="ddr-column">通用计算市场</td>
+                                <td class="hbm-column">专业高性能计算</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="summary">
+                <h3>💡 总结对比</h3>
+                <p>
+                    DDR内存如同城市的主干道路系统，成熟可靠、成本低廉，满足绝大多数日常计算需求；
+                    而HBM内存则像专用的高速铁路网络，为AI训练、科学计算等对带宽有极致要求的专业应用场景提供强大支撑。
+                    两者各有所长，共同构建了现代计算系统的内存生态。
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
