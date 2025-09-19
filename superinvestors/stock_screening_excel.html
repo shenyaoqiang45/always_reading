@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>芒格式选股筛选表格</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+        th {
+            background-color: #34495e;
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #2c3e50;
+        }
+        td {
+            padding: 10px 8px;
+            border: 1px solid #bdc3c7;
+            text-align: center;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e8f4f8;
+        }
+        .priority-1 { background-color: #e74c3c; }
+        .priority-2 { background-color: #f39c12; }
+        .priority-3 { background-color: #f1c40f; }
+        .priority-4 { background-color: #2ecc71; }
+        
+        .input-cell {
+            background-color: #fff;
+            min-width: 80px;
+        }
+        .criteria {
+            font-weight: bold;
+            text-align: left;
+            padding-left: 15px;
+        }
+        .priority {
+            color: white;
+            font-weight: bold;
+            width: 60px;
+        }
+        .standard {
+            font-size: 11px;
+            color: #7f8c8d;
+            text-align: left;
+            padding-left: 10px;
+        }
+        .notes {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+        }
+        .download-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            font-size: 16px;
+        }
+        .download-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>芒格式选股筛选表格</h1>
+        <p class="subtitle">"与其买100只平庸股票，不如买5只伟大企业" - 查理·芒格</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th class="priority">优先级</th>
+                    <th style="width: 200px;">筛选标准</th>
+                    <th style="width: 150px;">标准值</th>
+                    <th>股票A</th>
+                    <th>股票B</th>
+                    <th>股票C</th>
+                    <th>股票D</th>
+                    <th>股票E</th>
+                    <th style="width: 80px;">通过数</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="priority priority-1">P1</td>
+                    <td class="criteria">护城河深度</td>
+                    <td class="standard">行业Top3 + 刚需产品</td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td>0/5</td>
+                </tr>
+                <tr>
+                    <td class="priority priority-1">P1</td>
+                    <td class="criteria">商业模式清晰</td>
+                    <td class="standard">ToC > ToB >> ToG</td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td>0/5</td>
+                </tr>
+                <tr>
+                    <td class="priority priority-2">P2</td>
+                    <td class="criteria">ROE持续性</td>
+                    <td class="standard">连续3年 > 15%</td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td>0/5</td>
+                </tr>
+                <tr>
+                    <td class="priority priority-3">P3</td>
+                    <td class="criteria">估值合理</td>
+                    <td class="standard">PE < 20倍</td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td>0/5</td>
+                </tr>
+                <tr>
+                    <td class="priority priority-4">P4</td>
+                    <td class="criteria">现金流健康</td>
+                    <td class="standard">经营现金流/净利润 > 0.8</td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td>0/5</td>
+                </tr>
+                <tr>
+                    <td class="priority priority-4">P4</td>
+                    <td class="criteria">负债可控</td>
+                    <td class="standard">资产负债率 < 60%</td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td>0/5</td>
+                </tr>
+                <tr>
+                    <td class="priority priority-4">P4</td>
+                    <td class="criteria">AI时代适应性</td>
+                    <td class="standard">不受LLM负向影响</td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td>0/5</td>
+                </tr>
+                <tr style="background-color: #8e44ad; color: white;">
+                    <td class="priority">主观</td>
+                    <td class="criteria">个人直觉喜好</td>
+                    <td class="standard">1-5分 (5=非常喜欢)</td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td class="input-cell" contenteditable="true"></td>
+                    <td>平均分</td>
+                </tr>
+                <tr style="background-color: #2c3e50; color: white; font-weight: bold;">
+                    <td>总分</td>
+                    <td>P2-P4标准通过数</td>
+                    <td>5项满分</td>
+                    <td>0/5</td>
+                    <td>0/5</td>
+                    <td>0/5</td>
+                    <td>0/5</td>
+                    <td>0/5</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button class="download-btn" onclick="exportToCSV()">导出为CSV文件</button>
+
+        <div class="notes">
+            <h3>🎯 芒格选股核心原则</h3>
+            <p><strong>P1优先级：</strong>这是决定性因素，不符合直接淘汰</p>
+            <p><strong>P2-P4优先级：</strong>5项标准中至少4项通过</p>
+            <p><strong>主观判断：</strong>结合个人直觉，最终拍板决策</p>
+            <br>
+            <h3>📝 使用说明</h3>
+            <p>1. 客观标准：输入 "✓" 表示通过，"✗" 表示不通过</p>
+            <p>2. AI适应性：评估公司是否会被LLM革命冲击</p>
+            <p>3. 个人喜好：1-5分评分（5分=超级喜欢这个生意）</p>
+            <p>4. 筛选标准：P1全过 + P2-P4至少4/5通过 + 个人喜好≥3分</p>
+            <p>5. 芒格说：<em>"投资最后还是要凭直觉和常识"</em></p>
+        </div>
+    </div>
+
+    <script>
+        function exportToCSV() {
+            const table = document.querySelector('table');
+            let csv = [];
+            
+            // 获取表头
+            const headers = [];
+            table.querySelectorAll('thead th').forEach(th => {
+                headers.push('"' + th.textContent.replace(/"/g, '""') + '"');
+            });
+            csv.push(headers.join(','));
+            
+            // 获取数据行
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const row = [];
+                tr.querySelectorAll('td').forEach(td => {
+                    row.push('"' + td.textContent.replace(/"/g, '""') + '"');
+                });
+                csv.push(row.join(','));
+            });
+            
+            // 创建并下载CSV文件
+            const csvContent = csv.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', '芒格式选股筛选表.csv');
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // 简单的计分功能
+        document.addEventListener('input', function(e) {
+            if (e.target.contentEditable === 'true') {
+                updateScores();
+            }
+        });
+
+        function updateScores() {
+            // 这里可以添加自动计分逻辑
+            // 暂时保持简单，用户手动填写
+        }
+    </script>
+</body>
+</html>
