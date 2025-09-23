@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上海半导体生态产业链A股公司科普</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ff9f;
+            text-shadow: 0 0 10px rgba(0,255,159,0.3);
+        }
+
+        .chain-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .companies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .company-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .company-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102,126,234,0.2);
+            border-left-color: #764ba2;
+        }
+
+        .company-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .company-card:hover::before {
+            opacity: 1;
+        }
+
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .company-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stock-code {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .company-business {
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .company-description {
+            color: #718096;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .market-cap {
+            display: inline-block;
+            background: rgba(102,126,234,0.1);
+            color: #667eea;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 12px 20px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-tab.active {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ecosystem-diagram {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .flow-chart {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .flow-item {
+            flex: 1;
+            min-width: 150px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .flow-item::after {
+            content: '→';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        .flow-item:last-child::after {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .companies-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .flow-chart {
+                flex-direction: column;
+            }
+            
+            .flow-item::after {
+                content: '↓';
+                right: 50%;
+                top: 100%;
+                transform: translateX(50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏭 上海半导体生态产业链</h1>
+            <p>打造中国"芯"高地 | A股上市公司全景图</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">25+</div>
+                <div>核心A股公司</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5000亿+</div>
+                <div>总市值规模</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">90%</div>
+                <div>产业链覆盖度</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">张江</div>
+                <div>核心集聚区</div>
+            </div>
+        </div>
+
+        <div class="ecosystem-diagram">
+            <h2 style="color: #4a5568; margin-bottom: 20px;">🔄 产业链生态流程</h2>
+            <div class="flow-chart">
+                <div class="flow-item">设备材料</div>
+                <div class="flow-item">晶圆制造</div>
+                <div class="flow-item">芯片设计</div>
+                <div class="flow-item">封装测试</div>
+                <div class="flow-item">终端应用</div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showTab('manufacturing')">🏭 制造代工</div>
+            <div class="nav-tab" onclick="showTab('equipment')">⚙️ 设备材料</div>
+            <div class="nav-tab" onclick="showTab('design')">💡 芯片设计</div>
+            <div class="nav-tab" onclick="showTab('packaging')">📦 封装测试</div>
+        </div>
+
+        <div id="manufacturing" class="tab-content active">
+            <div class="chain-section">
+                <div class="section-title">
+                    <div class="section-icon">🏭</div>
+                    晶圆制造 - 上海制造业之光
+                </div>
+                <div class="companies-grid">
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">中芯国际</div>
+                            <div class="stock-code">688981</div>
+                        </div>
+                        <div class="company-business">晶圆代工龙头</div>
+                        <div class="company-description">
+                            中国大陆最大、技术最先进的晶圆代工企业，在上海有12英寸、8英寸多条产线，工艺覆盖28nm-180nm，是国产芯片制造的核心力量。
+                        </div>
+                        <div class="market-cap">市值: 3000亿+</div>
+                    </div>
+                    
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">华虹半导体</div>
+                            <div class="stock-code">688347</div>
+                        </div>
+                        <div class="company-business">特色工艺代工</div>
+                        <div class="company-description">
+                            专注功率器件、模拟芯片等特色工艺代工，华虹一厂至八厂均在上海，在汽车电子、工业控制等领域具有技术优势。
+                        </div>
+                        <div class="market-cap">市值: 800亿+</div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">华润微</div>
+                            <div class="stock-code">688396</div>
+                        </div>
+                        <div class="company-business">功率半导体制造</div>
+                        <div class="company-description">
+                            国内功率半导体龙头，拥有完整的功率器件产业链，在上海嘉定有重要制造基地，产品广泛应用于新能源汽车。
+                        </div>
+                        <div class="market-cap">市值: 1200亿+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="equipment" class="tab-content">
+            <div class="chain-section">
+                <div class="section-title">
+                    <div class="section-icon">⚙️</div>
+                    设备材料 - 产业链上游核心
+                </div>
+                <div class="companies-grid">
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">中微公司</div>
+                            <div class="stock-code">688012</div>
+                        </div>
+                        <div class="company-business">刻蚀设备龙头</div>
+                        <div class="company-description">
+                            国产刻蚀设备龙头，等离子体刻蚀设备技术达到国际先进水平，MOCVD设备在LED领域全球领先，总部位于上海张江。
+                        </div>
+                        <div class="market-cap">市值: 2000亿+</div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">沪硅产业</div>
+                            <div class="stock-code">688126</div>
+                        </div>
+                        <div class="company-business">硅片制造龙头</div>
+                        <div class="company-description">
+                            国内12英寸硅片龙头企业，打破国外垄断，位于上海临港，是中国大尺寸硅片产业化的重要突破。
+                        </div>
+                        <div class="market-cap">市值: 800亿+</div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">安集科技</div>
+                            <div class="stock-code">688019</div>
+                        </div>
+                        <div class="company-business">CMP材料供应商</div>
+                        <div class="company-description">
+                            化学机械抛光材料龙头，打破国外技术垄断，产品应用于全球主要晶圆厂，是科创板首批上市企业之一。
+                        </div>
+                        <div class="market-cap">市值: 400亿+</div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">晶瑞电材</div>
+                            <div class="stock-code">300655</div>
+                        </div>
+                        <div class="company-business">光刻胶及化学品</div>
+                        <div class="company-description">
+                            专业的电子化学品供应商，在光刻胶、超净高纯试剂等领域具有技术优势，在上海有重要生产基地。
+                        </div>
+                        <div class="market-cap">市值: 300亿+</div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">上海新阳</div>
+                            <div class="stock-code">300236</div>
+                        </div>
+                        <div class="company-business">湿电子化学品</div>
+                        <div class="company-description">
+                            专注电镀液、清洗液等湿电子化学品，在晶圆级封装材料领域有所突破，是上海本土成长起来的材料企业。
+                        </div>
+                        <div class="market-cap">市值: 200亿+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="design" class="tab-content">
+            <div class="chain-section">
+                <div class="section-title">
+                    <div class="section-icon">💡</div>
+                    芯片设计 - 创新引领未来
+                </div>
+                <div class="companies-grid">
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">韦尔股份</div>
+                            <div class="stock-code">603501</div>
+                        </div>
+                        <div class="company-business">CIS芯片龙头</div>
+                        <div class="company-description">
+                            全球第三大CIS芯片供应商，收购豪威科技后成为图像传感器领域领军企业，产品广泛应用于手机摄像头。
+                        </div>
+                        <div class="market-cap">市值: 1500亿+</div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">紫光国微</div>
+                            <div class="stock-code">002049</div>
+                        </div>
+                        <div class="company-business">智能安全芯片</div>
+                        <div class="company-description">
+                            国内智能安全芯片龙头，在金融IC卡、身份识别、汽车电子等领域具有领先优势，是数字经济基础设施的重要支撑。
+                        </div>
+                        <div class="market-cap">市值: 1000亿+</div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">兆易创新</div>
+                            <div class="stock-code">603986</div>
+                        </div>
+                        <div class="company-business">存储芯片设计</div>
+                        <div class="company-description">
+                            国内存储芯片设计龙头，NOR Flash全球市场份额第三，同时在MCU微控制器领域快速发展，是存储产业的重要力量。
+                        </div>
+                        <div class="market-cap">市值: 800亿+</div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">卓胜微</div>
+                            <div class="stock-code">300782</div>
+                        </div>
+                        <div class="company-business">射频芯片设计</div>
+                        <div class="company-description">
+                            国内射频前端芯片龙头，在5G射频器件领域技术领先，产品广泛应用于智能手机，是5G产业链的核心环节。
+                        </div>
+                        <div class="market-cap">市值: 1200亿+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="packaging" class="tab-content">
+            <div class="chain-section">
+                <div class="section-title">
+                    <div class="section-icon">📦</div>
+                    封装测试 - 产业链后端支撑
+                </div>
+                <div class="companies-grid">
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">长电科技</div>
+                            <div class="stock-code">600584</div>
+                        </div>
+                        <div class="company-business">封测龙头企业</div>
+                        <div class="company-description">
+                            全球第三大封测企业，在上海、江阴等地有重要基地，为全球主要芯片厂商提供封装测试服务，技术实力雄厚。
+                        </div>
+                        <div class="market-cap">市值: 600亿+</div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">华天科技</div>
+                            <div class="stock-code">002185</div>
+                        </div>
+                        <div class="company-business">封装测试服务</div>
+                        <div class="company-description">
+                            国内封测行业重要企业，在先进封装技术方面持续投入，为消费电子、汽车电子等领域提供专业服务。
+                        </div>
+                        <div class="market-cap">市值: 400亿+</div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">通富微电</div>
+                            <div class="stock-code">002156</div>
+                        </div>
+                        <div class="company-business">封装测试服务</div>
+                        <div class="company-description">
+                            专业的封装测试服务商，在CPU、GPU等高端芯片封装领域具有技术优势，是AMD等国际巨头的重要合作伙伴。
+                        </div>
+                        <div class="market-cap">市值: 300亿+</div>
+                    </div>
+
+                    <div class="company-card">
+                        <div class="company-header">
+                            <div class="company-name">深南电路</div>
+                            <div class="stock-code">002916</div>
+                        </div>
+                        <div class="company-business">PCB及封装基板</div>
+                        <div class="company-description">
+                            PCB行业龙头，在IC封装基板领域技术先进，为半导体封装提供关键基础材料，是产业链重要环节。
+                        </div>
+                        <div class="market-cap">市值: 500亿+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chain-section">
+            <div class="section-title">
+                <div class="section-icon">🌟</div>
+                上海半导体产业发展优势
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 15px;">
+                    <h3>🏛️ 政策支持</h3>
+                    <p>上海市集成电路产业"十四五"规划，临港新片区特殊政策，长三角一体化发展战略。</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 20px; border-radius: 15px;">
+                    <h3>🎓 人才集聚</h3>
+                    <p>复旦、交大等顶尖高校，海外人才回流，完善的产业人才培养体系。</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 20px; border-radius: 15px;">
+                    <h3>💰 资本支持</h3>
+                    <p>科创板助力企业融资，国家及地方产业基金重点投资，国际资本积极参与。</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; padding: 20px; border-radius: 15px;">
+                    <h3>🏭 产业基础</h3>
+                    <p>张江高科技园区，临港新片区，完整的产业链生态，强大的制造业基础。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // 隐藏所有tab内容
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有tab的active状态
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的tab内容
+            document.getElementById(tabName).classList.add('active');
+            
+            // 设置对应tab为active状态
+            event.target.classList.add('active');
+        }
+
+        // 添加公司卡片点击效果
+        document.querySelectorAll('.company-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const stockCode = this.querySelector('.stock-code').textContent;
+                const companyName = this.querySelector('.company-name').textContent;
+                
+                // 创建临时提示
+                const tooltip = document.createElement('div');
+                tooltip.innerHTML = `📈 ${companyName} (${stockCode}) - 点击查看详情`;
+                tooltip.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    z-index: 1000;
+                    animation: fadeIn 0.3s ease;
+                `;
+                document.body.appendChild(tooltip);
+                
+                setTimeout(() => {
+                    document.body.removeChild(tooltip);
+                }, 2000);
+            });
+        });
+
+        // 添加统计数字动画效果
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stat-number');
+            numbers.forEach(num => {
+                if (!isNaN(parseInt(num.textContent))) {
+                    const finalNum = parseInt(num.textContent);
+                    let currentNum = 0;
+                    const increment = finalNum / 50;
+                    
+                    const timer = setInterval(() => {
+                        currentNum += increment;
+                        if (currentNum >= finalNum) {
+                            num.textContent = finalNum + '+';
+                            clearInterval(timer);
+                        } else {
+                            num.textContent = Math.floor(currentNum);
+                        }
+                    }, 30);
+                }
+            });
+        }
+
+        // 页面加载完成后执行动画
+        window.addEventListener('load', animateNumbers);
+    </script>
+</body>
+</html>
