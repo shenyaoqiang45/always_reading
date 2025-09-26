@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>城商行与券商业务异同科普</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .business-item {
+            background: #f8f9ff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .business-item h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        
+        .comparison-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-section h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .comparison-header {
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .comparison-cell {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e6ff;
+        }
+        
+        .highlight {
+            background: linear-gradient(45deg, #ffeaa7, #fab1a0);
+            color: #2d3436;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .tab-container {
+            margin: 30px 0;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 15px;
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 城商行 vs 券商 🏢</h1>
+            <p>深度解析中国金融机构的业务模式与差异</p>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <h2><span class="icon">🏛️</span>城市商业银行</h2>
+                <div class="business-item">
+                    <h4>存贷业务</h4>
+                    <p>吸收公众存款，发放各类贷款，是银行的核心传统业务</p>
+                </div>
+                <div class="business-item">
+                    <h4>支付结算</h4>
+                    <p>提供转账、汇款、票据结算等支付服务</p>
+                </div>
+                <div class="business-item">
+                    <h4>理财业务</h4>
+                    <p>销售理财产品，提供财富管理服务</p>
+                </div>
+                <div class="business-item">
+                    <h4>信用卡业务</h4>
+                    <p>发行信用卡，提供消费信贷服务</p>
+                </div>
+                <div class="business-item">
+                    <h4>外汇业务</h4>
+                    <p>外汇兑换、跨境汇款等国际业务</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><span class="icon">📈</span>证券公司</h2>
+                <div class="business-item">
+                    <h4>经纪业务</h4>
+                    <p>代理客户买卖股票、债券等证券交易</p>
+                </div>
+                <div class="business-item">
+                    <h4>投行业务</h4>
+                    <p>承销发行、并购重组、财务顾问等</p>
+                </div>
+                <div class="business-item">
+                    <h4>自营业务</h4>
+                    <p>用自有资金进行证券投资交易</p>
+                </div>
+                <div class="business-item">
+                    <h4>资管业务</h4>
+                    <p>受托管理客户资产，发行集合理财产品</p>
+                </div>
+                <div class="business-item">
+                    <h4>融资融券</h4>
+                    <p>向客户融资融券，提供杠杆交易服务</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <h2>🔍 核心差异对比</h2>
+            <div class="comparison-grid">
+                <div class="comparison-header">对比维度</div>
+                <div class="comparison-header">城商行</div>
+                <div class="comparison-header">券商</div>
+                
+                <div class="comparison-cell"><strong>主要功能</strong></div>
+                <div class="comparison-cell">资金中介、支付结算</div>
+                <div class="comparison-cell">证券中介、投资银行</div>
+                
+                <div class="comparison-cell"><strong>收入来源</strong></div>
+                <div class="comparison-cell">净息差、手续费</div>
+                <div class="comparison-cell">佣金、承销费、投资收益</div>
+                
+                <div class="comparison-cell"><strong>客户群体</strong></div>
+                <div class="comparison-cell">个人、企业存贷客户</div>
+                <div class="comparison-cell">投资者、拟上市企业</div>
+                
+                <div class="comparison-cell"><strong>监管机构</strong></div>
+                <div class="comparison-cell">银保监会</div>
+                <div class="comparison-cell">证监会</div>
+                
+                <div class="comparison-cell"><strong>风险特征</strong></div>
+                <div class="comparison-cell">信用风险为主</div>
+                <div class="comparison-cell">市场风险为主</div>
+                
+                <div class="comparison-cell"><strong>经营周期</strong></div>
+                <div class="comparison-cell">相对稳定</div>
+                <div class="comparison-cell">与市场周期高度相关</div>
+            </div>
+        </div>
+        
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('similarities')">相同点</button>
+                <button class="tab-button" onclick="showTab('regulations')">监管要求</button>
+                <button class="tab-button" onclick="showTab('trends')">发展趋势</button>
+            </div>
+            
+            <div id="similarities" class="tab-content active">
+                <h3>🤝 共同特征</h3>
+                <div class="business-item">
+                    <h4>金融牌照管理</h4>
+                    <p>都需要获得相应的金融牌照才能开展业务，受到严格监管</p>
+                </div>
+                <div class="business-item">
+                    <h4>风险管理</h4>
+                    <p>都需要建立完善的风险管理体系，防范各类金融风险</p>
+                </div>
+                <div class="business-item">
+                    <h4>资本充足率要求</h4>
+                    <p>都有最低资本充足率要求，确保机构稳健经营</p>
+                </div>
+                <div class="business-item">
+                    <h4>信息披露义务</h4>
+                    <p>都需要定期披露财务状况和经营信息，保证透明度</p>
+                </div>
+                <div class="business-item">
+                    <h4>服务实体经济</h4>
+                    <p>都承担服务实体经济发展的社会责任</p>
+                </div>
+            </div>
+            
+            <div id="regulations" class="tab-content">
+                <h3>📋 监管框架</h3>
+                <div class="content-grid">
+                    <div>
+                        <h4>城商行监管</h4>
+                        <div class="business-item">
+                            <strong>银保监会监管</strong>
+                            <p>• 存贷比监管<br>• 资本充足率要求<br>• 流动性覆盖率<br>• 大额风险暴露管理</p>
+                        </div>
+                        <div class="business-item">
+                            <strong>央行政策</strong>
+                            <p>• 存款准备金率<br>• 货币政策传导<br>• 支付结算监管</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>券商监管</h4>
+                        <div class="business-item">
+                            <strong>证监会监管</strong>
+                            <p>• 净资本管理<br>• 客户资金第三方存管<br>• 投资者适当性管理<br>• 合规风控要求</p>
+                        </div>
+                        <div class="business-item">
+                            <strong>行业自律</strong>
+                            <p>• 证券业协会<br>• 交易所规则<br>• 投资者保护基金</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="trends" class="tab-content">
+                <h3>🚀 未来发展趋势</h3>
+                <div class="business-item">
+                    <h4>数字化转型</h4>
+                    <p>两者都在加快数字化进程，通过金融科技提升服务效率和客户体验</p>
+                </div>
+                <div class="business-item">
+                    <h4>业务边界模糊化</h4>
+                    <p>银行理财子公司、券商资管等业务使得两者在资管领域竞争加剧</p>
+                </div>
+                <div class="business-item">
+                    <h4>综合化经营</h4>
+                    <p>大型机构通过设立子公司等方式，向综合金融服务商转型</p>
+                </div>
+                <div class="business-item">
+                    <h4>服务下沉</h4>
+                    <p>都在向中小企业和个人投资者提供更多元化的金融服务</p>
+                </div>
+                <div class="business-item">
+                    <h4>国际化发展</h4>
+                    <p>头部机构积极拓展海外市场，提升国际竞争力</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="highlight">
+            💡 总结：城商行和券商虽然业务模式不同，但都是金融体系的重要组成部分，
+            在服务实体经济、防范金融风险方面发挥着重要作用。
+            未来两者将在数字化、综合化道路上持续发展。
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            // 隐藏所有标签页内容
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有按钮的active状态
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // 显示选中的标签页
+            document.getElementById(tabName).classList.add('active');
+            
+            // 激活对应的按钮
+            event.target.classList.add('active');
+        }
+        
+        // 添加卡片悬停动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
