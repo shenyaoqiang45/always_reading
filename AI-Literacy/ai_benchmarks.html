@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI公司常用Benchmark测试集介绍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .company-section {
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .company-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .company-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .deepseek { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+        .openai { background: linear-gradient(135deg, #10a37f, #087f5b); }
+        .anthropic { background: linear-gradient(135deg, #d4a574, #b8956b); }
+        .xai { background: linear-gradient(135deg, #1da1f2, #0d8bd9); }
+
+        .company-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .benchmark-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .benchmark-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benchmark-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            pointer-events: none;
+        }
+
+        .benchmark-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .math { border-left-color: #e74c3c; }
+        .language { border-left-color: #3498db; }
+        .code { border-left-color: #2ecc71; }
+        .reasoning { border-left-color: #9b59b6; }
+        .multimodal { border-left-color: #f39c12; }
+        .safety { border-left-color: #e67e22; }
+
+        .benchmark-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .benchmark-desc {
+            color: #5a6c7d;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .benchmark-tag {
+            display: inline-block;
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin: 2px;
+        }
+
+        .company-focus {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        .stats-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .benchmark-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .company-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .company-logo {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header fade-in">
+            <h1>AI公司常用Benchmark测试集</h1>
+            <p>全面了解主流AI公司的模型评测标准与测试集选择策略</p>
+        </div>
+
+        <div class="stats-section fade-in">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">20+</span>
+                    <div class="stat-label">核心测试集</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">4</span>
+                    <div class="stat-label">主流AI公司</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">6</span>
+                    <div class="stat-label">评测维度</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <div class="stat-label">开源透明</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DeepSeek -->
+        <div class="company-section fade-in">
+            <div class="company-header">
+                <div class="company-logo deepseek">DS</div>
+                <div class="company-name">DeepSeek</div>
+            </div>
+            <div class="benchmark-grid">
+                <div class="benchmark-card language">
+                    <div class="benchmark-name">MMLU-Pro</div>
+                    <div class="benchmark-desc">多任务语言理解的增强版本，比标准MMLU更具挑战性，包含更复杂的推理题目</div>
+                    <span class="benchmark-tag">多任务理解</span>
+                    <span class="benchmark-tag">知识评估</span>
+                </div>
+                <div class="benchmark-card math">
+                    <div class="benchmark-name">AIME</div>
+                    <div class="benchmark-desc">美国数学邀请赛，测试高水平数学竞赛能力，要求深度数学推理</div>
+                    <span class="benchmark-tag">数学竞赛</span>
+                    <span class="benchmark-tag">高难度推理</span>
+                </div>
+                <div class="benchmark-card math">
+                    <div class="benchmark-name">MATH-500</div>
+                    <div class="benchmark-desc">精选的500道高难度数学问题，涵盖代数、几何、数论等多个领域</div>
+                    <span class="benchmark-tag">数学解题</span>
+                    <span class="benchmark-tag">综合能力</span>
+                </div>
+                <div class="benchmark-card code">
+                    <div class="benchmark-name">LiveCodeBench</div>
+                    <div class="benchmark-desc">实时代码生成评测，定期更新避免训练数据泄露，确保评测公平性</div>
+                    <span class="benchmark-tag">代码生成</span>
+                    <span class="benchmark-tag">实时更新</span>
+                </div>
+                <div class="benchmark-card code">
+                    <div class="benchmark-name">Codeforces</div>
+                    <div class="benchmark-desc">算法竞赛平台题目，测试算法设计和编程实现能力</div>
+                    <span class="benchmark-tag">算法竞赛</span>
+                    <span class="benchmark-tag">编程能力</span>
+                </div>
+            </div>
+            <div class="company-focus">
+                <strong>核心策略：</strong>强调开源模型在数学和编码上的竞争力，V3/R1系列在数学推理和代码生成方面表现突出
+            </div>
+        </div>
+
+        <!-- OpenAI -->
+        <div class="company-section fade-in">
+            <div class="company-header">
+                <div class="company-logo openai">AI</div>
+                <div class="company-name">OpenAI (GPT)</div>
+            </div>
+            <div class="benchmark-grid">
+                <div class="benchmark-card language">
+                    <div class="benchmark-name">MMLU</div>
+                    <div class="benchmark-desc">多任务语言理解，涵盖57个学科的综合知识评估，业界标准测试集</div>
+                    <span class="benchmark-tag">综合知识</span>
+                    <span class="benchmark-tag">多学科</span>
+                </div>
+                <div class="benchmark-card math">
+                    <div class="benchmark-name">AIME</div>
+                    <div class="benchmark-desc">美国数学邀请赛，与DeepSeek同样重视的高水平数学评测</div>
+                    <span class="benchmark-tag">数学竞赛</span>
+                    <span class="benchmark-tag">推理能力</span>
+                </div>
+                <div class="benchmark-card code">
+                    <div class="benchmark-name">SWE-bench Verified</div>
+                    <div class="benchmark-desc">软件工程任务评测，测试真实软件开发场景中的问题解决能力</div>
+                    <span class="benchmark-tag">软件工程</span>
+                    <span class="benchmark-tag">实际应用</span>
+                </div>
+                <div class="benchmark-card code">
+                    <div class="benchmark-name">Aider Polyglot</div>
+                    <div class="benchmark-desc">多语言编码能力测试，支持多种编程语言的代码生成和修改</div>
+                    <span class="benchmark-tag">多语言编程</span>
+                    <span class="benchmark-tag">代码修改</span>
+                </div>
+                <div class="benchmark-card math">
+                    <div class="benchmark-name">GSM8K</div>
+                    <div class="benchmark-desc">小学数学应用题，测试基础数学推理和逻辑思维能力</div>
+                    <span class="benchmark-tag">数学推理</span>
+                    <span class="benchmark-tag">应用题</span>
+                </div>
+                <div class="benchmark-card reasoning">
+                    <div class="benchmark-name">GPQA</div>
+                    <div class="benchmark-desc">研究生级别的推理问题，测试高阶认知和专业知识应用能力</div>
+                    <span class="benchmark-tag">研究生级</span>
+                    <span class="benchmark-tag">专业推理</span>
+                </div>
+            </div>
+            <div class="company-focus">
+                <strong>核心策略：</strong>覆盖从学术到实际应用的全方位任务，如GDPval经济价值评估，GPT-5等模型在编码基准中保持领先地位
+            </div>
+        </div>
+
+        <!-- Anthropic -->
+        <div class="company-section fade-in">
+            <div class="company-header">
+                <div class="company-logo anthropic">C</div>
+                <div class="company-name">Anthropic (Claude)</div>
+            </div>
+            <div class="benchmark-grid">
+                <div class="benchmark-card language">
+                    <div class="benchmark-name">MMLU</div>
+                    <div class="benchmark-desc">与OpenAI同样重视的多任务语言理解评测，作为基础能力指标</div>
+                    <span class="benchmark-tag">基础能力</span>
+                    <span class="benchmark-tag">知识广度</span>
+                </div>
+                <div class="benchmark-card reasoning">
+                    <div class="benchmark-name">GPQA</div>
+                    <div class="benchmark-desc">研究生级推理问题，Claude系列在此类高认知任务中表现优异</div>
+                    <span class="benchmark-tag">高级认知</span>
+                    <span class="benchmark-tag">专业推理</span>
+                </div>
+                <div class="benchmark-card code">
+                    <div class="benchmark-name">SWE-bench Verified</div>
+                    <div class="benchmark-desc">软件工程任务验证集，测试实际开发环境中的问题解决能力</div>
+                    <span class="benchmark-tag">软件工程</span>
+                    <span class="benchmark-tag">实用性</span>
+                </div>
+                <div class="benchmark-card multimodal">
+                    <div class="benchmark-name">MMMLU</div>
+                    <div class="benchmark-desc">多语言多模态理解评测，结合视觉和语言的综合理解能力</div>
+                    <span class="benchmark-tag">多模态</span>
+                    <span class="benchmark-tag">多语言</span>
+                </div>
+                <div class="benchmark-card multimodal">
+                    <div class="benchmark-name">视觉基准</div>
+                    <div class="benchmark-desc">图表理解、图像分析等视觉任务，Claude在多模态理解方面的优势</div>
+                    <span class="benchmark-tag">视觉理解</span>
+                    <span class="benchmark-tag">图表分析</span>
+                </div>
+            </div>
+            <div class="company-focus">
+                <strong>核心策略：</strong>重点关注认知能力和软件工程，Claude 4/3.5 Sonnet在研究生级任务上创造行业新标准
+            </div>
+        </div>
+
+        <!-- xAI -->
+        <div class="company-section fade-in">
+            <div class="company-header">
+                <div class="company-logo xai">X</div>
+                <div class="company-name">xAI (Grok)</div>
+            </div>
+            <div class="benchmark-grid">
+                <div class="benchmark-card language">
+                    <div class="benchmark-name">MMLU</div>
+                    <div class="benchmark-desc">标准多任务语言理解评测，作为基础能力衡量标准</div>
+                    <span class="benchmark-tag">标准评测</span>
+                    <span class="benchmark-tag">基础能力</span>
+                </div>
+                <div class="benchmark-card math">
+                    <div class="benchmark-name">GSM8K</div>
+                    <div class="benchmark-desc">数学推理能力测试，验证逻辑思维和计算能力</div>
+                    <span class="benchmark-tag">数学推理</span>
+                    <span class="benchmark-tag">逻辑思维</span>
+                </div>
+                <div class="benchmark-card reasoning">
+                    <div class="benchmark-name">AI Intelligence Index</div>
+                    <div class="benchmark-desc">综合智能评估指数，多维度衡量AI系统的整体表现</div>
+                    <span class="benchmark-tag">综合评估</span>
+                    <span class="benchmark-tag">多维度</span>
+                </div>
+                <div class="benchmark-card reasoning">
+                    <div class="benchmark-name">LMSYS Arena</div>
+                    <div class="benchmark-desc">用户偏好排名系统，基于真实用户交互的模型能力评估</div>
+                    <span class="benchmark-tag">用户偏好</span>
+                    <span class="benchmark-tag">实际应用</span>
+                </div>
+                <div class="benchmark-card reasoning">
+                    <div class="benchmark-name">学术考试 & 业务模拟</div>
+                    <div class="benchmark-desc">结合学术测试和商业场景模拟，全面评估实用性</div>
+                    <span class="benchmark-tag">学术测试</span>
+                    <span class="benchmark-tag">商业应用</span>
+                </div>
+            </div>
+            <div class="company-focus">
+                <strong>核心策略：</strong>Grok 4系列强调效率和多代理性能，常与Claude/DeepSeek进行基准对比，在综合排行榜中占据领先地位
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 添加滚动动画效果
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // 观察所有需要动画的元素
+        document.querySelectorAll('.company-section, .stats-section').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // 添加交互效果
+        document.querySelectorAll('.benchmark-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.background = 'linear-gradient(135deg, #ffffff, #f8f9fa)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.background = 'linear-gradient(135deg, #f8f9fa, #e9ecef)';
+            });
+        });
+    </script>
+</body>
+</html>
