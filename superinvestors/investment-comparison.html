@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投资方案三维对比分析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            font-weight: 600;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .plan-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .plan-card.best {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border: 3px solid #f39c12;
+        }
+
+        .plan-card.best::before {
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .badge.gold {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .plan-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .plan-composition {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .metric-value {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .metric-value.good {
+            color: #27ae60;
+        }
+
+        .metric-value.warning {
+            color: #e67e22;
+        }
+
+        .metric-value.bad {
+            color: #e74c3c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 18px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .medal {
+            font-size: 1.3em;
+            margin-left: 5px;
+        }
+
+        .scenario-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .scenario-title {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.15em;
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .recommendation h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .recommendation-content {
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .pros, .cons {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .pros {
+            border-left: 5px solid #27ae60;
+        }
+
+        .cons {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .pros h4, .cons h4 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .pros h4 {
+            color: #27ae60;
+        }
+
+        .cons h4 {
+            color: #e74c3c;
+        }
+
+        .pros ul, .cons ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pros li, .cons li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .pros li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .cons li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bar-label {
+            min-width: 150px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            background: #ecf0f1;
+            border-radius: 10px;
+            height: 35px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 700;
+            transition: width 1s ease;
+        }
+
+        .bar-fill.plan1 {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .bar-fill.plan2 {
+            background: linear-gradient(90deg, #27ae60, #229954);
+        }
+
+        .bar-fill.plan3 {
+            background: linear-gradient(90deg, #e67e22, #e74c3c);
+        }
+
+        @media (max-width: 1024px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 投资方案三维对比分析</h1>
+            <p class="subtitle">基于ROE、PEG、PE/ROE的系统性评估</p>
+        </header>
+
+        <div class="content">
+            <!-- 方案概览 -->
+            <div class="section">
+                <h2 class="section-title">📊 三大方案概览</h2>
+                <div class="comparison-grid">
+                    <div class="plan-card best">
+                        <span class="badge gold">推荐方案</span>
+                        <h3 class="plan-title">方案一：纯紫金</h3>
+                        <div class="plan-composition">
+                            <strong>配置：</strong>紫金矿业 100%
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">预期年化收益</span>
+                            <span class="metric-value good">14-15%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">加权ROE</span>
+                            <span class="metric-value good">16.39%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">加权PEG</span>
+                            <span class="metric-value good">1.30</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">波动率</span>
+                            <span class="metric-value warning">18%</span>
+                        </div>
+                    </div>
+
+                    <div class="plan-card">
+                        <span class="badge">平衡方案</span>
+                        <h3 class="plan-title">方案二：紫金+美的</h3>
+                        <div class="plan-composition">
+                            <strong>配置：</strong>紫金矿业 50% + 美的 50%
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">预期年化收益</span>
+                            <span class="metric-value good">12.5%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">加权ROE</span>
+                            <span class="metric-value good">14.22%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">加权PEG</span>
+                            <span class="metric-value good">1.45</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">波动率</span>
+                            <span class="metric-value good">12%</span>
+                        </div>
+                    </div>
+
+                    <div class="plan-card">
+                        <span class="badge">激进方案</span>
+                        <h3 class="plan-title">方案三：+沪电</h3>
+                        <div class="plan-composition">
+                            <strong>配置：</strong>紫金 50% + 美的 35% + 沪电 15%
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">预期年化收益</span>
+                            <span class="metric-value bad">9.5%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">加权ROE</span>
+                            <span class="metric-value good">14.40%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">加权PEG</span>
+                            <span class="metric-value good">1.31</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">波动率</span>
+                            <span class="metric-value warning">16%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 核心指标对比 -->
+            <div class="section">
+                <h2 class="section-title">📈 核心指标对比</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>评估维度</th>
+                            <th>方案一（纯紫金）</th>
+                            <th>方案二（紫金+美的）</th>
+                            <th>方案三（+沪电）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight">
+                            <td><strong>预期年化收益</strong></td>
+                            <td>15.0% 🥇</td>
+                            <td>12.5% 🥈</td>
+                            <td>9.5% 🥉</td>
+                        </tr>
+                        <tr>
+                            <td>加权ROE</td>
+                            <td>16.39% 🥇</td>
+                            <td>14.22% 🥈</td>
+                            <td>14.40% 🥈</td>
+                        </tr>
+                        <tr>
+                            <td>加权PEG</td>
+                            <td>1.30 🥇</td>
+                            <td>1.45 🥈</td>
+                            <td>1.31 🥇</td>
+                        </tr>
+                        <tr>
+                            <td>PE/ROE</td>
+                            <td>1.19 🥇</td>
+                            <td>1.13 🥇</td>
+                            <td>1.52 🥉</td>
+                        </tr>
+                        <tr>
+                            <td>波动率</td>
+                            <td>18% 🥉</td>
+                            <td>12% 🥇</td>
+                            <td>16% 🥈</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td><strong>夏普比率</strong></td>
+                            <td>0.67 🥈</td>
+                            <td>0.79 🥇</td>
+                            <td>0.43 🥉</td>
+                        </tr>
+                        <tr>
+                            <td>最大回撤</td>
+                            <td>-35% 🥈</td>
+                            <td>-25% 🥇</td>
+                            <td>-40% 🥉</td>
+                        </tr>
+                        <tr>
+                            <td>持有难度</td>
+                            <td>中</td>
+                            <td>低 🥇</td>
+                            <td>高</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 情景分析 -->
+            <div class="section">
+                <h2 class="section-title">🎲 不同市场环境下的表现</h2>
+                
+                <div class="scenario-box">
+                    <div class="scenario-title">📈 情景1：大宗商品牛市（概率20%）</div>
+                    <p><strong>假设：</strong>金价突破$3000，铜价大涨</p>
+                    <div class="chart-container">
+                        <div class="bar-chart">
+                            <div class="bar-item">
+                                <div class="bar-label">方案一</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar-fill plan1" style="width: 100%;">+35% 🥇</div>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">方案二</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar-fill plan2" style="width: 67%;">+23.5%</div>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">方案三</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar-fill plan3" style="width: 88%;">+30.7%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario-box">
+                    <div class="scenario-title">📊 情景2：平稳增长（概率50%）</div>
+                    <p><strong>假设：</strong>金价维持$2400-2600，经济稳定</p>
+                    <div class="chart-container">
+                        <div class="bar-chart">
+                            <div class="bar-item">
+                                <div class="bar-label">方案一</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar-fill plan1" style="width: 100%;">+15% 🥇</div>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">方案二</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar-fill plan2" style="width: 77%;">+11.5%</div>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">方案三</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar-fill plan3" style="width: 67%;">+10.0%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario-box">
+                    <div class="scenario-title">📉 情景3：经济衰退（概率20%）</div>
+                    <p><strong>假设：</strong>金价回落至$2000，经济下行</p>
+                    <div class="chart-container">
+                        <div class="bar-chart">
+                            <div class="bar-item">
+                                <div class="bar-label">方案一</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar-fill plan1" style="width: 35%; background: #e74c3c;">-20%</div>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">方案二</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar-fill plan2" style="width: 28%; background: #27ae60;">-17.5% 🥇</div>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">方案三</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar-fill plan3" style="width: 40%; background: #c0392b;">-22.8%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 长期复利对比 -->
+            <div class="section">
+                <h2 class="section-title">💰 长期复利对比（初始100万）</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>持有期</th>
+                            <th>方案一（14%）</th>
+                            <th>方案二（11.2%）</th>
+                            <th>方案三（9.8%）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>5年</td>
+                            <td class="highlight">192万</td>
+                            <td>170万</td>
+                            <td>161万</td>
+                        </tr>
+                        <tr>
+                            <td>10年</td>
+                            <td class="highlight">370万</td>
+                            <td>290万</td>
+                            <td>258万</td>
+                        </tr>
+                        <tr>
+                            <td>15年</td>
+                            <td class="highlight">711万</td>
+                            <td>493万</td>
+                            <td>415万</td>
+                        </tr>
+                        <tr>
+                            <td>20年</td>
+                            <td class="highlight">1,374万 🥇</td>
+                            <td>839万</td>
+                            <td>667万</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 15px; color: #e74c3c; font-weight: 600;">
+                    ⚠️ 20年差距：方案一比方案二多赚535万，比方案三多赚707万！
+                </p>
+            </div>
+
+            <!-- 适合人群 -->
+            <div class="section">
+                <h2 class="section-title">👥 适合人群分析</h2>
+                <div class="comparison-grid">
+                    <div class="plan-card">
+                        <h3 class="plan-title">方案一适合人群</h3>
+                        <div class="pros-cons" style="display: block;">
+                            <div class="pros">
+                                <h4>✓ 适合条件</h4>
+                                <ul>
+                                    <li>能承受30%波动</li>
+                                    <li>持有期10年+</li>
+                                    <li>追求最高复利</li>
+                                    <li>不频繁查看账户</li>
+                                </ul>
+                            </div>
+                            <div class="cons" style="margin-top: 15px;">
+                                <h4>✗ 不适合条件</h4>
+                                <ul>
+                                    <li>风险厌恶型</li>
+                                    <li>承受不了回撤</li>
+                                    <li>持有期<5年</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p style="margin-top: 15px; font-weight: 600; color: #667eea;">
+                            👤 画像：25-40岁，风险承受能力中高
+                        </p>
+                    </div>
+
+                    <div class="plan-card">
+                        <h3 class="plan-title">方案二适合人群</h3>
+                        <div class="pros-cons" style="display: block;">
+                            <div class="pros">
+                                <h4>✓ 适合条件</h4>
+                                <ul>
+                                    <li>追求平衡</li>
+                                    <li>希望降低波动</li>
+                                    <li>持有期5-10年</li>
+                                    <li>想睡得安稳</li>
+                                </ul>
+                            </div>
+                            <div class="cons" style="margin-top: 15px;">
+                                <h4>✗ 不适合条件</h4>
+                                <ul>
+                                    <li>追求极致收益</li>
+                                    <li>年龄<30岁</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p style="margin-top: 15px; font-weight: 600; color: #667eea;">
+                            👤 画像：35-55岁，风险承受能力中等
+                        </p>
+                    </div>
+
+                    <div class="plan-card">
+                        <h3 class="plan-title">方案三适合人群</h3>
+                        <div class="pros-cons" style="display: block;">
+                            <div class="pros">
+                                <h4>✓ 适合条件</h4>
+                                <ul>
+                                    <li>看好AI趋势</li>
+                                    <li>有择时能力</li>
+                                    <li>承受40%回撤</li>
+                                </ul>
+                            </div>
+                            <div class="cons" style="margin-top: 15px;">
+                                <h4>✗ 不适合条件</h4>
+                                <ul>
+                                    <li>大部分投资者</li>
+                                    <li>无法判断周期</li>
+                                    <li>希望稳健增长</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p style="margin-top: 15px; font-weight: 600; color: #e74c3c;">
+                            ⚠️ 不推荐：预期收益最低，风险最高
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 最终推荐 -->
+            <div class="recommendation">
+                <h3>🎯 芒格式最终建议</h3>
+                <div class="recommendation-content">
+                    <p style="font-size: 1.3em; margin-bottom: 20px;">
+                        <strong>如果只能选一个：方案一（纯紫金矿业）</strong>
+                    </p>
+                    <p style="margin-bottom: 15px;">
+                        <strong>核心理由：</strong>
+                    </p>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="margin-bottom: 10px;">✓ <strong>数学优势：</strong>预期收益最高（14%），20年复利最强（1374万）</li>
+                        <li style="margin-bottom: 10px;">✓ <strong>逻辑优势：</strong>PEG合理（1.30），全球化分散，抗老龄化</li>
+                        <li style="margin-bottom: 10px;">✓ <strong>哲学优势：</strong>简单、可持续、可理解</li>
+                        <li style="margin-bottom: 10px;">✓ <strong>实战优势：</strong>不需择时、不需再平衡、不需盯盘</li>
+                    </ul>
+                    <p style="margin-top: 20px; font-size: 1.15em; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                        <strong>但前提是：</strong>能承受30%波动 + 持有期≥10年 + 不在暴跌时恐慌卖出
+                    </p>
+                    <p style="margin-top: 20px; font-size: 1.15em; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                        <strong>如果做不到：</strong>选方案二（紫金50%+美的50%），这是"次优但更易执行"的方案
+                    </p>
+                    <p style="margin-top: 20px; font-size: 1.2em; color: #ffeaa7; font-weight: 700;">
+                        💡 芒格的忠告："选最简单、最可持续的方案，然后坚持20年。这就是致富的秘密。"
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>投资有风险，决策
