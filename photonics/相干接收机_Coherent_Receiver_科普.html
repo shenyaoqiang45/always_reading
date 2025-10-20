@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"/>
+  <title>相干接收机（Coherent Receiver）科普介绍</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>
+    body { font-family: -apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Microsoft Yahei",Arial,serif; line-height:1.7; padding:28px; color:#111; background:#fff; }
+    h1 { font-size:30px; margin-bottom:6px; }
+    h2 { color:#0a58ca; margin-top:22px; }
+    p { margin:10px 0; }
+    pre { background:#f6f8fa; padding:12px; border-radius:6px; overflow:auto; }
+    table { border-collapse:collapse; width:100%; margin:12px 0; }
+    th, td { border:1px solid #ddd; padding:8px; text-align:left; }
+    th { background:#f0f4ff; }
+    ul { margin:8px 0 8px 20px; }
+    .note { background:#fff8e1; padding:12px; border-left:4px solid #ffd54f; margin:12px 0; }
+    .footer { margin-top:22px; font-size:13px; color:#555; }
+    .diagram { font-family: "Courier New", monospace; background:#f7f9fc; padding:12px; border-radius:6px; }
+    .bold { font-weight:600; }
+  </style>
+</head>
+<body>
+  <h1>相干接收机（Coherent Receiver）科普介绍</h1>
+
+  <p class="note"><strong>核心结论：</strong> 相干接收机通过将接收信号与一束相干的本振光（Local Oscillator，LO）在光学域混频，再用光电探测器把干涉结果转换为可处理的低频电信号，最后由 ADC + DSP 恢复出幅度与相位信息。</p>
+
+  <h2>一、为什么需要相干接收？</h2>
+  <p>直接检测（IM-DD）只能测量光强（能量），无法直接获得相位信息；而相干通信采用相位和幅度联合调制（如 QPSK、QAM），可以显著提高光纤的信息承载能力与灵敏度。相干接收机是读取这些相位/幅度信息的关键。</p>
+
+  <h2>二、相干接收的核心组成（模块级）</h2>
+  <ol>
+    <li><strong>光学前端</strong>
+      <ul>
+        <li>输入光：来自光纤的信号光（可能已通过 IQ 调制器调制）。</li>
+        <li>本振（LO）光源：一束窄线宽、频率可控的激光，作为参考。</li>
+        <li>光学耦合与混频器：将信号光与 LO 进行干涉（例如 90° 混频器 / 光学杂交器），输出 I/Q 光场。</li>
+      </ul>
+    </li>
+    <li><strong>光电探测器</strong>
+      <ul>
+        <li>通常使用平衡光电二极管（Balanced Photodiodes）来抑制直流项并放大拍频项。</li>
+      </ul>
+    </li>
+    <li><strong>射频放大与模拟链路</strong>
+      <ul>
+        <li>低噪放大器（LNA）、抗混叠滤波器等，让信号进入 ADC。</li>
+      </ul>
+    </li>
+    <li><strong>模数转换（ADC）与数字信号处理（DSP）</strong>
+      <ul>
+        <li>ADC 将 I/Q 模拟波形采样为数字数据，DSP 进行均衡、载波与相位恢复、时钟恢复、FEC 解码等。</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h2>三、工作原理（简明数学说明）</h2>
+  <p>设信号光为 <code>E_s(t)=A_s cos(ω_s t + φ_s)</code>，本振光为 <code>E_LO(t)=A_LO cos(ω_LO t + φ_LO)</code>。两光场叠加后的强度（探测器测量对象）为：</p>
+  <pre>I(t) ∝ |E_s + E_LO|^2 = A_s^2 + A_LO^2 + 2 A_s A_LO cos((ω_s-ω_LO)t + (φ_s-φ_LO))</pre>
+  <p>关键项为最后一项（拍频项），其频率为 <code>Δω = ω_s - ω_LO</code>（通常在 GHz 级，电子器件可处理）。这项的相位包含 <code>φ_s - φ_LO</code>，即信号的相位信息。</p>
+
+  <h2>四、I/Q 解调与 90° 光学混频</h2>
+  <p>为了完整恢复复包络（同时拿到实部与虚部），相干接收通常实现 I/Q 解调：将信号与 LO 在两路中分别以 0° 和 90° 相位偏移混频，得到 I（同相）与 Q（正交）分量。</p>
+  <div class="diagram">
+    光学域（示意）:<br>
+    信号光 ----┬---(分路)---┬--- 干涉 --- PD_I ---> 放大 ---> ADC ---> DSP<br>
+               │            │<br>
+               └---(分路)---┴--- 干涉 --- PD_Q ---> 放大 ---> ADC ---> DSP<br>
+    其中一条路径相位偏移 90° 用于产生 Q 分量。
+  </div>
+
+  <h2>五、平衡检测的作用</h2>
+  <p>平衡光电探测器将两路差分信号相减，抑制直流功率项（A_s^2 + A_LO^2）并增强拍频项（与相位相关）。这能提高灵敏度并降低共模噪声与光源强度波动的影响。</p>
+
+  <h2>六、载波恢复与相位噪声处理（DSP 部分）</h2>
+  <p>在进入 DSP 前得到的 I/Q 数字序列，通常还包含频偏、相位噪声、幅度失配和色散等失真。DSP 的常见功能包括：</p>
+  <ul>
+    <li>频偏估计与补偿（Carrier Frequency Offset, CFO）</li>
+    <li>相位恢复（Carrier Phase Recovery）</li>
+    <li>自适应均衡（补偿色散和 PMD）</li>
+    <li>符号判决与 FEC 解码</li>
+  </ul>
+
+  <h2>七、典型工程参数与挑战</h2>
+  <table>
+    <tr><th>项</th><th>典型要求</th></tr>
+    <tr><td>激光线宽</td><td>&lt;100 kHz（高性能系统可达 &lt;50 kHz）</td></tr>
+    <tr><td>本振稳定度</td><td>频率漂移小，需支持微调用于配对</td></tr>
+    <tr><td>ADC 速率与精度</td><td>数百 MS/s 到数 GS/s，ENOB 要求高以保证 SNR</td></tr>
+    <tr><td>DSP 算力</td><td>需要高性能并行运算，低延迟实现载波/相位恢复</td></tr>
+  </table>
+
+  <h2>八、相干接收机在 CPO（Co-Packaged Optics）中的位置</h2>
+  <p>对于相干型 CPO，接收机的光学前端（包括 LO 与混频器）和高速光电探测器经常与 DSP 或 SerDes 在同一封装或非常近的载板上集成，以缩短距离并减少电损耗，从而满足高带宽与低功耗的需求。</p>
+
+  <h2>九、总结</h2>
+  <p class="note"><span class="bold">相干接收机的核心思想是“把光学频率上的相位信息通过光学混频拉到可由电子电路处理的拍频范围，然后用光电探测器把它变成电信号，最后用 ADC + DSP 恢复出数据”。</span> 其优势是高容量、长距离与高灵敏度，但代价是对激光相干性、模数转换与 DSP 算力的更高要求。</p>
+
+  <div class="footer">
+    <p>如果你需要：<br>
+      • 我可以把这份科普转换为一页 PPT 要点（每页 3–5 行）；<br>
+      • 或者我可以在 HTML 中嵌入一张 SVG 示意图（更直观）；<br>
+      • 也可生成英文版文档或把内容导出为 PDF/Markdown。<br>
+      直接告诉我你需要哪一种格式。</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"/>
+  <title>光的波动性与调制解调——科普介绍</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>
+    body { font-family: -apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft Yahei",Arial,serif; line-height:1.75; padding:24px; color:#111; background:#fff;}
+    h1 { font-size:28px; margin-bottom:6px; }
+    h2 { color:#0a58ca; margin-top:20px; }
+    p { margin:10px 0; }
+    pre { background:#f6f8fa; padding:12px; border-radius:6px; overflow:auto; }
+    table { border-collapse:collapse; width:100%; margin:12px 0; }
+    th, td { border:1px solid #ddd; padding:8px; text-align:left; }
+    th { background:#f0f4ff; }
+    ul { margin:8px 0 8px 20px; }
+    .note { background:#fff8e1; padding:10px; border-left:4px solid #ffd54f; margin:12px 0; }
+    .footer { margin-top:24px; font-size:13px; color:#555; }
+  </style>
+</head>
+<body>
+  <h1>光的波动性与调制/解调：科普介绍</h1>
+
+  <p class="note"><strong>核心观点：</strong> 光是一种电磁波，其振幅、相位、频率与偏振等波动特性可以携带信息。现代光通信的调制与解调正是通过控制并读取这些波动参数来实现“电信号 → 光信号 → 电信号”的传输。</p>
+
+  <h2>一、光的波动性质（简要）</h2>
+  <p>光既有波动性也有粒子性。在通信领域，我们关注的是光的波动性。电场随时间变化可表示为：</p>
+  <pre>E(t) = E<sub>0</sub> cos(ωt + φ)</pre>
+  <p>其中：</p>
+  <ul>
+    <li><strong>E<sub>0</sub></strong>：振幅（与光强度 I ∝ E<sub>0</sub><sup>2</sup> 相关）</li>
+    <li><strong>ω</strong>：角频率（对应光的颜色/波长）</li>
+    <li><strong>φ</strong>：相位（决定波的位置）</li>
+  </ul>
+
+  <h2>二、调制：把电信号写入光波（电→光）</h2>
+  <p>常见调制方式包括：</p>
+  <table>
+    <tr><th>方式</th><th>调制内容</th><th>物理量</th><th>应用/特点</th></tr>
+    <tr><td>强度调制（IM）</td><td>改变光强</td><td>振幅 / 光功率</td><td>实现简单，常用于短距离链路（IM-DD）</td></tr>
+    <tr><td>相位调制（PM）</td><td>改变相位 φ</td><td>相位</td><td>用于相干通信，信息承载能力高</td></tr>
+    <tr><td>频率调制（FM）</td><td>改变频率 ω</td><td>频率/波长</td><td>抗干扰能力好，复杂度中等</td></tr>
+    <tr><td>偏振调制（PolM）</td><td>改变偏振态</td><td>偏振方向</td><td>作为额外自由度增加容量</td></tr>
+    <tr><td>相干调制（IQ/多阶QAM）</td><td>同时调制幅度与相位</td><td>振幅 + 相位</td><td>容量高，需相干检测与 DSP</td></tr>
+  </table>
+
+  <h2>三、解调：从光波恢复电信号（光→电）</h2>
+  <p>解调分两大类：</p>
+  <ul>
+    <li><strong>直接检测（IM-DD）：</strong> 通过光电二极管测量光强，适合强度调制信号，结构简单，但只能读取光的能量信息。</li>
+    <li><strong>相干检测：</strong> 接收端使用一束本振光（LO）与信号光干涉，探测器测量干涉结果，从中提取相位与幅度信息。相干检测能读取光的波动信息（相位、偏振等），并依赖 DSP 做后续恢复与均衡。</li>
+  </ul>
+
+  <h2>四、干涉项与相位信息（相干检测的数学直观）</h2>
+  <p>若信号光为 E<sub>s</sub>=E<sub>s</sub>cos(ωt+φ<sub>s</sub>)，本振光为 E<sub>LO</sub>=E<sub>LO</sub>cos(ωt+φ<sub>LO</sub>)，探测器测得的光强包含项：</p>
+  <pre>I ∝ E<sub>s</sub>² + E<sub>LO</sub>² + 2 E<sub>s</sub> E<sub>LO</sub> cos(φ<sub>s</sub> - φ<sub>LO</sub>)</pre>
+  <p>其中最后一项正是包含相位差的信息，通过数字信号处理（DSP）可还原出发送端编码的相位与幅度信息。</p>
+
+  <h2>五、为什么相干通信更强？</h2>
+  <ul>
+    <li>能同时利用相位与幅度等多个自由度，信息容量更高（例如 QPSK、16QAM、64QAM）。</li>
+    <li>更好的灵敏度与噪声性能，可用于长距离链路。</li>
+    <li>需要高相干性的激光器（窄线宽）与复杂的 DSP，系统复杂度和成本更高。</li>
+  </ul>
+
+  <h2>六、工程要点与挑战（给从业者的简短提示）</h2>
+  <ul>
+    <li>相干系统对激光线宽、相位噪声与频率稳定性要求高；本振与发射激光器需精确配对或通过载波恢复算法对齐。</li>
+    <li>相位/频率/偏振漂移需靠 DSP 做补偿（均衡、载波恢复、FEC 等）。</li>
+    <li>直接调制激光器（DML）简单但带宽与距离受限；外调制（MZM/EML）性能好但成本高。</li>
+  </ul>
+
+  <h2>七、结论（简短）</h2>
+  <p>光的调制与解调本质上利用了光的波动性：通过控制光的振幅、相位、频率与偏振，把电信号编码到光波上；通过直接或相干检测把这些信息恢复为电信号。相干通信是对光波波动性最充分的利用，使光通信进入高容量、长距离的新时代。</p>
+
+  <div class="footer">
+    <p>想要将本文改写为 PPT 要点、英文版、或添加示意图（SVG/PNG）用于报告吗？告诉我你的需求，我可以直接生成相应文件。</p>
+  </div>
+</body>
+</html>
