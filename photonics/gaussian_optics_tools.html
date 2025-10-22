@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高斯光学工具设计与控制高斯光束</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            color: #1e3c72;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid #2a5298;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title .icon {
+            font-size: 1.2em;
+            margin-right: 15px;
+        }
+        
+        .intro-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+        
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .tool-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        
+        .tool-card h3 {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+        
+        .tool-card .formula {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            text-align: center;
+        }
+        
+        .tool-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tool-card ul li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .tool-card ul li:before {
+            content: "✦";
+            position: absolute;
+            left: 0;
+            color: #ffd700;
+            font-size: 1.2em;
+        }
+        
+        .method-section {
+            background: #f8f9fa;
+            padding: 35px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border-left: 6px solid #2a5298;
+        }
+        
+        .method-section h3 {
+            color: #1e3c72;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        
+        .step-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 280px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            position: relative;
+            border-top: 4px solid #667eea;
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .step h4 {
+            color: #1e3c72;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .example-box {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            padding: 35px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .example-box h3 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .example-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .example-content h4 {
+            color: #fa709a;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .calculation {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid #fa709a;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 15px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .highlight-box h3 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .highlight-box .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .feature-item {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .feature-item .emoji {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .feature-item h4 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        th {
+            background: #1e3c72;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .matrix-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔬 用高斯光学工具设计与控制高斯光束</h1>
+            <p>从理论到实践的完整指南</p>
+        </header>
+        
+        <div class="content">
+            <div class="intro-box">
+                <p><strong>核心思想：</strong>高斯光学提供了一套强大的数学工具（特别是ABCD矩阵法和复光束参数q），可以精确地预测和控制高斯光束在光学系统中的传播、变换和聚焦。这使得我们能够系统地设计激光器、光束整形系统和激光加工装置。</p>
+            </div>
+            
+            <!-- 核心工具 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="icon">🛠️</span>
+                    核心工具：复光束参数 q
+                </h2>
+                
+                <div class="tool-grid">
+                    <div class="tool-card">
+                        <h3>复光束参数定义</h3>
+                        <div class="formula">
+                            1/q = 1/R - iλ/(πw²)
+                        </div>
+                        <ul>
+                            <li><strong>R</strong>：波前曲率半径</li>
+                            <li><strong>w</strong>：光束半径</li>
+                            <li><strong>λ</strong>：波长</li>
+                        </ul>
+                        <p style="margin-top: 15px;">将光束的<strong>几何特性</strong>（曲率）和<strong>衍射特性</strong>（束宽）统一描述</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>束腰位置的 q</h3>
+                        <div class="formula">
+                            q = iz₀<br>
+                            z₀ = πw₀²/λ
+                        </div>
+                        <ul>
+                            <li><strong>w₀</strong>：束腰半径</li>
+                            <li><strong>z₀</strong>：瑞利长度</li>
+                            <li>波前为平面（R = ∞）</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>任意位置的 q</h3>
+                        <div class="formula">
+                            q(z) = z + iz₀
+                        </div>
+                        <ul>
+                            <li>光束半径：w(z) = w₀√(1 + (z/z₀)²)</li>
+                            <li>曲率半径：R(z) = z[1 + (z₀/z)²]</li>
+                            <li>发散角：θ = λ/(πw₀)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ABCD矩阵法 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="icon">📐</span>
+                    ABCD矩阵传输法
+                </h2>
+                
+                <div class="method-section">
+                    <h3>基本原理</h3>
+                    <p>光束通过光学元件后，新的复光束参数可以通过矩阵变换得到：</p>
+                    <div class="matrix-display">
+                        q₂ = (Aq₁ + B)/(Cq₁ + D)
+                    </div>
+                    <p style="margin-top: 20px;">其中 [A B; C D] 是光学元件的传输矩阵</p>
+                </div>
+                
+                <h3 style="color: #1e3c72; font-size: 1.8em; margin-top: 40px; margin-bottom: 20px;">常用光学元件的ABCD矩阵</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>光学元件</th>
+                            <th>ABCD矩阵</th>
+                            <th>物理意义</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>自由空间传播 (距离d)</strong></td>
+                            <td>[1, d; 0, 1]</td>
+                            <td>光束发散，曲率变化</td>
+                        </tr>
+                        <tr>
+                            <td><strong>薄透镜 (焦距f)</strong></td>
+                            <td>[1, 0; -1/f, 1]</td>
+                            <td>改变波前曲率，不改变束宽</td>
+                        </tr>
+                        <tr>
+                            <td><strong>平面反射镜</strong></td>
+                            <td>[1, 0; 0, 1]</td>
+                            <td>不改变光束参数</td>
+                        </tr>
+                        <tr>
+                            <td><strong>球面反射镜 (半径R)</strong></td>
+                            <td>[1, 0; -2/R, 1]</td>
+                            <td>等效于焦距f=R/2的透镜</td>
+                        </tr>
+                        <tr>
+                            <td><strong>介质分界面 (n₁→n₂)</strong></td>
+                            <td>[1, 0; 0, n₁/n₂]</td>
+                            <td>折射率变化</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 设计步骤 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="icon">⚙️</span>
+                    高斯光束系统设计步骤
+                </h2>
+                
+                <div class="step-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h4>确定初始光束参数</h4>
+                        <p>已知激光器输出：</p>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li>• 束腰位置 w₀</li>
+                            <li>• 波长 λ</li>
+                            <li>• 计算初始 q₀</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h4>建立光学系统模型</h4>
+                        <p>列出所有光学元件：</p>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li>• 透镜、反射镜</li>
+                            <li>• 传播距离</li>
+                            <li>• 写出对应ABCD矩阵</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h4>矩阵连乘计算</h4>
+                        <p>从右向左依次相乘：</p>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li>• M_total = M_n × ... × M₂ × M₁</li>
+                            <li>• 得到总传输矩阵</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h4>计算输出光束参数</h4>
+                        <p>应用变换公式：</p>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li>• q_out = (Aq_in + B)/(Cq_in + D)</li>
+                            <li>• 提取 w, R 参数</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <h4>优化设计参数</h4>
+                        <p>根据目标调整：</p>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li>• 透镜焦距</li>
+                            <li>• 元件间距</li>
+                            <li>• 达到理想光束特性</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 实际应用案例 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="icon">💡</span>
+                    实际应用案例
+                </h2>
+                
+                <div class="example-box">
+                    <h3>案例一：激光聚焦系统设计</h3>
+                    
+                    <div class="example-content">
+                        <h4>问题描述</h4>
+                        <p>已知激光束腰 w₀ = 1 mm，λ = 632.8 nm，需要用焦距 f = 50 mm 的透镜聚焦。求焦点处的束腰大小。</p>
+                        
+                        <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 25px 0;">
+                            <h4 style="text-align: center; color: #1e3c72; margin-bottom: 20px;">系统光路图</h4>
+                            <svg viewBox="0 0 800 300" style="width: 100%; max-width: 800px; margin: 0 auto; display: block;">
+                                <!-- 背景 -->
+                                <rect width="800" height="300" fill="#ffffff"/>
+                                
+                                <!-- 光轴 -->
+                                <line x1="50" y1="150" x2="750" y2="150" stroke="#999" stroke-width="1" stroke-dasharray="5,5"/>
+                                
+                                <!-- 输入光束轮廓 -->
+                                <path d="M 50 130 Q 150 120, 250 100" stroke="#ff6b6b" stroke-width="2" fill="none"/>
+                                <path d="M 50 170 Q 150 180, 250 200" stroke="#ff6b6b" stroke-width="2" fill="none"/>
+                                
+                                <!-- 光束填充 -->
+                                <path d="M 50 130 Q 150 120, 250 100 L 250 200 Q 150 180, 50 170 Z" fill="#ff6b6b" opacity="0.2"/>
+                                
+                                <!-- 束腰标记 -->
+                                <line x1="50" y1="130" x2="50" y2="170" stroke="#e74c3c" stroke-width="3"/>
+                                <text x="50" y="110" font-size="16" fill="#e74c3c" text-anchor="middle" font-weight="bold">w₀ = 1mm</text>
+                                
+                                <!-- 透镜 -->
+                                <ellipse cx="300" cy="150" rx="8" ry="80" fill="#4facfe" opacity="0.6" stroke="#1e3c72" stroke-width="3"/>
+                                <text x="300" y="250" font-size="16" fill="#1e3c72" text-anchor="middle" font-weight="bold">透镜 (f = 50mm)</text>
+                                
+                                <!-- 聚焦后的光束 -->
+                                <path d="M 310 100 L 600 148" stroke="#4ecdc4" stroke-width="2" fill="none"/>
+                                <path d="M 310 200 L 600 152" stroke="#4ecdc4" stroke-width="2" fill="none"/>
+                                <path d="M 310 100 L 600 148 L 600 152 L 310 200 Z" fill="#4ecdc4" opacity="0.2"/>
+                                
+                                <!-- 聚焦光束发散 -->
+                                <path d="M 600 148 L 750 120" stroke="#4ecdc4" stroke-width="2" fill="none"/>
+                                <path d="M 600 152 L 750 180" stroke="#4ecdc4" stroke-width="2" fill="none"/>
+                                <path d="M 600 148 L 750 120 L 750 180 L 600 152 Z" fill="#4ecdc4" opacity="0.2"/>
+                                
+                                <!-- 焦点束腰标记 -->
+                                <line x1="600" y1="148" x2="600" y2="152" stroke="#e74c3c" stroke-width="4"/>
+                                <circle cx="600" cy="150" r="5" fill="#e74c3c"/>
+                                <text x="600" y="130" font-size="16" fill="#e74c3c" text-anchor="middle" font-weight="bold">w'₀ = 10.1μm</text>
+                                
+                                <!-- 距离标注 -->
+                                <line x1="300" y1="270" x2="600" y2="270" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)" marker-start="url(#arrowhead-start)"/>
+                                <text x="450" y="290" font-size="14" fill="#666" text-anchor="middle">f = 50mm</text>
+                                
+                                <!-- 箭头定义 -->
+                                <defs>
+                                    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                        <polygon points="0 0, 10 3, 0 6" fill="#666"/>
+                                    </marker>
+                                    <marker id="arrowhead-start" markerWidth="10" markerHeight="10" refX="1" refY="3" orient="auto">
+                                        <polygon points="10 0, 0 3, 10 6" fill="#666"/>
+                                    </marker>
+                                </defs>
+                                
+                                <!-- 标题标注 -->
+                                <text x="50" y="30" font-size="18" fill="#1e3c72" font-weight="bold">入射光束</text>
+                                <text x="680" y="30" font-size="18" fill="#1e3c72" font-weight="bold">聚焦光束</text>
+                                
+                                <!-- 光束参数标注 -->
+                                <rect x="520" y="170" width="160" height="80" fill="white" stroke="#1e3c72" stroke-width="2" rx="5"/>
+                                <text x="600" y="190" font-size="13" fill="#333" text-anchor="middle" font-weight="bold">焦点特性：</text>
+                                <text x="600" y="210" font-size="12" fill="#666" text-anchor="middle">束腰直径: 20.2μm</text>
+                                <text x="600" y="228" font-size="12" fill="#666" text-anchor="middle">瑞利长度: 0.51mm</text>
+                                <text x="600" y="246" font-size="12" fill="#666" text-anchor="middle">聚焦倍率: ~100×</text>
+                            </svg>
+                        </div>
+                        
+                        <div class="calculation">
+                            <strong>步骤1：计算初始瑞利长度</strong><br>
+                            z₀ = πw₀²/λ = π × (1×10⁻³)² / (632.8×10⁻⁹) ≈ 4.97 m<br><br>
+                            
+                            <strong>步骤2：初始复光束参数（束腰位置）</strong><br>
+                            q₀ = iz₀ = i × 4.97 m<br><br>
+                            
+                            <strong>步骤3：透镜ABCD矩阵</strong><br>
+                            [A B] = [1    0  ]<br>
+                            [C D]   [-1/f  1  ]<br><br>
+                            
+                            <strong>步骤4：传播距离f（到焦点）</strong><br>
+                            [A B] = [1  f]<br>
+                            [C D]   [0  1]<br><br>
+                            
+                            <strong>步骤5：总矩阵 = 传播 × 透镜</strong><br>
+                            <div style="font-family: monospace; margin: 10px 0; line-height: 1.8;">
+                                M_total = [0&nbsp;&nbsp;&nbsp;&nbsp;f  ]<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[-1/f&nbsp;&nbsp;1  ]
+                            </div>
+                            <br>
+                            
+                            <strong>步骤6：计算输出q</strong><br>
+                            q_out = (Aq₀ + B)/(Cq₀ + D)<br>
+                            当束腰在焦点时，使用近似：w'₀ ≈ λf/(πw₀)<br><br>
+                            
+                            <strong>结果：</strong><br>
+                            w'₀ = (632.8×10⁻⁹ × 50×10⁻³) / (π × 1×10⁻³)<br>
+                            w'₀ ≈ 10.1 μm
+                        </div>
+                        
+                        <p style="margin-top: 20px; color: #fa709a; font-weight: bold;">
+                            结论：聚焦后的束腰约为 10.1 微米，实现了近100倍的光束压缩！
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="example-box" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); margin-top: 30px;">
+                    <h3>案例二：激光谐振腔设计</h3>
+                    
+                    <div class="example-content">
+                        <h4>问题描述</h4>
+                        <p>设计平凹腔：一个平面镜 + 一个曲率半径 R = 1 m 的凹面镜，腔长 L = 50 cm。计算腔内基模光束参数。</p>
+                        
+                        <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 25px 0;">
+                            <h4 style="text-align: center; color: #1e3c72; margin-bottom: 20px;">平凹腔结构示意图</h4>
+                            <svg viewBox="0 0 900 400" style="width: 100%; max-width: 900px; margin: 0 auto; display: block;">
+                                <!-- 背景 -->
+                                <rect width="900" height="400" fill="#ffffff"/>
+                                
+                                <!-- 光轴 -->
+                                <line x1="100" y1="200" x2="800" y2="200" stroke="#999" stroke-width="1" stroke-dasharray="5,5"/>
+                                
+                                <!-- 平面镜 (左侧) -->
+                                <line x1="150" y1="120" x2="150" y2="280" stroke="#2c3e50" stroke-width="6"/>
+                                <line x1="140" y1="120" x2="150" y2="120" stroke="#34495e" stroke-width="4"/>
+                                <line x1="140" y1="280" x2="150" y2="280" stroke="#34495e" stroke-width="4"/>
+                                <text x="150" y="110" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">平面镜</text>
+                                <text x="150" y="310" font-size="14" fill="#666" text-anchor="middle">R₁ = ∞</text>
+                                
+                                <!-- 凹面镜 (右侧) -->
+                                <path d="M 650 120 Q 665 200 650 280" stroke="#2c3e50" stroke-width="6" fill="none"/>
+                                <line x1="660" y1="120" x2="650" y2="120" stroke="#34495e" stroke-width="4"/>
+                                <line x1="660" y1="280" x2="650" y2="280" stroke="#34495e" stroke-width="4"/>
+                                <text x="650" y="110" font-size="16" fill="#2c3e50" text-anchor="middle" font-weight="bold">凹面镜</text>
+                                <text x="650" y="310" font-size="14" fill="#666" text-anchor="middle">R₂ = 1 m</text>
+                                
+                                <!-- 曲率半径示意 (虚线圆弧) -->
+                                <path d="M 650 200 Q 900 200 1150 200" stroke="#e74c3c" stroke-width="2" stroke-dasharray="5,5" fill="none" opacity="0.5"/>
+                                <line x1="650" y1="200" x2="1150" y2="200" stroke="#e74c3c" stroke-width="1" stroke-dasharray="3,3"/>
+                                <text x="900" y="190" font-size="14" fill="#e74c3c" text-anchor="middle">R = 1 m</text>
+                                <circle cx="1150" cy="200" r="4" fill="#e74c3c"/>
+                                <text x="1150" y="220" font-size="12" fill="#e74c3c" text-anchor="middle">曲率中心</text>
+                                
+                                <!-- 腔长标注 -->
+                                <line x1="150" y1="340" x2="650" y2="340" stroke="#1e3c72" stroke-width="3" marker-end="url(#arrow2)" marker-start="url(#arrow2-start)"/>
+                                <text x="400" y="365" font-size="18" fill="#1e3c72" text-anchor="middle" font-weight="bold">L = 50 cm</text>
+                                
+                                <!-- 腔内高斯光束轮廓 -->
+                                <!-- 束腰在平面镜处 -->
+                                <ellipse cx="150" cy="200" rx="2" ry="30" fill="#ff6b6b" opacity="0.3"/>
+                                <line x1="150" y1="170" x2="150" y2="230" stroke="#e74c3c" stroke-width="3"/>
+                                <text x="180" y="165" font-size="14" fill="#e74c3c" font-weight="bold">w₀ = 290μm</text>
+                                
+                                <!-- 光束传播轮廓 (上半部分) -->
+                                <path d="M 150 170 Q 300 140, 450 130, 650 125" stroke="#4ecdc4" stroke-width="2.5" fill="none"/>
+                                <!-- 光束传播轮廓 (下半部分) -->
+                                <path d="M 150 230 Q 300 260, 450 270, 650 275" stroke="#4ecdc4" stroke-width="2.5" fill="none"/>
+                                <!-- 光束填充 -->
+                                <path d="M 150 170 Q 300 140, 450 130, 650 125 L 650 275 Q 450 270, 300 260, 150 230 Z" fill="#4ecdc4" opacity="0.15"/>
+                                
+                                <!-- 光束在凹面镜处的宽度标注 -->
+                                <line x1="650" y1="125" x2="650" y2="275" stroke="#4ecdc4" stroke-width="2" stroke-dasharray="3,3"/>
+                                <text x="680" y="200" font-size="14" fill="#4ecdc4" font-weight="bold">w(L)</text>
+                                
+                                <!-- 箭头定义 -->
+                                <defs>
+                                    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                        <polygon points="0 0, 10 3, 0 6" fill="#1e3c72"/>
+                                    </marker>
+                                    <marker id="arrow2-start" markerWidth="10" markerHeight="10" refX="1" refY="3" orient="auto">
+                                        <polygon points="10 0, 0 3, 10 6" fill="#1e3c72"/>
+                                    </marker>
+                                </defs>
+                                
+                                <!-- 参数信息框 -->
+                                <rect x="720" y="140" width="160" height="120" fill="white" stroke="#1e3c72" stroke-width="2" rx="5"/>
+                                <text x="800" y="165" font-size="14" fill="#333" text-anchor="middle" font-weight="bold">腔参数：</text>
+                                <text x="800" y="188" font-size="12" fill="#666" text-anchor="middle">腔长: L = 0.5 m</text>
+                                <text x="800" y="208" font-size="12" fill="#666" text-anchor="middle">束腰: w₀ = 290μm</text>
+                                <text x="800" y="228" font-size="12" fill="#666" text-anchor="middle">瑞利长度: z₀ ≈ 25cm</text>
+                                <text x="800" y="248" font-size="12" fill="#666" text-anchor="middle">稳定性: g₁g₂ = 0.5 ✓</text>
+                                
+                                <!-- 光传播方向箭头 -->
+                                <path d="M 250 200 L 280 200" stroke="#ff6b6b" stroke-width="3" marker-end="url(#laser-arrow)"/>
+                                <path d="M 550 200 L 520 200" stroke="#ff6b6b" stroke-width="3" marker-end="url(#laser-arrow-back)"/>
+                                
+                                <defs>
+                                    <marker id="laser-arrow" markerWidth="12" markerHeight="12" refX="10" refY="3" orient="auto">
+                                        <polygon points="0 0, 12 3, 0 6" fill="#ff6b6b"/>
+                                    </marker>
+                                    <marker id="laser-arrow-back" markerWidth="12" markerHeight="12" refX="2" refY="3" orient="auto">
+                                        <polygon points="12 0, 0 3, 12 6" fill="#ff6b6b"/>
+                                    </marker>
+                                </defs>
+                                
+                                <!-- 标题 -->
+                                <text x="400" y="40" font-size="20" fill="#1e3c72" text-anchor="middle" font-weight="bold">平凹腔谐振器 (Plano-Concave Cavity)</text>
+                            </svg>
+                        </div>
+                        
+                        <div class="calculation">
+                            <strong>步骤1：稳定性判据</strong><br>
+                            g₁ = 1 - L/R₁ = 1 - 0/∞ = 1 (平面镜)<br>
+                            g₂ = 1 - L/R₂ = 1 - 0.5/1 = 0.5 (凹面镜)<br>
+                            g₁g₂ = 0.5，满足 0 ≤ g₁g₂ ≤ 1，腔稳定 ✓<br><br>
+                            
+                            <strong>步骤2：一个往返的ABCD矩阵</strong><br>
+                            往返 = 平面镜反射 × 传播L × 凹面镜反射 × 传播L<br><br>
+                            
+                            <strong>步骤3：自再现条件（自洽解）</strong><br>
+                            腔内稳定模式满足：q_out = q_in<br>
+                            求解得到束腰位置和大小<br><br>
+                            
+                            <strong>对于平凹腔的解析解：</strong><br>
+                            束腰在平面镜处：<br>
+                            w₀ = √(λL(R-L)/(πR))^(1/2)<br><br>
+                            
+                            假设 λ = 1064 nm (Nd:YAG激光)：<br>
+                            w₀ = √[(1064×10⁻⁹ × 0.5 × 0.5) / (π × 1)]^(1/2)<br>
+                            w₀ ≈ 0.29 mm = 290 μm
+                        </div>
+                        
+                        <p style="margin-top: 20px; color: #4facfe; font-weight: bold;">
+                            结论：腔内基模束腰约为 290 微米，可据此设计增益介质尺寸和泵浦光束！
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="example-box" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); margin-top: 30px;">
+                    <h3>案例三：LBS激光投射系统设计</h3>
+                    
+                    <div class="example-content">
+                        <h4>问题描述</h4>
+                        <p>设计一个LBS (Laser Beam Scanning) 投射系统，激光束通过MEMS振镜扫描后，需要投射到2米距离的屏幕上。已知激光准直束直径2mm，λ = 520nm，设计光学系统使得投射光斑直径控制在0.5mm以内。</p>
+                        
+                        <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 25px 0;">
+                            <h4 style="text-align: center; color: #1e3c72; margin-bottom: 20px;">LBS投射光路示意图</h4>
+                            <svg viewBox="0 0 1000 450" style="width: 100%; max-width: 1000px; margin: 0 auto; display: block;">
+                                <!-- 背景 -->
+                                <rect width="1000" height="450" fill="#ffffff"/>
+                                
+                                <!-- 标题区域 -->
+                                <text x="500" y="30" font-size="20" fill="#1e3c72" text-anchor="middle" font-weight="bold">LBS激光扫描投射系统</text>
+                                
+                                <!-- 激光源 -->
+                                <rect x="50" y="180" width="60" height="40" fill="#e74c3c" stroke="#c0392b" stroke-width="2" rx="5"/>
+                                <text x="80" y="205" font-size="12" fill="white" text-anchor="middle" font-weight="bold">激光源</text>
+                                <text x="80" y="240" font-size="11" fill="#e74c3c" text-anchor="middle">λ=520nm</text>
+                                
+                                <!-- 准直光束 -->
+                                <line x1="110" y1="195" x2="200" y2="195" stroke="#ff6b6b" stroke-width="3"/>
+                                <line x1="110" y1="205" x2="200" y2="205" stroke="#ff6b6b" stroke-width="3"/>
+                                <polygon points="110,195 110,205 200,205 200,195" fill="#ff6b6b" opacity="0.3"/>
+                                <text x="155" y="180" font-size="12" fill="#e74c3c" text-anchor="middle">Φ2mm</text>
+                                
+                                <!-- 准直透镜 -->
+                                <ellipse cx="220" cy="200" rx="6" ry="40" fill="#3498db" opacity="0.7" stroke="#2980b9" stroke-width="2"/>
+                                <text x="220" y="260" font-size="11" fill="#2980b9" text-anchor="middle" font-weight="bold">准直镜</text>
+                                
+                                <!-- MEMS振镜 -->
+                                <g transform="translate(320, 200)">
+                                    <rect x="-15" y="-35" width="30" height="70" fill="#95a5a6" stroke="#7f8c8d" stroke-width="2" rx="3"/>
+                                    <line x1="-10" y1="-25" x2="10" y2="25" stroke="#34495e" stroke-width="3"/>
+                                    <circle cx="0" cy="0" r="5" fill="#e67e22"/>
+                                    <text x="0" y="-50" font-size="13" fill="#34495e" text-anchor="middle" font-weight="bold">MEMS</text>
+                                    <text x="0" y="-35" font-size="11" fill="#7f8c8d" text-anchor="middle">振镜</text>
+                                </g>
+                                
+                                <!-- 扫描光束（多条光线示意） -->
+                                <!-- 中心光线 -->
+                                <line x1="335" y1="200" x2="480" y2="200" stroke="#4ecdc4" stroke-width="2.5"/>
+                                <!-- 上扫描光线 -->
+                                <line x1="330" y1="195" x2="480" y2="120" stroke="#4ecdc4" stroke-width="1.5" opacity="0.6"/>
+                                <!-- 下扫描光线 -->
+                                <line x1="330" y1="205" x2="480" y2="280" stroke="#4ecdc4" stroke-width="1.5" opacity="0.6"/>
+                                <!-- 扫描角度标注 -->
+                                <path d="M 360 200 Q 370 180, 380 160" stroke="#e67e22" stroke-width="1" fill="none" stroke-dasharray="2,2"/>
+                                <text x="390" y="170" font-size="11" fill="#e67e22">±θ</text>
+                                
+                                <!-- 投射透镜组 -->
+                                <ellipse cx="500" cy="200" rx="8" ry="50" fill="#3498db" opacity="0.7" stroke="#2980b9" stroke-width="2"/>
+                                <ellipse cx="530" cy="200" rx="8" ry="45" fill="#3498db" opacity="0.7" stroke="#2980b9" stroke-width="2"/>
+                                <text x="515" y="270" font-size="12" fill="#2980b9" text-anchor="middle" font-weight="bold">投射透镜组</text>
+                                <text x="515" y="285" font-size="10" fill="#7f8c8d" text-anchor="middle">(f_eff = 40mm)</text>
+                                
+                                <!-- 投射到屏幕的光束 -->
+                                <!-- 中心 -->
+                                <line x1="538" y1="200" x2="850" y2="200" stroke="#2ecc71" stroke-width="2"/>
+                                <circle cx="850" cy="200" r="3" fill="#27ae60"/>
+                                
+                                <!-- 上扫描 -->
+                                <line x1="535" y1="180" x2="850" y2="120" stroke="#2ecc71" stroke-width="1.5" opacity="0.7"/>
+                                <circle cx="850" cy="120" r="2.5" fill="#27ae60"/>
+                                
+                                <!-- 下扫描 -->
+                                <line x1="535" y1="220" x2="850" y2="280" stroke="#2ecc71" stroke-width="1.5" opacity="0.7"/>
+                                <circle cx="850" cy="280" r="2.5" fill="#27ae60"/>
+                                
+                                <!-- 光斑大小示意 -->
+                                <ellipse cx="850" cy="200" rx="3" ry="8" fill="#2ecc71" opacity="0.3"/>
+                                <text x="890" y="203" font-size="11" fill="#27ae60" font-weight="bold">Φ0.5mm</text>
+                                
+                                <!-- 屏幕 -->
+                                <rect x="870" y="100" width="15" height="200" fill="#ecf0f1" stroke="#95a5a6" stroke-width="2"/>
+                                <text x="878" y="320" font-size="12" fill="#7f8c8d" text-anchor="middle" font-weight="bold">投影屏幕</text>
+                                
+                                <!-- 距离标注 -->
+                                <line x1="530" y1="350" x2="870" y2="350" stroke="#e67e22" stroke-width="2" marker-end="url(#arrow3)" marker-start="url(#arrow3-start)"/>
+                                <text x="700" y="340" font-size="14" fill="#e67e22" text-anchor="middle" font-weight="bold">投射距离 D = 2m</text>
+                                
+                                <!-- 扫描范围标注 -->
+                                <line x1="920" y1="120" x2="920" y2="280" stroke="#9b59b6" stroke-width="2" marker-end="url(#arrow4)" marker-start="url(#arrow4-start)"/>
+                                <text x="950" y="205" font-size="12" fill="#9b59b6" text-anchor="start" font-weight="bold">扫描高度</text>
+                                
+                                <!-- 箭头定义 -->
+                                <defs>
+                                    <marker id="arrow3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                        <polygon points="0 0, 10 3, 0 6" fill="#e67e22"/>
+                                    </marker>
+                                    <marker id="arrow3-start" markerWidth="10" markerHeight="10" refX="1" refY="3" orient="auto">
+                                        <polygon points="10 0, 0 3, 10 6" fill="#e67e22"/>
+                                    </marker>
+                                    <marker id="arrow4" markerWidth="10" markerHeight="10" refX="3" refY="9" orient="auto" markerUnits="strokeWidth">
+                                        <polygon points="0 0, 6 0, 3 10" fill="#9b59b6"/>
+                                    </marker>
+                                    <marker id="arrow4-start" markerWidth="10" markerHeight="10" refX="3" refY="1" orient="auto" markerUnits="strokeWidth">
+                                        <polygon points="0 10, 6 10, 3 0" fill="#9b59b6"/>
+                                    </marker>
+                                </defs>
+                                
+                                <!-- 关键参数框 -->
+                                <rect x="50" y="320" width="250" height="110" fill="white" stroke="#3498db" stroke-width="2" rx="8"/>
+                                <text x="175" y="345" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">设计参数</text>
+                                <text x="60" y="368" font-size="11" fill="#555" font-weight="bold">• 入射光束直径: 2mm</text>
+                                <text x="60" y="388" font-size="11" fill="#555" font-weight="bold">• 投射距离: 2m</text>
+                                <text x="60" y="408" font-size="11" fill="#555" font-weight="bold">• 目标光斑: Φ0.5mm</text>
+                                <text x="60" y="425" font-size="11" fill="#27ae60" font-weight="bold">✓ 光束压缩比: 4×</text>
+                                
+                                <!-- 光学设计要点框 -->
+                                <rect x="350" y="320" width="280" height="110" fill="white" stroke="#e67e22" stroke-width="2" rx="8"/>
+                                <text x="490" y="345" font-size="14" fill="#2c3e50" text-anchor="middle" font-weight="bold">设计要点</text>
+                                <text x="360" y="368" font-size="11" fill="#555">• MEMS扫描角度: ±10° ~ ±15°</text>
+                                <text x="360" y="388" font-size="11" fill="#555">• 有效焦距: f = 40mm</text>
+                                <text x="360" y="408" font-size="11" fill="#555">• 瑞利长度: z₀ ≈ 1.2m (确保景深)</text>
+                                <text x="360" y="425" font-size="11" fill="#27ae60">• 分辨率: 支持720p+投影</text>
+                            </svg>
+                        </div>
+                        
+                        <div class="calculation">
+                            <strong>设计步骤与计算：</strong><br><br>
+                            
+                            <strong>步骤1：确定目标束腰</strong><br>
+                            目标光斑直径 = 0.5mm → 束腰半径 w'₀ = 0.25mm<br><br>
+                            
+                            <strong>步骤2：计算所需瑞利长度与光束发散</strong><br>
+                            设计束腰 w'₀ = 0.25mm，计算瑞利长度：<br>
+                            z₀ = πw'₀²/λ = π × (0.25×10⁻³)² / (520×10⁻⁹) ≈ 1.2m<br><br>
+                            
+                            <span style="color: #e67e22;">⚠️ 关键理解：</span><br>
+                            • <strong>束腰位置</strong> (z=0)：光束最细 = w'₀ = 0.25mm<br>
+                            • <strong>瑞利距离处</strong> (z=z₀=1.2m)：w(z₀) = √2 × w'₀ ≈ 0.35mm<br>
+                            • <strong>2米处</strong> (z=2m)：w(2m) = w'₀√(1+(2/1.2)²) ≈ 0.44mm<br><br>
+                            
+                            由于衍射效应，光束会逐渐发散，但0.44mm &lt; 0.5mm，满足要求 ✓<br><br>
+                            
+                            <strong>步骤3：投射透镜组设计</strong><br>
+                            输入束腰：w₀ = 1mm (准直光束半径)<br>
+                            输出束腰：w'₀ = 0.25mm<br>
+                            放大率：M = w'₀/w₀ = 0.25 (缩小4倍)<br><br>
+                            
+                            根据高斯光束变换公式：<br>
+                            f_eff ≈ w'₀ × D / w₀ = 0.25 × 2000 / 1 = 40mm<br><br>
+                            
+                            <strong>步骤4：MEMS振镜参数</strong><br>
+                            扫描角度：±12° (机械角)<br>
+                            扫描线数：720线 (720p分辨率)<br>
+                            刷新率：60Hz<br>
+                            在2m处扫描范围：2 × 2m × tan(12°) ≈ 85cm<br><br>
+                            
+                            <strong>步骤5：系统ABCD矩阵验证</strong><br>
+                            振镜到透镜距离 d₁ = 180mm<br>
+                            透镜到屏幕距离 d₂ = 2m<br><br>
+                            
+                            M_system = M_传播(d₂) × M_透镜(f) × M_传播(d₁)<br>
+                            通过q参数变换验证光斑大小满足要求 ✓
+                        </div>
+                        
+                        <h4 style="margin-top: 25px; color: #9b59b6;">LBS系统的优势：</h4>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>超小型化</strong>：MEMS振镜体积小，适合便携设备</li>
+                            <li><strong>无需对焦</strong>：利用大瑞利长度实现全景深投影</li>
+                            <li><strong>高分辨率</strong>：激光光斑极小，理论分辨率无限</li>
+                            <li><strong>高亮度</strong>：激光能量集中，即使小功率也很明亮</li>
+                            <li><strong>宽色域</strong>：RGB激光覆盖更广色域范围</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px; color: #e67e22; font-weight: bold; background: #fef5e7; padding: 15px; border-radius: 8px; border-left: 4px solid #e67e22;">
+                            ⚠️ 设计关键：通过高斯光学工具精确控制光束发散角和瑞利长度，确保在整个投射距离范围内光斑大小满足分辨率要求，同时MEMS振镜的高速扫描实现图像显示！
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 关键优势 -->
+            <div class="highlight-box">
+                <h3>🌟 高斯光学工具的关键优势</h3>
+                <div class="features">
+                    <div class="feature-item">
+                        <div class="emoji">🎯</div>
+                        <h4>精确预测</h4>
+                        <p>能够准确计算光束在复杂系统中的传播特性</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="emoji">⚡</div>
+                        <h4>快速设计</h4>
+                        <p>矩阵法使计算变得简单高效</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="emoji">🔧</div>
+                        <h4>系统优化</h4>
+                        <p>可方便地调整参数达到最优性能</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="emoji">📊</div>
+                        <h4>通用性强</h4>
+                        <p>适用于各种激光系统和光束整形应用</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 实际应用领域 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="icon">🚀</span>
+                    实际应用领域
+                </h2>
+                
+                <div class="tool-grid">
+                    <div class="tool-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <h3>激光器设计</h3>
+                        <ul>
+                            <li>谐振腔稳定性分析</li>
+                            <li>腔内模式计算</li>
+                            <li>输出光束质量优化</li>
+                            <li>热透镜效应补偿</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tool-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <h3>光束整形</h3>
+                        <ul>
+                            <li>扩束与准直系统</li>
+                            <li>光束匹配设计</li>
+                            <li>模式转换</li>
+                            <li>光纤耦合优化</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tool-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <h3>激光加工</h3>
+                        <ul>
+                            <li>聚焦光斑计算</li>
+                            <li>焦深控制</li>
+                            <li>能量密度分布</li>
+                            <li>加工精度提升</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tool-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <h3>光通信</h3>
+                        <ul>
+                            <li>光纤耦合效率</li>
+                            <li>自由空间传输</li>
+                            <li>光束准直</li>
+                            <li>模式匹配</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

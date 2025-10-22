@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>激光模态科普介绍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .intro {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .intro h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .mode-section {
+            margin-bottom: 50px;
+        }
+        
+        .mode-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .mode-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+        }
+        
+        .mode-header h2 {
+            color: #333;
+            font-size: 2em;
+        }
+        
+        .mode-header .english {
+            color: #666;
+            font-size: 0.7em;
+            margin-left: 10px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid #e9ecef;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .formula {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.3em;
+            margin: 20px 0;
+            border: 2px dashed #667eea;
+            color: #333;
+        }
+        
+        .formula-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .mode-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+        
+        .mode-item:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+        
+        .mode-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .comparison {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+        
+        .comparison h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+        
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .highlight h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+        
+        .highlight p {
+            font-size: 1.2em;
+            color: #555;
+        }
+        
+        .emoji {
+            font-size: 1.2em;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        ul li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        ul li:before {
+            content: "▸";
+            color: #667eea;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ 激光模态科普介绍 ✨</h1>
+            <p>探索激光内部的神秘世界</p>
+        </header>
+        
+        <div class="content">
+            <div class="intro">
+                <h2>🔬 什么是激光模态？</h2>
+                <p>激光模态是描述激光在谐振腔内<strong>电磁场分布特征</strong>的概念。就像乐器发出的声音有不同的音调和音色，激光也有不同的"模式"，这些模式决定了激光的频率、光斑形状和传播特性。</p>
+                <p style="margin-top: 15px;">激光模态主要分为两大类：<strong>纵模</strong>（描述频率分布）和<strong>横模</strong>（描述光斑形状）。</p>
+            </div>
+            
+            <div class="mode-section">
+                <div class="mode-header">
+                    <span class="mode-icon">📏</span>
+                    <div>
+                        <h2>纵模 <span class="english">Longitudinal Modes</span></h2>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>纵模的本质</h3>
+                    <p>纵模描述激光沿<strong>传播方向（光轴）</strong>的频率分布。由于谐振腔的存在，只有特定频率的光波能够形成稳定的驻波，这些频率就是纵模。</p>
+                    
+                    <div class="formula">
+                        Δν = c / (2nL)
+                        <div class="formula-label">
+                            相邻纵模的频率间隔公式<br>
+                            c = 光速，n = 折射率，L = 腔长
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>纵模的类型</h3>
+                    <div class="mode-grid">
+                        <div class="mode-item">
+                            <h4>单纵模</h4>
+                            <p>只有一个频率振荡</p>
+                            <p class="emoji">🎯</p>
+                            <ul>
+                                <li>频率稳定</li>
+                                <li>相干长度长</li>
+                                <li>适合精密测量</li>
+                            </ul>
+                        </div>
+                        <div class="mode-item">
+                            <h4>多纵模</h4>
+                            <p>多个频率同时振荡</p>
+                            <p class="emoji">🌈</p>
+                            <ul>
+                                <li>频谱较宽</li>
+                                <li>相干性较差</li>
+                                <li>适合功率输出</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mode-section">
+                <div class="mode-header">
+                    <span class="mode-icon">🎯</span>
+                    <div>
+                        <h2>横模 <span class="english">Transverse Modes</span></h2>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>横模的本质</h3>
+                    <p>横模描述<strong>垂直于传播方向</strong>的光场分布，也就是激光光斑的形状。不同的横模对应不同的光斑图案和光束质量。</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Laguerre-Gaussian 模式 (LG)</h3>
+                    <p><strong>适用于圆对称谐振腔</strong></p>
+                    <div class="mode-grid">
+                        <div class="mode-item">
+                            <h4>LG₀₀ 基模</h4>
+                            <p>高斯光斑，能量集中，光束质量最佳</p>
+                        </div>
+                        <div class="mode-item">
+                            <h4>LG₁₀, LG₂₀...</h4>
+                            <p>同心环状结构，径向节点增加</p>
+                        </div>
+                        <div class="mode-item">
+                            <h4>LG₀₁*, LG₀₂...</h4>
+                            <p>环形模式，带角向相位</p>
+                        </div>
+                        <div class="mode-item">
+                            <h4>LG₁₁, LG₂₁...</h4>
+                            <p>复杂的径向+角向组合结构</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Hermite-Gaussian 模式 (HG)</h3>
+                    <p><strong>适用于矩形对称谐振腔</strong></p>
+                    <div class="mode-grid">
+                        <div class="mode-item">
+                            <h4>TEM₀₀ 基模</h4>
+                            <p>高斯光斑，与LG₀₀相同</p>
+                        </div>
+                        <div class="mode-item">
+                            <h4>TEM₁₀, TEM₂₀...</h4>
+                            <p>水平方向的多瓣结构</p>
+                        </div>
+                        <div class="mode-item">
+                            <h4>TEM₀₁, TEM₁₁...</h4>
+                            <p>垂直和水平方向的组合</p>
+                        </div>
+                        <div class="mode-item">
+                            <h4>TEM₂₂, TEM₃₃...</h4>
+                            <p>复杂的网格状分布</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comparison">
+                <h3>📊 纵模与横模的对比</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>纵模</th>
+                            <th>横模</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>描述对象</strong></td>
+                            <td>频率/波长分布</td>
+                            <td>空间光场分布</td>
+                        </tr>
+                        <tr>
+                            <td><strong>主要影响因素</strong></td>
+                            <td>谐振腔长度</td>
+                            <td>腔镜曲率、光阑大小</td>
+                        </tr>
+                        <tr>
+                            <td><strong>应用影响</strong></td>
+                            <td>相干性、线宽、频率稳定性</td>
+                            <td>光束质量、聚焦性能、发散角</td>
+                        </tr>
+                        <tr>
+                            <td><strong>控制方法</strong></td>
+                            <td>标准具、短腔</td>
+                            <td>光阑、腔型设计</td>
+                        </tr>
+                        <tr>
+                            <td><strong>理想状态</strong></td>
+                            <td>单纵模</td>
+                            <td>TEM₀₀ 基模</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="highlight">
+                <h3>🌟 最理想的激光</h3>
+                <p><strong>单纵模 + TEM₀₀ 基横模</strong></p>
+                <p style="margin-top: 15px;">这样的激光具有最好的<strong>相干性</strong>和<strong>光束质量</strong>，适用于精密测量、激光加工、光通信等高端应用！</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
