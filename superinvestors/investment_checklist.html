@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投资亏损行为检查清单 - 芒格式逆向思维</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title .icon {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .checklist {
+            list-style: none;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+            transition: all 0.3s ease;
+        }
+        
+        .checklist-item:hover {
+            background: #fff5f5;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.1);
+        }
+        
+        .checklist-item input[type="checkbox"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .checklist-item.checked {
+            opacity: 0.6;
+            text-decoration: line-through;
+            border-left-color: #28a745;
+            background: #f0f9f4;
+        }
+        
+        .item-content {
+            flex: 1;
+        }
+        
+        .item-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+        
+        .item-desc {
+            font-size: 13px;
+            color: #718096;
+            line-height: 1.5;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        
+        .warning-box h3 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .warning-box p {
+            color: #856404;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        
+        .quote {
+            background: #e8f4f8;
+            border-left: 4px solid #17a2b8;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+            font-style: italic;
+            color: #0c5460;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 5px;
+        }
+        
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💸 投资亏损行为检查清单</h1>
+            <p>"我只想知道我会死在哪里，然后我永远不去那个地方" —— 查理·芒格</p>
+            <p style="margin-top: 10px; font-size: 13px;">逆向思维：避免愚蠢比追求聪明更重要</p>
+        </div>
+        
+        <div class="content">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalItems">0</div>
+                    <div class="stat-label">检查项目</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="checkedItems">0</div>
+                    <div class="stat-label">已识别风险</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="riskLevel">安全</div>
+                    <div class="stat-label">风险等级</div>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <h3>⚠️ 使用说明</h3>
+                <p><strong>每次买入前</strong>，逐条检查以下行为。勾选任何一项即表示该笔投资存在致命缺陷，应<strong>立即放弃或重新评估</strong>。</p>
+            </div>
+            
+            <!-- 心态与纪律 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="icon">🧠</span>
+                    心态与纪律
+                </h2>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">赌徒心态 - 急买急卖</div>
+                            <div class="item-desc">想快速翻本、追涨杀跌、频繁交易</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">FOMO（错失恐惧）驱动买入</div>
+                            <div class="item-desc">因为"别人都在赚钱"而冲动追高，而非基于价值判断</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">缺乏长期持有信心</div>
+                            <div class="item-desc">不符合价值投资逻辑还要硬做，无法回答"关闭市场3年我还愿意持有吗"</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">过度行动偏好</div>
+                            <div class="item-desc">无法忍受"坐着不动"，频繁调仓换标的</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 风险评估 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="icon">⚡</span>
+                    风险评估
+                </h2>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">只看收益不评估风险</div>
+                            <div class="item-desc">没有优先考虑"永久性资本损失"的可能性</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">混淆结构性风险与周期性调整</div>
+                            <div class="item-desc">把行业衰退当成短期调整，接飞刀</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">没有安全边际</div>
+                            <div class="item-desc">估值过高或刚好公允，没有留足犯错空间</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">使用杠杆</div>
+                            <div class="item-desc">融资、配资、期权等放大风险而非智慧</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">与品格可疑的人/公司合作</div>
+                            <div class="item-desc">管理层诚信存疑、财务造假前科、关联交易复杂</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 能力圈与认知 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="icon">🎯</span>
+                    能力圈与认知
+                </h2>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">超出能力圈</div>
+                            <div class="item-desc">不理解商业模式、技术路线、竞争格局</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">看行业β不看公司α</div>
+                            <div class="item-desc">只因"新能源是趋势"就买入，忽视具体公司竞争力</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">听消息/跟风买入</div>
+                            <div class="item-desc">基于社交媒体、大V推荐、小道消息，缺乏独立判断</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">不懂装懂</div>
+                            <div class="item-desc">无法用简单语言解释公司如何赚钱</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 公司质地 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="icon">🏢</span>
+                    公司质地
+                </h2>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">三无公司：无品牌、无规模、无定价权</div>
+                            <div class="item-desc">产品同质化严重，只能打价格战</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">ToG业务为主且无定价权</div>
+                            <div class="item-desc">严重依赖政府订单，受政策波动大</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">没有护城河</div>
+                            <div class="item-desc">低技术壁垒、易被替代、无网络效应或规模效应</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">现金流造血能力差</div>
+                            <div class="item-desc">持续烧钱、依赖融资、应收账款高企</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 资本配置 -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="icon">💰</span>
+                    资本配置
+                </h2>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">过度分散持仓</div>
+                            <div class="item-desc">持有10+标的，精力分散无法深度研究</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">忽视机会成本</div>
+                            <div class="item-desc">没有与账户里的最优标的对比，或与持有现金对比</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">重仓单一行业/标的但无深度认知</div>
+                            <div class="item-desc">集中度高但不符合"胜率极高时重仓"的条件</div>
+                        </div>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" onchange="updateStats()">
+                        <div class="item-content">
+                            <div class="item-title">追高买入（技术面)</div>
+                            <div class="item-desc">连续大涨后追进，而非在冷门时布局</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="quote">
+                "投资的艺术不是发现下一个伟大的公司，而是避免糟糕的决定。" —— 查理·芒格
+            </div>
+            
+            <div class="warning-box" style="background: #f8d7da; border-left-color: #dc3545;">
+                <h3>🚨 核心原则</h3>
+                <p><strong>任何一项被勾选，都应该是一票否决！</strong><br>
+                宁可错过机会，也不要犯下愚蠢的错误。好的投资机会会再来，但本金永久损失无法挽回。</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>逆向思维工具 | 基于查理·芒格投资哲学</p>
+            <p style="margin-top: 8px; opacity: 0.8;">定期更新此清单，把新犯的错误加入检查项</p>
+        </div>
+    </div>
+    
+    <script>
+        function updateStats() {
+            const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            const totalItems = checkboxes.length;
+            let checkedCount = 0;
+            
+            checkboxes.forEach(checkbox => {
+                const item = checkbox.closest('.checklist-item');
+                if (checkbox.checked) {
+                    item.classList.add('checked');
+                    checkedCount++;
+                } else {
+                    item.classList.remove('checked');
+                }
+            });
+            
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('checkedItems').textContent = checkedCount;
+            
+            const riskLevelEl = document.getElementById('riskLevel');
+            if (checkedCount === 0) {
+                riskLevelEl.textContent = '安全';
+                riskLevelEl.style.color = '#28a745';
+            } else if (checkedCount <= 2) {
+                riskLevelEl.textContent = '警告';
+                riskLevelEl.style.color = '#ffc107';
+            } else {
+                riskLevelEl.textContent = '危险';
+                riskLevelEl.style.color = '#dc3545';
+            }
+        }
+        
+        // 初始化统计
+        updateStats();
+    </script>
+</body>
+</html>
