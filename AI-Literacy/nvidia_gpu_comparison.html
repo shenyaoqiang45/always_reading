@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NVIDIA GPU 参数对比、出口限制时间线及战略考量</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        h1, h2 { color: #333; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        ul { margin: 10px 0; padding-left: 20px; }
+        .timeline { list-style-type: none; padding: 0; }
+        .timeline li { margin-bottom: 10px; padding-left: 20px; position: relative; }
+        .timeline li:before { content: "•"; position: absolute; left: 0; color: #007bff; font-weight: bold; }
+        .citation { font-size: 0.8em; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>NVIDIA H100、H200、H800、H20 参数对比、GPU 出口限制中国时间线及战略考量</h1>
+    
+    <h2>1. GPU 参数对比汇总</h2>
+    <p>基于 NVIDIA 官方规格（2025年10月更新）。性能指标以稀疏性启用为基准，SXM 形式因子。H800/H20 为出口合规版，性能受限。实际值依工作负载而异。</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>参数</th>
+                <th>H100</th>
+                <th>H200</th>
+                <th>H800</th>
+                <th>H20</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>架构</strong></td>
+                <td>Hopper</td>
+                <td>Hopper (增强版)</td>
+                <td>Hopper (出口版)</td>
+                <td>Hopper (优化出口版)</td>
+            </tr>
+            <tr>
+                <td><strong>内存容量</strong></td>
+                <td>80 GB</td>
+                <td>141 GB</td>
+                <td>80 GB</td>
+                <td>96 GB</td>
+            </tr>
+            <tr>
+                <td><strong>内存类型</strong></td>
+                <td>HBM3</td>
+                <td>HBM3e</td>
+                <td>HBM3</td>
+                <td>HBM3</td>
+            </tr>
+            <tr>
+                <td><strong>内存带宽</strong></td>
+                <td>3.35 TB/s</td>
+                <td>4.8 TB/s</td>
+                <td>3.35 TB/s</td>
+                <td>4.0 TB/s</td>
+            </tr>
+            <tr>
+                <td><strong>TDP (功耗)</strong></td>
+                <td>700 W</td>
+                <td>1000 W</td>
+                <td>700 W</td>
+                <td>400 W</td>
+            </tr>
+            <tr>
+                <td><strong>FP8 TFLOPS</strong></td>
+                <td>3958</td>
+                <td>3958</td>
+                <td>~3958 (AI 性能类似)</td>
+                <td>未公布 (~1184 估算)</td>
+            </tr>
+            <tr>
+                <td><strong>FP16 TFLOPS</strong></td>
+                <td>1979</td>
+                <td>1979</td>
+                <td>~1979 (AI 性能类似)</td>
+                <td>296</td>
+            </tr>
+            <tr>
+                <td><strong>SM 数量</strong></td>
+                <td>132</td>
+                <td>132</td>
+                <td>132</td>
+                <td>~78 (减少 41%)</td>
+            </tr>
+            <tr>
+                <td><strong>CUDA 核心数</strong></td>
+                <td>16,896</td>
+                <td>16,896</td>
+                <td>16,896</td>
+                <td>~10,000 (估算，减少)</td>
+            </tr>
+            <tr>
+                <td><strong>NVLink 带宽</strong></td>
+                <td>900 GB/s</td>
+                <td>900 GB/s</td>
+                <td>400 GB/s (降低)</td>
+                <td>900 GB/s</td>
+            </tr>
+            <tr>
+                <td><strong>主要应用</strong></td>
+                <td>AI 训练/推理/HPC</td>
+                <td>大模型训练 (高内存需求)</td>
+                <td>中国市场 AI (FP64 降至 1 TFLOPS)</td>
+                <td>中国市场 推理 (低功耗)</td>
+            </tr>
+            <tr>
+                <td><strong>价格估算 (单 GPU)</strong></td>
+                <td>~$25,000-$30,000</td>
+                <td>~$40,000+</td>
+                <td>~$20,000-$25,000</td>
+                <td>~$12,000-$15,000</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2. GPU 出口限制中国时间线（2022-2025）</h2>
+    <p>以下是美国针对中国 GPU（特别是 NVIDIA 产品）出口管制的关键事件时间线，基于公开报道和官方公告。管制由美国商务部工业与安全局（BIS）主导，旨在限制先进 AI 芯片技术扩散。</p>
+    
+    <ul class="timeline">
+        <li><strong>2022年8月26日</strong>: 美国政府通知 NVIDIA 即将实施出口限制，影响 A100/H100 等先进 GPU 对中国的销售。<span class="citation">[来源: NVIDIA 财报]</span></li>
+        <li><strong>2022年9月21日</strong>: NVIDIA 寻求绕过禁令，向中国提供性能降低的替代 GPU（如 A800/H800）。<span class="citation">[来源: TechNode]</span></li>
+        <li><strong>2022年10月7日</strong>: 新出口管制正式生效，禁止高性能 AI 芯片（如 A100/H100）直接出口中国，定义“先进计算”阈值（TPP > 4800）。<span class="citation">[来源: BIS 公告]</span></li>
+        <li><strong>2023年10月</strong>: 管制更新，进一步限制先进逻辑芯片出口，针对训练/推理大模型的 GPU。<span class="citation">[来源: CSIS 分析]</span></li>
+        <li><strong>2025年4月</strong>: 美国推进对 H20 芯片的出口管制，限制 NVIDIA 最先进半导体对中国的销售。<span class="citation">[来源: NPR]</span></li>
+        <li><strong>2025年8月</strong>: 美国许可 NVIDIA 向中国出口 H20，但需许可方案且 NVIDIA 上缴 15% 费用；其他先进 AI 芯片仍受限。<span class="citation">[来源: Reuters]</span></li>
+        <li><strong>2025年9月</strong>: 特朗普政府逆转 4 月政策，短暂解除 AI 芯片禁令，但面临国会压力和中方反制（如 SAMR 指控 NVIDIA 违规）。<span class="citation">[来源: Built In, Congress.gov]</span></li>
+        <li><strong>2025年10月</strong>: 中国海关打击 NVIDIA 进口，北京部分禁令重塑 AI 供应链，美国考虑进一步动态调整。<span class="citation">[来源: GeneOnline]</span></li>
+    </ul>
+
+    <h2>3. 战略考量</h2>
+    <p>这些管制本质上是“性能阈值控制”，基于美国多层次战略，旨在平衡国家安全与经济利益。核心考虑包括：</p>
+    
+    <ul>
+        <li><strong>国家安全与军事防范</strong>: 限制先进 GPU 用于中国军事 AI（如武器设计、情报分析），防止商用技术转向军用。H800/H20 的性能裁减（如 NVLink 带宽降低）确保无法构建“超级计算机”级集群。</li>
+        <li><strong>技术霸权维护</strong>: 维持美国在 AI 芯片生态的优势（NVIDIA 全球市场份额 >90%）。管制延缓中国 AI 迭代（如大模型训练），迫使依赖低效硬件，推动本土化但短期“卡脖子”。</li>
+        <li><strong>地缘政治与供应链重塑</strong>: 作为中美科技战的一部分，重塑全球供应链，鼓励盟友同步限制。H20 等“特供版”是贸易折中，允许 NVIDIA 保留中国市场（收入 15-20%），但防范技术转移。2025 年松绑尝试反映“胡萝卜加大棒”策略。</li>
+    </ul>
+    
+    <p><em>数据更新至 2025 年 10 月 23 日。如需更多细节，请参考 NVIDIA 官网或 BIS 公告。</em></p>
+</body>
+</html>
