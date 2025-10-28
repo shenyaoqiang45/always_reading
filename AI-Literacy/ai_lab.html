@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球顶尖AI实验室发展时间线对比</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .intro {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .intro h2 {
+            font-size: 20px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .intro p {
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 14px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        thead th {
+            padding: 16px 12px;
+            font-weight: 600;
+            text-align: left;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        thead th:first-child {
+            min-width: 80px;
+        }
+
+        thead th:last-child {
+            border-right: none;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 14px 12px;
+            border-right: 1px solid #e9ecef;
+            vertical-align: top;
+        }
+
+        td:first-child {
+            font-weight: 600;
+            background: #f8f9fa;
+            color: #667eea;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        /* 为每个实验室的列组添加不同的背景色 */
+        td:nth-child(4n+2),
+        td:nth-child(4n+3),
+        td:nth-child(4n+4),
+        td:nth-child(4n+5) {
+            background-color: rgba(102, 126, 234, 0.02);
+        }
+
+        /* 空单元格样式 */
+        td:empty::after,
+        td:contains('–')::after {
+            content: '–';
+            color: #ccc;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .lab-section {
+            border-left: 3px solid;
+        }
+
+        .deepmind-col {
+            border-left-color: #ff6b6b;
+        }
+
+        .openai-col {
+            border-left-color: #4ecdc4;
+        }
+
+        .anthropic-col {
+            border-left-color: #95e1d3;
+        }
+
+        .deepseek-col {
+            border-left-color: #f38181;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        .legend-color.deepmind {
+            background-color: #ff6b6b;
+        }
+
+        .legend-color.openai {
+            background-color: #4ecdc4;
+        }
+
+        .legend-color.anthropic {
+            background-color: #95e1d3;
+        }
+
+        .legend-color.deepseek {
+            background-color: #f38181;
+        }
+
+        .legend-color.bytedance {
+            background-color: #a8e6cf;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            thead th, td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 全球顶尖AI实验室发展时间线对比</h1>
+            <p>DeepMind · OpenAI · Anthropic · DeepSeek · 字节豆包 技术演进全景图</p>
+        </div>
+
+        <div class="content">
+            <div class="intro">
+                <h2>📊 关于本对比表</h2>
+                <p>
+                    本表汇总了全球五大领先AI实验室（DeepMind、OpenAI、Anthropic、DeepSeek、字节豆包）从2014年至2025年的关键技术里程碑，
+                    包括模型架构、算力资源配置、训练框架选择等核心信息。通过横向对比，可以清晰看到各实验室的技术路线、
+                    发展策略以及在AI竞赛中的不同定位。
+                </p>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color deepmind"></div>
+                    <span>DeepMind (Google)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color openai"></div>
+                    <span>OpenAI</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color anthropic"></div>
+                    <span>Anthropic</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color deepseek"></div>
+                    <span>DeepSeek (中国)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color bytedance"></div>
+                    <span>字节豆包 (ByteDance)</span>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>年份</th>
+                            <th>DeepMind</th>
+                            <th>架构</th>
+                            <th>算力/资源</th>
+                            <th>训练框架</th>
+                            <th>OpenAI</th>
+                            <th>架构</th>
+                            <th>算力/资源</th>
+                            <th>训练框架</th>
+                            <th>Anthropic</th>
+                            <th>架构</th>
+                            <th>算力/资源</th>
+                            <th>训练框架</th>
+                            <th>DeepSeek</th>
+                            <th>架构</th>
+                            <th>算力/资源</th>
+                            <th>训练框架</th>
+                            <th>字节豆包</th>
+                            <th>架构</th>
+                            <th>算力/资源</th>
+                            <th>训练框架</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2014</td>
+                            <td><span class="highlight">成立</span></td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                        </tr>
+                        <tr>
+                            <td>2015</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td><span class="highlight">成立</span></td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                        </tr>
+                        <tr>
+                            <td>2016</td>
+                            <td>AlphaGo 击败李世石</td>
+                            <td>CNN + MCTS</td>
+                            <td>176 GPU + 1,202 CPU</td>
+                            <td>TensorFlow</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td><span class="highlight">DeepSeek 创立</span></td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                        </tr>
+                        <tr>
+                            <td>2018</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>GPT-2</td>
+                            <td>Transformer</td>
+                            <td>数百 V100 GPU</td>
+                            <td>TensorFlow</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                        </tr>
+                        <tr>
+                            <td>2021</td>
+                            <td>AlphaCode</td>
+                            <td>Transformer + RL</td>
+                            <td>GPU/TPU 集群</td>
+                            <td>JAX + TensorFlow</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td><span class="highlight">成立</span></td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                        </tr>
+                        <tr>
+                            <td>2022</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>ChatGPT (GPT-3.5)</td>
+                            <td>Transformer</td>
+                            <td>数千 V100 GPU</td>
+                            <td>PyTorch + DeepSpeed</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                        </tr>
+                        <tr>
+                            <td>2023</td>
+                            <td>Gemini 系列</td>
+                            <td>Transformer 多模态</td>
+                            <td>GPU/TPU 集群</td>
+                            <td>JAX / TensorFlow</td>
+                            <td>GPT-4</td>
+                            <td>Transformer 多模态</td>
+                            <td>大规模 GPU/TPU</td>
+                            <td>PyTorch + DeepSpeed</td>
+                            <td>Claude 1</td>
+                            <td>Transformer</td>
+                            <td>AWS/Google Cloud TPU</td>
+                            <td>JAX + PyTorch</td>
+                            <td>DeepSeek-V2 & Coder</td>
+                            <td>Transformer / MoE / Sparse</td>
+                            <td>未公开</td>
+                            <td>PyTorch / MindSpore</td>
+                            <td>豆包 1.0</td>
+                            <td>Transformer</td>
+                            <td>火山引擎算力集群</td>
+                            <td>PyTorch / MegEngine</td>
+                        </tr>
+                        <tr>
+                            <td>2024</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>GPT-4.5</td>
+                            <td>Transformer</td>
+                            <td>未公开</td>
+                            <td>PyTorch + DeepSpeed</td>
+                            <td>Claude 3</td>
+                            <td>Transformer</td>
+                            <td>AWS/Google Cloud TPU</td>
+                            <td>JAX + PyTorch</td>
+                            <td>DeepSeek-R1 / V2</td>
+                            <td>Transformer / MoE / Sparse</td>
+                            <td>未公开</td>
+                            <td>PyTorch / MindSpore</td>
+                            <td>豆包 1.5 / 多模态版</td>
+                            <td>Transformer / MoE</td>
+                            <td>火山引擎算力集群</td>
+                            <td>PyTorch / MegEngine</td>
+                        </tr>
+                        <tr>
+                            <td>2025</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>–</td>
+                            <td>o3-mini / o4-mini</td>
+                            <td>Transformer</td>
+                            <td>未公开</td>
+                            <td>PyTorch + DeepSpeed</td>
+                            <td>Claude 4</td>
+                            <td>Transformer</td>
+                            <td>AWS/Google Cloud TPU</td>
+                            <td>JAX + PyTorch</td>
+                            <td>DeepSeek-R1-Lite / V3 系列</td>
+                            <td>Transformer / Sparse / 128K Context</td>
+                            <td>未公开</td>
+                            <td>PyTorch / MindSpore</td>
+                            <td>豆包 2.0 / AI 工具链</td>
+                            <td>Transformer / MoE / 多模态</td>
+                            <td>火山引擎 + 自研芯片</td>
+                            <td>PyTorch / MegEngine</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="intro" style="margin-top: 30px;">
+                <h2>🔍 关键观察</h2>
+                <p>
+                    <strong>· DeepMind：</strong>从强化学习（AlphaGo）转向多模态大模型（Gemini），深度整合Google的TPU资源，主要使用JAX框架。<br>
+                    <strong>· OpenAI：</strong>持续引领生成式AI革命，从GPT-2到ChatGPT再到GPT-4，建立了PyTorch + DeepSpeed的技术栈。<br>
+                    <strong>· Anthropic：</strong>由前OpenAI成员创立，专注AI安全，Claude系列模型在对话安全性上有独特优势。<br>
+                    <strong>· DeepSeek：</strong>中国本土AI实验室，采用MoE（混合专家）和稀疏架构，在算力受限下探索高效路径，支持超长上下文。<br>
+                    <strong>· 字节豆包：</strong>字节跳动旗下AI大模型，依托火山引擎强大算力和自研芯片，使用MegEngine自研框架，快速迭代多模态能力，构建完整AI工具链生态。
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>数据来源：各实验室官方发布 | 最后更新：2025年10月 | <a href="../index.html" style="color: #667eea; text-decoration: none;">返回主页</a></p>
+        </div>
+    </div>
+</body>
+</html>
