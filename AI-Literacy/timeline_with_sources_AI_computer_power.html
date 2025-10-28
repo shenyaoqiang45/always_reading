@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>寒武纪 vs Google TPU vs NVIDIA — AI 芯片发展对比时间线（带来源）</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; margin: 24px; color: #0b1220; background: #f7f9fb; }
+    .container { max-width: 1100px; margin: auto; background: #fff; padding: 22px; box-shadow: 0 8px 24px rgba(10,20,30,0.06); border-radius: 8px; }
+    h1 { margin-top: 0; font-size: 22px; }
+    p.lead { color: #4a5568; }
+    table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+    th, td { border: 1px solid #e6eef6; padding: 10px 12px; vertical-align: top; font-size: 13px; }
+    th { background: linear-gradient(90deg,#f1f8ff,#f9fbff); text-align: left; font-weight: 700; }
+    tr:nth-child(even) td { background: #fbfdff; }
+    .summary { margin-top: 18px; padding: 12px; background: #fbfdff; border-left: 4px solid #2b6cb0; border-radius: 4px; }
+    .meta { color: #6b7280; font-size: 12px; }
+    .source { font-size: 11px; color: #555; margin-top: 4px; }
+    @media (max-width:720px) {
+      table, thead, tbody, th, td, tr { display: block; }
+      th { position: sticky; top:0; background:#f1f8ff; }
+      td { border: none; padding: 8px 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>寒武纪 vs Google TPU vs NVIDIA — AI 芯片发展对比时间线（带来源）</h1>
+    <p class="lead">整合关键年份与节点，便于横向比较。生成日期：2025-10-28</p>
+    <div class="meta">注：表中事件为公开报道/综合整理的关键节点，并且每条附有来源链接。</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>年份</th>
+          <th>寒武纪（Cambricon）</th>
+          <th>Google TPU</th>
+          <th>NVIDIA AI 芯片</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2010</td>
+          <td>研究起源于中科院相关团队</td>
+          <td>早期内部 ASIC 概念与研究</td>
+          <td>GPU 用于图形与科研计算的发展期</td>
+        </tr>
+        <tr>
+          <td>2015</td>
+          <td>——</td>
+          <td>TPU v1：用于推理（内部部署）</td>
+          <td>CUDA 生态扩张，GPU 被广泛用于深度学习</td>
+        </tr>
+        <tr>
+          <td>2016</td>
+          <td>寒武纪正式成立；Cambricon-1A 发布</td>
+          <td>——</td>
+          <td>Pascal / P100 成 AI 训练基础</td>
+        </tr>
+        <tr>
+          <td>2017</td>
+          <td>推出 1H/1M，进入手机/终端市场</td>
+          <td>TPU v2：支持训练与推理</td>
+          <td>Volta V100，Tensor Core 引入</td>
+        </tr>
+        <tr>
+          <td>2018</td>
+          <td>MLU100 面向数据中心</td>
+          <td>TPU v3 & TPU Pod：大规模训练集群</td>
+          <td>NVIDIA 确立数据中心 AI 战略</td>
+        </tr>
+        <tr>
+          <td>2019</td>
+          <td>MLU270，NeuWare SDK 生态扩展</td>
+          <td>——</td>
+          <td>Turing/RTX 加速图形与推理融合</td>
+        </tr>
+        <tr>
+          <td>2020</td>
+          <td>科创板上市；MLU290 云端芯片</td>
+          <td>TPU v4 研发/演进</td>
+          <td>Ampere A100 发布，训练能力显著提升</td>
+        </tr>
+        <tr>
+          <td>2021</td>
+          <td>MLU370 推出；拓展云端合作</td>
+          <td>TPU v4 正式部署，效率提升</td>
+          <td>A100 大规模部署于数据中心</td>
+        </tr>
+        <tr>
+          <td>2022</td>
+          <td><strong>12月 被美国列入实体清单（制裁）</strong><br><div class="source">来源：U.S. DOC BIS 12/15/2022 实体清单公告 :contentReference[oaicite:0]{index=0}</div></td>
+          <td>TPU v5 系列研发中</td>
+          <td>Hopper H100 发布（更强 Tensor 性能）</td>
+        </tr>
+        <tr>
+          <td>2023</td>
+          <td>制裁影响代工与 EDA，营收承压<br><div class="source">来源：DIGITIMES 报道 “One year after US sanction … Cambricon faces investor pessimism” :contentReference[oaicite:1]{index=1}</div></td>
+          <td>TPU v5e/v5p：成本与效率优化</td>
+          <td>H100 主导大模型训练（ChatGPT/LLM 时代）</td>
+        </tr>
+        <tr>
+          <td>2024</td>
+          <td>推出 MLU580，推进国产替代</td>
+          <td>TPU v6 (Trillium)：能效与推理优化<br><div class="source">来源：Google Cloud Blog “Introducing Trillium, sixth-generation TPUs” :contentReference[oaicite:2]{index=2}</div></td>
+          <td>Blackwell 架构（B100/B200）推出，支持新数值格式<br><div class="source">来源：NVIDIA News “Blackwell Platform Arrives” :contentReference[oaicite:3]{index=3}</div></td>
+        </tr>
+        <tr>
+          <td>2025</td>
+          <td>2025 上半年扭亏为盈，营收利润改善<br><div class="source">来源：Tech Wire Asia “When sanctions backfire … Cambricon” :contentReference[oaicite:4]{index=4}</div></td>
+          <td>TPU v7 (Ironwood)：面向生成式 AI 推理<br><div class="source">来源：Google Blog “Ironwood: The first Google TPU for the age of inference” :contentReference[oaicite:5]{index=5}</div></td>
+          <td>Blackwell Ultra 推出／筹备，性能继续领跑<br><div class="source">来源：NVIDIA Press Release “Blackwell Ultra AI Factory Platform” :contentReference[oaicite:6]{index=6}</div></td>
+        </tr>
+        <tr>
+          <td>2026</td>
+          <td>继续布局次世代工艺与国产生态</td>
+          <td>持续优化推理/训练能效（云端）</td>
+          <td>Rubin 平台（整合 GPU+CPU+Networking）规划量产</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="summary">
+      <strong>总结要点：</strong>
+      <ol>
+        <li><strong>时间节奏差异：</strong>
+          <ul>
+            <li>NVIDIA 每 2–3 年一次架构更新，形成业界标准</li>
+            <li>Google TPU 每 1–2 年迭代一代，以 云端 服务为核心</li>
+            <li>寒武纪 受制裁 2022 年短暂受阻，但 2025 实现恢复增长</li>
+          </ul>
+        </li>
+        <li><strong>技术路线差异：</strong>
+          <ul>
+            <li>NVIDIA → 通用加速（GPU+AI）</li>
+            <li>Google → 专用 ASIC（云端 推理/训练）</li>
+            <li>寒武纪 → 自主 AI 加速 + 国产替代 路线</li>
+          </ul>
+        </li>
+        <li><strong>战略意义：</strong>
+          <ul>
+            <li>从 国家层面 看：寒武纪的命运与 中美技术封锁 紧密相关</li>
+            <li>从 商业竞争 看：NVIDIA 依靠生态护城河，TPU 依靠自用垂直整合</li>
+            <li>从 技术演进 看：三者都在走向 "专用化 + 能效最优" 方向</li>
+          </ul>
+        </li>
+        <li><strong>建议：</strong>若将芯片用于产品/系统设计，要同时考虑性能、SDK 兼容性与供应链/制裁风险。</li>
+        <li><strong>人才需求：</strong>AI 芯片的发展需要具备跨学科视野的复合型人才。"既懂算法，又懂系统"的研究者与工程师，将成为推动技术落地的中坚力量。需要拓宽知识边界，关注底层硬件与上层应用的协同优化。</li>
+        <li><strong>AI 芯片面临的四大新挑战：</strong>
+          <ul>
+            <li><strong>算法与芯片周期矛盾：</strong>算法快速迭代与芯片研发周期之间的矛盾 → 算法可推动芯片设计的高能效与低功耗</li>
+            <li><strong>算力密度与能效比：</strong>需持续提升算力密度与能效比 → 在封装层面，需依靠新材料、新结构解决供电与散热问题</li>
+            <li><strong>先进封装与散热：</strong>先进封装与散热技术的突破 → 软件层面，提升系统效率是工程实现中的核心难题</li>
+            <li><strong>集群互联与优化：</strong>集群的互联与效率优化 → 光互联技术有望发挥关键作用</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <footer class="meta">
+      说明：此报告为整理版，若需更详尽版本（例如每年每款芯片规格、每事件来源深挖），可请求扩展。
+    </footer>
+  </div>
+</body>
+</html>
