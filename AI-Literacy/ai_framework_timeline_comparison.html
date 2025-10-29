@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI训练推理框架发展对比时间线（2014-2025）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+            margin-top: 10px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border-left: 5px solid #667eea;
+        }
+
+        .intro p {
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin: 40px 0 25px 0;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .timeline-wrapper {
+            overflow-x: auto;
+            margin: 30px 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            min-width: 1200px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.05em;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            border-right: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+            transition: background 0.3s ease;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .framework-name {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 1.05em;
+        }
+
+        .open-source {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #10b981;
+            color: white;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .comparison-section {
+            margin-top: 50px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .framework-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid;
+        }
+
+        .framework-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .framework-card.tensorflow { border-top-color: #ff6f00; }
+        .framework-card.pytorch { border-top-color: #ee4c2c; }
+        .framework-card.mxnet { border-top-color: #1c85e8; }
+        .framework-card.jax { border-top-color: #00d2ff; }
+        .framework-card.deepspeed { border-top-color: #00a4ef; }
+        .framework-card.megengine { border-top-color: #6b4eff; }
+        .framework-card.mindspore { border-top-color: #e60012; }
+
+        .framework-card h3 {
+            color: #2c3e50;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .framework-card .meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .framework-card .tag {
+            padding: 5px 12px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .framework-card .section {
+            margin-top: 15px;
+        }
+
+        .framework-card .section-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+
+        .framework-card .section-content {
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .pros {
+            color: #10b981;
+        }
+
+        .cons {
+            color: #ef4444;
+        }
+
+        .timeline-highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        .icon {
+            margin-right: 5px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .year-marker {
+            background: #667eea;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 AI训练推理框架发展对比时间线</h1>
+            <div class="subtitle">JAX / TensorFlow / PyTorch / MXNet / DeepSpeed / MegEngine / MindSpore</div>
+            <div class="subtitle" style="font-size: 1em; margin-top: 15px;">2014–2025 全景对比</div>
+        </header>
+
+        <div class="content">
+            <div class="intro">
+                <p><strong>📊 概述：</strong>本页面详细对比了七大主流AI训练与推理框架的发展历程、技术特点、开源状态及应用场景。这些框架代表了从学术研究到工业部署、从通用计算到专用硬件优化的不同路径，反映了AI基础设施的演进趋势。</p>
+            </div>
+
+            <h2>📅 发展时间线对比表</h2>
+            
+            <div class="timeline-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 120px;">时间</th>
+                            <th style="width: 140px;">框架</th>
+                            <th style="width: 100px;">是否开源</th>
+                            <th style="width: 180px;">开发公司/机构</th>
+                            <th style="width: 200px;">核心定位</th>
+                            <th style="width: 180px;">AI编译器</th>
+                            <th>关键里程碑/特征</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="year-marker">2014</span></td>
+                            <td><span class="framework-name">MegEngine</span></td>
+                            <td><span class="open-source">✅ 开源 (2020)</span></td>
+                            <td>旷视科技 Megvii</td>
+                            <td>视觉方向工业级深度学习框架</td>
+                            <td>自研编译器 MegCC</td>
+                            <td>2014年内部开发，2019年正式命名为 MegEngine，2020年3月开源</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2015-11</span></td>
+                            <td><span class="framework-name">TensorFlow</span></td>
+                            <td><span class="open-source">✅ 开源</span></td>
+                            <td>Google Brain</td>
+                            <td>通用AI框架 / 跨平台部署</td>
+                            <td><strong>XLA</strong> (Accelerated Linear Algebra)</td>
+                            <td>TensorFlow 1.0 前身开源，成为深度学习研究与生产标准之一</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2015-12</span></td>
+                            <td><span class="framework-name">MXNet</span></td>
+                            <td><span class="open-source">✅ 开源</span></td>
+                            <td>DMLC / Apache 基金会 / AWS</td>
+                            <td>灵活高效的深度学习框架 / 多语言支持</td>
+                            <td>TVM、NNVM</td>
+                            <td>由 DMLC（Distributed Machine Learning Community）开发，2017年成为 Apache 顶级项目，AWS 官方推荐框架</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2016-09</span></td>
+                            <td><span class="framework-name">PyTorch</span></td>
+                            <td><span class="open-source">✅ 开源</span></td>
+                            <td>Meta (Facebook AI Research)</td>
+                            <td>动态计算图 / 易用研究</td>
+                            <td>JIT (TorchScript)、<strong>TorchInductor</strong> (2.0+)</td>
+                            <td>初版发布，凭动态图机制迅速占领研究领域</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2018-12</span></td>
+                            <td><span class="framework-name">PyTorch 1.0</span></td>
+                            <td><span class="open-source">✅</span></td>
+                            <td>Meta</td>
+                            <td>稳定生产环境</td>
+                            <td>TorchScript、ONNX</td>
+                            <td>融合 Caffe2 能力，首次提出 TorchScript，向生产部署靠拢</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2018-12</span></td>
+                            <td><span class="framework-name">JAX</span></td>
+                            <td><span class="open-source">✅ 开源</span></td>
+                            <td>Google Research</td>
+                            <td>高性能数值计算 / 自动微分</td>
+                            <td><strong>XLA</strong> (原生集成)</td>
+                            <td>JAX 发布，基于 XLA 实现 JIT 编译、grad/vmap/pmap 等变换</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2019-09</span></td>
+                            <td><span class="framework-name">TensorFlow 2.0</span></td>
+                            <td><span class="open-source">✅</span></td>
+                            <td>Google</td>
+                            <td>Eager 模式 / Keras 集成</td>
+                            <td><strong>XLA</strong>、TensorFlow Lite</td>
+                            <td>改进用户体验，成为默认动态图执行框架</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2019-10</span></td>
+                            <td><span class="framework-name">DeepSpeed (ZeRO论文)</span></td>
+                            <td><span class="open-source">✅ 开源</span></td>
+                            <td>Microsoft</td>
+                            <td>分布式训练优化 / 大模型引擎</td>
+                            <td>依赖 PyTorch 编译器</td>
+                            <td>ZeRO 提出，极大提升分布式训练内存效率</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2020-02~05</span></td>
+                            <td><span class="framework-name">DeepSpeed</span></td>
+                            <td><span class="open-source">✅</span></td>
+                            <td>Microsoft</td>
+                            <td>超大模型训练库</td>
+                            <td>PyTorch JIT、ONNX Runtime</td>
+                            <td>正式开源，集成 ZeRO、Pipeline、3D 并行，支持万亿参数级模型</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2020-03</span></td>
+                            <td><span class="framework-name">MegEngine</span></td>
+                            <td><span class="open-source">✅</span></td>
+                            <td>旷视科技 Megvii</td>
+                            <td>通用视觉训练框架</td>
+                            <td>MegCC (跨平台编译器)</td>
+                            <td>正式对外开源，支持动态图/静态图混合模式</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2020-03</span></td>
+                            <td><span class="framework-name">MindSpore</span></td>
+                            <td><span class="open-source">✅ 开源</span></td>
+                            <td>华为</td>
+                            <td>全栈AI框架 / 芯片自适配</td>
+                            <td><strong>MindSpore Graph Engine (GE)</strong></td>
+                            <td>华为官方框架，面向 Ascend、昇腾、端-边-云协同场景</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2022-09</span></td>
+                            <td><span class="framework-name">PyTorch Foundation</span></td>
+                            <td><span class="open-source">✅</span></td>
+                            <td>Linux Foundation / Meta</td>
+                            <td>社区化治理</td>
+                            <td>TorchScript、FX</td>
+                            <td>PyTorch 独立治理结构确立，确保开放生态</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2023-03-15</span></td>
+                            <td><span class="framework-name">PyTorch 2.0</span></td>
+                            <td><span class="open-source">✅</span></td>
+                            <td>Meta</td>
+                            <td>编译加速 / 生产性能</td>
+                            <td><strong>TorchInductor</strong> + TorchDynamo + AOTAutograd</td>
+                            <td>TorchDynamo、AOTAutograd、Inductor 带来数倍加速</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2023-06~2024</span></td>
+                            <td><span class="framework-name">DeepSpeed-MII / ZeRO++</span></td>
+                            <td><span class="open-source">✅</span></td>
+                            <td>Microsoft</td>
+                            <td>高效推理 / 大模型部署</td>
+                            <td>ONNX Runtime、Triton</td>
+                            <td>支持混合精度推理、模型并行推理框架集成</td>
+                        </tr>
+                        <tr>
+                            <td><span class="year-marker">2024-2025</span></td>
+                            <td><span class="framework-name">JAX + Flax / MindSpore Ascend</span></td>
+                            <td><span class="open-source">✅</span></td>
+                            <td>Google / 华为</td>
+                            <td>AI编译优化 / 芯片自适应</td>
+                            <td><strong>XLA</strong> / MindSpore GE + CANN</td>
+                            <td>JAX 与 TPU 深度绑定；MindSpore 集成昇腾AI芯片优化推理性能</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="comparison-section">
+                <h2>🌍 七大框架详细对比</h2>
+                
+                <div class="comparison-grid">
+                    <div class="framework-card tensorflow">
+                        <h3>TensorFlow</h3>
+                        <div class="meta">
+                            <span class="tag">✅ 开源</span>
+                            <span class="tag">Google Brain</span>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🔧 AI编译器</div>
+                            <div class="section-content"><strong>XLA</strong> (Accelerated Linear Algebra) - 静态图全局优化，TPU原生支持，操作融合与硬件专用化</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title pros">✅ 优势</div>
+                            <div class="section-content">全生态支持（训练→部署→移动端），TensorFlow Lite、TensorFlow.js、TFX 完整工具链，适合产业级应用</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title cons">❌ 劣势</div>
+                            <div class="section-content">代码复杂，学习曲线陡峭，早期版本（1.x）静态图调试困难</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🎯 主要应用</div>
+                            <div class="section-content">产业级AI服务、跨平台模型部署、移动端推理、Google云服务集成</div>
+                        </div>
+                    </div>
+
+                    <div class="framework-card pytorch">
+                        <h3>PyTorch</h3>
+                        <div class="meta">
+                            <span class="tag">✅ 开源</span>
+                            <span class="tag">Meta (FAIR)</span>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🔧 AI编译器</div>
+                            <div class="section-content"><strong>TorchInductor</strong> (2.0+) + TorchDynamo + AOTAutograd - 动态捕获+静态优化，JIT编译，ONNX导出</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title pros">✅ 优势</div>
+                            <div class="section-content">动态计算图，Pythonic 设计，社区活跃，科研友好，调试直观，大量论文实现</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title cons">❌ 劣势</div>
+                            <div class="section-content">早期部署能力较弱（现已通过 TorchScript/ONNX 改善），移动端支持不如 TensorFlow</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🎯 主要应用</div>
+                            <div class="section-content">学术研究、通用AI训练、计算机视觉、NLP、强化学习、大模型训练（GPT/LLaMA）</div>
+                        </div>
+                    </div>
+
+                    <div class="framework-card mxnet">
+                        <h3>MXNet</h3>
+                        <div class="meta">
+                            <span class="tag">✅ 开源</span>
+                            <span class="tag">Apache / AWS</span>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🔧 AI编译器</div>
+                            <div class="section-content"><strong>TVM</strong> + NNVM - 跨平台自动调优，Tensor表达式优化，边缘设备友好</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title pros">✅ 优势</div>
+                            <div class="section-content">灵活的编程接口（命令式/符号式混合），支持多语言（Python/C++/R/Julia等），内存效率高，AWS官方推荐，分布式训练优化，Apache顶级项目</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title cons">❌ 劣势</div>
+                            <div class="section-content">社区活跃度不及 PyTorch/TensorFlow，文档和教程相对较少，近年发展放缓，生态系统较小</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🎯 主要应用</div>
+                            <div class="section-content">AWS云服务集成、计算机视觉、NLP、推荐系统、边缘设备部署、多语言AI开发</div>
+                        </div>
+                    </div>
+
+                    <div class="framework-card jax">
+                        <h3>JAX</h3>
+                        <div class="meta">
+                            <span class="tag">✅ 开源</span>
+                            <span class="tag">Google Research</span>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🔧 AI编译器</div>
+                            <div class="section-content"><strong>XLA</strong> (原生深度集成) - JIT编译，自动微分(grad/vmap/pmap)，TPU专属优化</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title pros">✅ 优势</div>
+                            <div class="section-content">XLA 编译高性能，自动微分灵活（grad/vmap/pmap），函数式编程范式，TPU 原生支持</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title cons">❌ 劣势</div>
+                            <div class="section-content">上手难度高，生态较小，社区规模不及 TensorFlow/PyTorch，文档相对较少</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🎯 主要应用</div>
+                            <div class="section-content">数值优化、科学计算、TPU 训练、前沿研究（如 Transformer 变体、强化学习）</div>
+                        </div>
+                    </div>
+
+                    <div class="framework-card deepspeed">
+                        <h3>DeepSpeed</h3>
+                        <div class="meta">
+                            <span class="tag">✅ 开源</span>
+                            <span class="tag">Microsoft</span>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🔧 AI编译器</div>
+                            <div class="section-content">依赖 <strong>PyTorch JIT</strong> + <strong>ONNX Runtime</strong> + <strong>Triton</strong> - GPU内核优化，混合精度推理</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title pros">✅ 优势</div>
+                            <div class="section-content">大模型训练与推理优化，ZeRO 内存优化技术，3D 并行（数据/流水线/张量），训练效率极高</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title cons">❌ 劣势</div>
+                            <div class="section-content">依赖 PyTorch，非独立框架，主要面向超大规模模型场景，中小模型优势不明显</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🎯 主要应用</div>
+                            <div class="section-content">超大参数模型训练（LLM、Transformer）、千亿/万亿参数模型、分布式训练加速</div>
+                        </div>
+                    </div>
+
+                    <div class="framework-card megengine">
+                        <h3>MegEngine</h3>
+                        <div class="meta">
+                            <span class="tag">✅ 开源 (2020)</span>
+                            <span class="tag">旷视科技</span>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🔧 AI编译器</div>
+                            <div class="section-content"><strong>MegCC</strong> (跨平台编译器) - 轻量级推理部署，静态/动态图混合优化</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title pros">✅ 优势</div>
+                            <div class="section-content">国产框架，视觉性能优异，动态/静态图混合，工业部署经验丰富（旷视内部验证）</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title cons">❌ 劣势</div>
+                            <div class="section-content">国际生态小，社区活跃度不及主流框架，第三方库支持有限</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🎯 主要应用</div>
+                            <div class="section-content">计算机视觉算法、目标检测、人脸识别、工业部署、国产化AI方案</div>
+                        </div>
+                    </div>
+
+                    <div class="framework-card mindspore">
+                        <h3>MindSpore</h3>
+                        <div class="meta">
+                            <span class="tag">✅ 开源 (2020)</span>
+                            <span class="tag">华为</span>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🔧 AI编译器</div>
+                            <div class="section-content"><strong>MindSpore Graph Engine (GE)</strong> + CANN - 昇腾芯片深度优化，端-边-云协同编译</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title pros">✅ 优势</div>
+                            <div class="section-content">端-边-云协同，昇腾硬件深度优化，全栈AI解决方案，国产自主可控</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title cons">❌ 劣势</div>
+                            <div class="section-content">芯片依赖强（主要面向昇腾），通用硬件支持不如主流框架，国际化程度较低</div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-title">🎯 主要应用</div>
+                            <div class="section-content">华为硬件生态、昇腾AI处理器、国产AI平台、端侧推理、5G+AI融合场景</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="intro" style="margin-top: 50px; border-left-color: #10b981;">
+                <h3 style="color: #10b981; margin-bottom: 15px;">🎯 选型建议</h3>
+                <ul style="list-style-position: inside; color: #2c3e50;">
+                    <li><strong>学术研究：</strong>PyTorch（动态图、社区资源丰富）</li>
+                    <li><strong>产业部署：</strong>TensorFlow（全平台支持、成熟工具链）</li>
+                    <li><strong>AWS云服务：</strong>MXNet（AWS深度集成、多语言支持、内存高效）</li>
+                    <li><strong>超大模型训练：</strong>DeepSpeed + PyTorch（内存优化、并行策略）</li>
+                    <li><strong>高性能数值计算：</strong>JAX（XLA编译、TPU原生）</li>
+                    <li><strong>计算机视觉工业化：</strong>MegEngine（旷视生态、部署优化）</li>
+                    <li><strong>国产化/华为生态：</strong>MindSpore（昇腾适配、端云协同）</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>📚 AI框架生态持续演进，选择适合业务场景的工具是成功的关键</p>
+            <p style="margin-top: 10px; opacity: 0.8;">更新时间：2025年10月 | 数据来源：各框架官方文档及社区</p>
+        </footer>
+    </div>
+</body>
+</html>

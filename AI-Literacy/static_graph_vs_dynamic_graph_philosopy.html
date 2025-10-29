@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 框架架构哲学：动态图 vs. 静态图的核心差异</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; background-color: #f9f9f9; color: #333; }
+        h1, h2 { color: #2c3e50; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        .highlight { background-color: #e8f4fd; padding: 10px; border-left: 4px solid #3498db; }
+    </style>
+</head>
+<body>
+    <h1>AI 框架架构哲学：动态图 vs. 静态图的核心差异</h1>
+    
+    <p>在人工智能框架（如 PyTorch 和 TensorFlow）的设计中，"动态图"和"静态图"是两种核心架构哲学。这种差异不是技术细节，而是对"计算图"构建与执行方式的根本取向。动态图像"即兴创作的脚本"，强调灵活性和开发者友好；静态图像"精密的蓝图"，注重优化和效率。理解它们，能帮你选择合适的工具——研究用动态，生产用静态。</p>
+    
+    <h2>什么是计算图（Computation Graph）？</h2>
+    <div class="highlight">
+        <p><strong>计算图不是简单的"算子集合"</strong>，而是一个<strong>有向无环图（Directed Acyclic Graph, DAG）</strong>，其中节点代表算子（operators，如卷积层 Conv、ReLU 激活层、矩阵乘法等），边代表数据（张量/tensor）的流动和依赖关系。它将神经网络模型抽象为一个数学结构，便于框架（如 PyTorch、TensorFlow）自动求导、优化和并行执行。</p>
+        <p><strong>简单说</strong>：计算图是"模型的蓝图"，算子（如 Conv、ReLU）是"砖块"，边是"连接线"，整体描述了从输入到输出的计算路径。</p>
+    </div>
+    
+    <h3>核心组成：节点（算子） + 边（数据流）</h3>
+    <ul>
+        <li><strong>节点（Operators/Nodes）</strong>：包括卷积层（Conv2D）、ReLU、加法（Add）、乘法（MatMul）、损失函数（Loss）等基本算子。每个节点有输入/输出端口。</li>
+        <li><strong>边（Edges）</strong>：表示张量在节点间的传递（如：输入图像 → Conv → ReLU → 输出特征图）。边有方向（前向计算），无环（避免无限循环）。</li>
+        <li><strong>为什么是 DAG？</strong> 确保计算顺序唯一，便于拓扑排序（从输入逐层执行）。</li>
+    </ul>
+    
+    <h3>计算图的三大核心作用</h3>
+    <ol>
+        <li><strong>前向传播</strong>：从根节点（输入）遍历图，逐层计算输出。例如：输入图像 → 卷积提取特征 → 激活函数 → 全连接层 → 输出分类结果。</li>
+        <li><strong>反向传播</strong>：从叶节点（输出）逆向遍历，计算梯度（自动微分）。框架通过链式法则自动计算每个参数的梯度，无需手写求导公式。</li>
+        <li><strong>优化执行</strong>：框架在图上融合操作（例如：Conv + ReLU 合并成一个 kernel），减少内存和时间开销。还可以进行并行化调度，提升硬件利用率。</li>
+    </ol>
+    
+    <p><strong>举例</strong>：一个简单的神经网络 <code>y = ReLU(W * x + b)</code> 在计算图中表示为：</p>
+    <pre style="background-color: #f4f4f4; padding: 10px; border-left: 4px solid #3498db;">
+输入 x → [MatMul 节点（W * x）] → [Add 节点（+ b）] → [ReLU 节点] → 输出 y
+每个箭头代表一个张量（数据流），每个方框代表一个算子（计算操作）。
+    </pre>
+    
+    <h2>1. 哲学基础：为什么这样设计？</h2>
+    <div class="highlight">
+        <p><strong>动态图（Dynamic Graph）</strong>：哲学是“运行即构建”（define-by-run）。计算图在代码运行时逐步生成，像 Python 脚本一样自由。目标：快速迭代、易调试，适合探索性研究。</p>
+        <p><strong>静态图（Static Graph）</strong>：哲学是“预定义即优化”（define-and-run）。先构建完整图，再执行，像 C++ 编译器一样严谨。目标：性能稳定，适合大规模部署。</p>
+    </div>
+    
+    <h2>2. 构建与执行：它们怎么工作？</h2>
+    <ul>
+        <li><strong>动态图</strong>：逐操作构建（e.g., PyTorch 的 Eager Mode）。支持运行时修改，如 if-else 分支。执行即时，每步计算立即求值。</li>
+        <li><strong>静态图</strong>：预先构建完整图（e.g., TensorFlow 的 Graph Mode）。图固定后优化执行，先编译再批量运行。</li>
+    </ul>
+    
+    <h2>3. 核心差异对比</h2>
+    <p>以下表格总结关键维度，帮助直观比较（基于 2025 年主流框架）：</p>
+    <table>
+        <thead>
+            <tr>
+                <th>维度</th>
+                <th>动态图（e.g., PyTorch Eager）</th>
+                <th>静态图（e.g., TensorFlow Graph）</th>
+                <th>实际影响</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>灵活性</strong></td>
+                <td>高：运行时调整图，支持动态形状/控制流</td>
+                <td>低：图固定，需模拟分支（如 tf.cond）</td>
+                <td>动态适合原型调试；静态易稳定但刚性</td>
+            </tr>
+            <tr>
+                <td><strong>调试体验</strong></td>
+                <td>优秀：print(tensor) 实时查看</td>
+                <td>一般：需工具如 TensorBoard</td>
+                <td>动态迭代快 2-3x；静态需更多测试</td>
+            </tr>
+            <tr>
+                <td><strong>性能优化</strong></td>
+                <td>中：JIT 编译，但动态牺牲 10-20% 效率</td>
+                <td>高：静态融合 op，延迟降 30-50%</td>
+                <td>静态胜大规模；动态需额外补偿</td>
+            </tr>
+            <tr>
+                <td><strong>内存/资源</strong></td>
+                <td>高峰值：保留中间状态，易 OOM</td>
+                <td>低：预分配，优化复用</td>
+                <td>动态灵活但资源饿；静态高效</td>
+            </tr>
+            <tr>
+                <td><strong>适用场景</strong></td>
+                <td>研究/小规模：NLP 调试、RL 开发</td>
+                <td>生产/大规模：移动部署、分布式训练</td>
+                <td>2025 趋势：混合模式融合二者</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h2>4. 实际应用与趋势</h2>
+    <p>动态图让 PyTorch 成为学术首选（70% 论文用它），静态图让 TensorFlow 稳居企业（60% 部署）。如今，框架趋向混合：PyTorch 加 torch.jit 转静态，TensorFlow 支持 Eager Mode。选择时，问自己：是“快速试错”还是“高效生产”？</p>
+    
+    <p><em>科普小贴士：计算图是神经网络的“骨架”，动态/静态只是构建它的两种风格。想上手？从 PyTorch 动态图起步，简单如写 Python！</em></p>
+    
+    <footer>
+        <p>来源：AI 框架架构基础知识 | 更新日期：2025 年 10 月</p>
+    </footer>
+</body>
+</html>
