@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halide DSL - 代码生成与优化</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; }
+        h2 { color: #555; margin-top: 30px; }
+        .qa { background: #f9f9f9; padding: 15px; margin: 15px 0; border-left: 4px solid #007bff; }
+        .answer { color: #28a745; font-weight: bold; }
+        .description { margin-top: 10px; color: #333; }
+        ul { margin: 10px 0; }
+        li { margin: 8px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>Halide DSL - 代码生成与优化</h1>
+    
+    <div class="qa">
+        <h2>Halide 是 DSL 吗？</h2>
+        <p class="answer">✅ 是的。</p>
+        <div class="description">
+            <p>Halide 是专为 <strong>图像处理与数值计算</strong> 设计的 DSL，它的理念是：</p>
+            
+            <h3>核心设计理念</h3>
+            <ul>
+                <li><strong>算法层（Algorithm）</strong>：只描述计算逻辑，比如卷积、模糊、锐化</li>
+                <li><strong>调度层（Schedule）</strong>：描述如何执行，比如并行化、向量化、分块、存储位置</li>
+            </ul>
+            
+            <h3>优势</h3>
+            <p>这样的设计使得：</p>
+            <ul>
+                <li>算法可以保持数学纯净</li>
+                <li>调度部分可以单独针对硬件优化</li>
+                <li>同一算法可以轻松适配不同的硬件平台（CPU、GPU、移动设备等）</li>
+                <li>性能优化与算法逻辑解耦</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="qa">
+        <h2>Halide 代码生成管道（CPU & GPU）</h2>
+        <div class="description">
+            <p>Halide 统一的代码生成流程，支持 CPU 和 GPU 目标：</p>
+            <pre style="background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto;">
+算法定义（Halide DSL）
+   ↓
+调度搜索 + 代价模型（Cost Model）
+   ↓
+Halide IR 优化（Loop nest / Vectorize / Parallelize）
+   ↓
+   ├─── CPU 路径 ────────────────┬─── GPU 路径 ──────────────┐
+   ↓                              ↓
+LLVM IR 生成                 Lower to GPU Kernel IR
+（调用 LLVM API）            （Halide 内部 GPUIR）
+   ↓                              ↓
+机器码                        生成 OpenCL C 源码字符串
+（x86 / ARM / NEON）         （kernel）
+                                  ↓
+                             OpenCL Runtime API 编译
+                             （clBuildProgram）
+                                  ↓
+                             GPU 二进制代码
+            </pre>
+            
+            <h3>共同阶段</h3>
+            <ul>
+                <li><strong>算法定义</strong>：用户用 Halide DSL 描述计算</li>
+                <li><strong>调度搜索</strong>：根据代价模型找到最优的执行策略</li>
+                <li><strong>Halide IR 优化</strong>：
+                    <ul>
+                        <li>Loop nest：嵌套循环结构优化</li>
+                        <li>Vectorize：向量化</li>
+                        <li>Parallelize：并行化</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <h3>CPU 特定阶段</h3>
+            <ul>
+                <li><strong>LLVM IR 生成</strong>：将 Halide IR 转换为 LLVM 中间表示，调用 LLVM API</li>
+                <li><strong>机器码生成</strong>：针对不同架构（x86、ARM、NEON等）生成优化后的机器码</li>
+            </ul>
+            
+            <h3>GPU 特定阶段</h3>
+            <ul>
+                <li><strong>Lower to GPU Kernel IR</strong>：
+                    <ul>
+                        <li>将 Halide IR 转化为 GPU 友好的内部中间表示</li>
+                        <li>进行 GPU 特定的优化（分线程块、线程、内存层级等）</li>
+                    </ul>
+                </li>
+                <li><strong>生成 OpenCL C 源码</strong>：
+                    <ul>
+                        <li>从 GPU Kernel IR 生成 OpenCL C 源代码字符串</li>
+                        <li>包含 kernel 函数和内存访问模式</li>
+                    </ul>
+                </li>
+                <li><strong>OpenCL 编译运行</strong>：
+                    <ul>
+                        <li>通过 OpenCL Runtime API 调用 <code>clBuildProgram</code> 编译源码</li>
+                        <li>获得 GPU 二进制代码</li>
+                        <li>在运行时加载并执行</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="qa">
+        <h2>Halide 算法优化策略</h2>
+        <div class="description">
+            <p>Halide 的算法优化思想融合了 <strong>编译优化理论</strong> 和 <strong>自动调度（auto-scheduler）算法</strong>，主要包括：</p>
+            
+            <h3>主要优化策略对比</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                <tr style="background: #e8f4f8; border-bottom: 2px solid #007bff;">
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">优化策略</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">理论依据</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">实现效果</th>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>Loop Tiling</strong>（循环分块）</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">空间/时间局部性</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">减少 cache miss</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vectorization</strong>（向量化）</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">SIMD 理论</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">提升并行吞吐率</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>Parallelization</strong>（多线程）</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">Fork-Join Model</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">CPU 多核利用</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>Fusing/Splitting</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">DAG 节点融合</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">减少中间内存</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>Storage Folding</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">数据重用</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">减少带宽压力</td>
+                </tr>
+                <tr style="background: #f0f8ff;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>Auto-scheduler</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">代价模型 + 搜索</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">自动找到最优调度策略</td>
+                </tr>
+            </table>
+            
+            <h3>代价模型（Cost Model）</h3>
+            <p>Halide 的 auto-scheduler 基于一个 <strong>代价函数模型</strong>：</p>
+            <div style="background: #f9f9f9; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 4px solid #007bff;">
+                <p><strong>代价函数：</strong></p>
+                <p><code>C(S) = α · memory_access(S) + β · compute(S) + γ · parallel_overhead(S)</code></p>
+                <p style="margin-top: 10px; font-size: 0.9em;">其中：</p>
+                <ul style="margin: 5px 0; font-size: 0.9em;">
+                    <li><code>memory_access(S)</code>：内存访问成本（受缓存局部性影响）</li>
+                    <li><code>compute(S)</code>：计算成本（指令数、向量化程度等）</li>
+                    <li><code>parallel_overhead(S)</code>：并行化开销（线程同步、通信等）</li>
+                    <li><code>α, β, γ</code>：各项的权重系数（根据硬件特性调整）</li>
+                </ul>
+            </div>
+            
+            <h3>自动调度搜索</h3>
+            <p>通过搜索找到最优的调度策略：</p>
+            <pre style="background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto;">
+S* = argmin(C(S))   // 找到使代价函数最小的调度 S*
+
+搜索空间包括：
+  - Loop order（循环顺序）
+  - Tiling factors（分块大小）
+  - Parallelization level（并行化粒度）
+  - Vectorization width（向量宽度）
+  - Storage location（存储位置）
+  - Fusion/Split decisions（融合/分割决策）
+            </pre>
+            
+            <h3>不同自动调度库的优化方向</h3>
+            <ul>
+                <li><strong>Mullapudi 2016</strong>：基于随机森林学习历史性能数据，直接预测最优调度</li>
+                <li><strong>Li 2018</strong>：改进的特征工程，更好的泛化到新的计算模式</li>
+                <li><strong>Adams 2019</strong>：使用深度学习代价模型，更精准的性能预测，搜索策略更高效</li>
+            </ul>
+        </div>
+    </div>
+    
+</body>
+</html>

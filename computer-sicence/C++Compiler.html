@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三大主流C++编译器</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #bdc3c7;
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #ecf0f1;
+        }
+        tr:hover {
+            background-color: #d5e8f7;
+        }
+        .compiler-name {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .open-source {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .proprietary {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .feature-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>三大主流C++编译器</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>编译器</th>
+                <th>开发者</th>
+                <th>主要平台</th>
+                <th>许可证</th>
+                <th>特点</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="compiler-name">GCC</td>
+                <td>GNU项目</td>
+                <td>Linux/Unix</td>
+                <td class="open-source">开源(GPL)</td>
+                <td>
+                    <ul class="feature-list">
+                        <li>广泛应用于Linux生态</li>
+                        <li>支持多种编程语言</li>
+                        <li>强大的优化能力</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="compiler-name">Clang/LLVM</td>
+                <td>LLVM社区</td>
+                <td>跨平台</td>
+                <td class="open-source">开源(Apache)</td>
+                <td>
+                    <ul class="feature-list">
+                        <li>模块化架构设计</li>
+                        <li>编译速度快</li>
+                        <li>与标准C++兼容性好</li>
+                        <li>Apple在macOS和iOS上默认使用</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="compiler-name">MSVC</td>
+                <td>微软</td>
+                <td>Windows</td>
+                <td class="proprietary">专有/商业</td>
+                <td>
+                    <ul class="feature-list">
+                        <li>与Windows深度集成</li>
+                        <li>IDE集成度高（Visual Studio）</li>
+                        <li>Microsoft生态的主要编译工具</li>
+                        <li>对Windows开发优化</li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>JIT vs AOT 编译的区别</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>特性</th>
+                <th>JIT (Just-In-Time)</th>
+                <th>AOT (Ahead-Of-Time)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>编译时间</strong></td>
+                <td>运行时编译</td>
+                <td>部署前编译</td>
+            </tr>
+            <tr>
+                <td><strong>启动速度</strong></td>
+                <td>慢（需要编译开销）</td>
+                <td>快（预编译完成）</td>
+            </tr>
+            <tr>
+                <td><strong>运行性能</strong></td>
+                <td>优秀（可进行运行时优化）</td>
+                <td>良好（编译时优化）</td>
+            </tr>
+            <tr>
+                <td><strong>内存使用</strong></td>
+                <td>高（需要编译器和缓存）</td>
+                <td>低（仅保存编译结果）</td>
+            </tr>
+            <tr>
+                <td><strong>代码体积</strong></td>
+                <td>小（动态编译按需生成）</td>
+                <td>大（预先编译全部代码）</td>
+            </tr>
+            <tr>
+                <td><strong>跨平台性</strong></td>
+                <td>强（运行时生成本地代码）</td>
+                <td>弱（需要为不同平台分别编译）</td>
+            </tr>
+            <tr>
+                <td><strong>优化能力</strong></td>
+                <td>动态优化，了解运行时信息</td>
+                <td>静态优化，基于编译时信息</td>
+            </tr>
+            <tr>
+                <td><strong>典型应用</strong></td>
+                <td>Java、JavaScript、C#(.NET)</td>
+                <td>C++、Go、Rust、AOT编译的Swift</td>
+            </tr>
+            <tr>
+                <td><strong>预热期</strong></td>
+                <td>有（逐渐优化）</td>
+                <td>无</td>
+            </tr>
+            <tr>
+                <td><strong>可预测性</strong></td>
+                <td>低（性能波动较大）</td>
+                <td>高（性能稳定）</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>指令集和硬件CPU/GPU的对应关系</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>指令集架构</th>
+                <th>CPU硬件</th>
+                <th>GPU硬件</th>
+                <th>应用领域</th>
+                <th>特点</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>x86/x86-64</strong></td>
+                <td>
+                    <ul class="feature-list">
+                        <li>Intel Core/Xeon</li>
+                        <li>AMD Ryzen/EPYC</li>
+                        <li>服务器处理器</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul class="feature-list">
+                        <li>Nvidia Tesla（部分）</li>
+                        <li>AMD Radeon Pro</li>
+                    </ul>
+                </td>
+                <td>个人电脑、服务器、数据中心</td>
+                <td>应用最广泛，性能强劲，指令丰富</td>
+            </tr>
+            <tr>
+                <td><strong>ARM</strong></td>
+                <td>
+                    <ul class="feature-list">
+                        <li>Apple Silicon</li>
+                        <li>高通Snapdragon</li>
+                        <li>ARM Cortex系列</li>
+                        <li>移动处理器</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul class="feature-list">
+                        <li>ARM Mali</li>
+                        <li>Qualcomm Adreno</li>
+                        <li>移动GPU</li>
+                    </ul>
+                </td>
+                <td>手机、平板、嵌入式系统</td>
+                <td>功耗低，能效高，应用广泛</td>
+            </tr>
+            <tr>
+                <td><strong>RISC-V</strong></td>
+                <td>
+                    <ul class="feature-list">
+                        <li>SiFive处理器</li>
+                        <li>PolarFire</li>
+                        <li>学术/开源项目</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul class="feature-list">
+                        <li>实验阶段</li>
+                        <li>部分FPGA实现</li>
+                    </ul>
+                </td>
+                <td>学术研究、开源硬件</td>
+                <td>开源指令集，模块化，可扩展</td>
+            </tr>
+            <tr>
+                <td><strong>NVIDIA CUDA</strong></td>
+                <td>-</td>
+                <td>
+                    <ul class="feature-list">
+                        <li>GeForce RTX系列</li>
+                        <li>Tesla A100/H100</li>
+                        <li>Quadro/RTX Pro</li>
+                    </ul>
+                </td>
+                <td>AI训练、科学计算、图形渲染</td>
+                <td>专有架构，性能卓越，生态成熟</td>
+            </tr>
+            <tr>
+                <td><strong>AMD RDNA</strong></td>
+                <td>
+                    <ul class="feature-list">
+                        <li>AMD Ryzen 5000+</li>
+                        <li>Zen 3+架构</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul class="feature-list">
+                        <li>Radeon RX 6000系列</li>
+                        <li>MI 系列（AI加速）</li>
+                    </ul>
+                </td>
+                <td>游戏、工作站、数据中心</td>
+                <td>性价比高，ROCm支持开源</td>
+            </tr>
+            <tr>
+                <td><strong>PowerPC</strong></td>
+                <td>
+                    <ul class="feature-list">
+                        <li>IBM POWER系列</li>
+                        <li>超级计算机</li>
+                    </ul>
+                </td>
+                <td>-</td>
+                <td>超级计算、金融计算</td>
+                <td>高可靠性，应用领域专业</td>
+            </tr>
+            <tr>
+                <td><strong>MIPS</strong></td>
+                <td>
+                    <ul class="feature-list">
+                        <li>中国龙芯</li>
+                        <li>路由器处理器</li>
+                        <li>逐渐淡出市场</li>
+                    </ul>
+                </td>
+                <td>-</td>
+                <td>嵌入式系统、网络设备</td>
+                <td>曾广泛使用，现逐渐退役</td>
+            </tr>
+            <tr>
+                <td><strong>Apple Metal</strong></td>
+                <td>Apple Silicon</td>
+                <td>
+                    <ul class="feature-list">
+                        <li>Apple GPU（内置）</li>
+                        <li>集成图形</li>
+                    </ul>
+                </td>
+                <td>iOS、macOS图形处理</td>
+                <td>专有优化，能效最优</td>
+            </tr>
+            <tr>
+                <td><strong>Intel Arc</strong></td>
+                <td>-</td>
+                <td>
+                    <ul class="feature-list">
+                        <li>Arc A-series GPU</li>
+                        <li>独立显卡</li>
+                    </ul>
+                </td>
+                <td>游戏、内容创作</td>
+                <td>Intel新进入GPU领域</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
