@@ -191,6 +191,196 @@ S* = argmin(C(S))   // 找到使代价函数最小的调度 S*
             </ul>
         </div>
     </div>
+
+    <div class="qa">
+        <h2>RK3588 实战经验 (1) - GPU自动调度器（Adams 2019）</h2>
+        <div class="description">
+            <p>Adams 2019 是 Halide 中最先进的自动调度器，位于 Halide 源码路径：<code>src/Autoscheduler/Adams2019</code></p>
+            
+            <h3>调度策略：两个代价模型</h3>
+            <ul>
+                <li><strong>CPU Cost Model</strong>
+                    <ul>
+                        <li>基于深度神经网络学习 CPU 性能特征</li>
+                        <li>输入特征：loop nest 结构、内存访问模式、并行化策略等</li>
+                        <li>输出：执行时间预测</li>
+                        <li>RK3588 CPU 架构：4×A76 + 4×A55 混合核心，模型需要适配大小核差异</li>
+                    </ul>
+                </li>
+                <li><strong>GPU Cost Model（实验性）</strong>
+                    <ul>
+                        <li>训练数据主要来自 NVIDIA GPU（CUDA 优化的数据）</li>
+                        <li>RK3588 搭载 Mali-G610 GPU，与 NVIDIA 架构差异较大</li>
+                        <li>泛化性受限：OpenCL 与 CUDA 的计算模型、内存层级、warp/workgroup 调度机制不同</li>
+                        <li>建议在 RK3588 实际部署时，使用 CPU model 或针对 Mali-G610 重新训练 GPU model</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="qa">
+        <h2>RK3588 实战经验 (2) - GPU手动调度 malloc_consolidate() 崩溃问题</h2>
+        <div class="description">
+            <h3>错误现象</h3>
+            <p>在 ARM Mali GPU 上使用 Halide 手动调度进行 GPU 计算时，程序崩溃并输出：</p>
+            <pre style="background: #f9f9f9; padding: 15px; border-radius: 5px; overflow-x: auto; color: #d32f2f;">
+malloc_consolidate(): invalid chunk size
+Aborted (core dumped)
+            </pre>
+            
+            <h3>根本原因</h3>
+            <p>这个错误 <strong>不是 Halide 算法本身崩溃</strong>，而是：</p>
+            <ul>
+                <li><strong>OpenCL runtime（libmali）</strong> 在 Halide AOT（Ahead-of-Time）编译模式下释放内存时出现问题</li>
+                <li>具体表现为 <strong>二次释放（double free）</strong>：内存被释放两次，导致堆损坏</li>
+                <li>这是 <strong>Halide OpenCL runtime 在 ARM Mali 上的已知 bug</strong></li>
+                <li>在 libHalide.so < v17 版本中最为常见</li>
+            </ul>
+
+            <h3>问题分析</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                <tr style="background: #e8f4f8; border-bottom: 2px solid #007bff;">
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">问题环节</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">详细说明</th>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>发生阶段</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">程序结束或 GPU buffer 释放时（析构函数）</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>涉及组件</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">libmali（ARM Mali OpenCL driver）、libHalide.so OpenCL backend</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>关键因素</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">AOT 编译时的内存管理逻辑与 libmali 的释放机制不兼容</td>
+                </tr>
+                <tr style="background: #f0f8ff;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>触发条件</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">手动调度 GPU 任务 + 大尺寸 buffer（>32MB）+ 频繁分配/释放</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="qa">
+        <h2>RK3588 实战经验 (3) - CPU自动调度 machine_params 最优配置计算</h2>
+        <div class="description">
+            <p>基于 RK3588 的硬件规格，为 4 个 A76 大核计算最优的 <code>machine_params</code> 设置。</p>
+            
+            <h3>RK3588 A76 大核规格</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                <tr style="background: #e8f4f8; border-bottom: 2px solid #007bff;">
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">硬件参数</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">规格</th>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>CPU 型号</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">ARM Cortex-A76（4 核）</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>主频</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">2.4 GHz</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>L1 缓存</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">32KB (Instruction) + 32KB (Data) = 64KB / 核</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>L2 缓存</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">1MB / 核（4 核共 4MB）</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>L3 缓存</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">4MB（系统级共享，所有核心共用）</td>
+                </tr>
+                <tr style="background: #f0f8ff;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>总缓存容量</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">L2 (4MB) + L3 (4MB) = <strong>8MB</strong></td>
+                </tr>
+            </table>
+
+            <h3>machine_params 三参数计算</h3>
+            <ol style="margin: 10px 0;">
+                <li><strong>cores = 4</strong>
+                    <ul>
+                        <li>使用 4 个 A76 大核</li>
+                        <li>通过 Linux cpuset 或 taskset 隔离小核</li>
+                    </ul>
+                </li>
+                <li><strong>memory_size 计算</strong>
+                    <ul>
+                        <li>代价模型评估数据在缓存中的重用性</li>
+                        <li>推荐值：<strong>L2 + L3 缓存总和 = 8MB = 8388608 Bytes</strong></li>
+                        <li>保守策略：使用 L3 容量 4MB = 4194304 Bytes（避免 L2 竞争）</li>
+                        <li>激进策略：使用 8MB（允许充分利用 L2 缓存）</li>
+                    </ul>
+                </li>
+                <li><strong>compute_capability 计算</strong>
+                    <ul>
+                        <li>相对基准处理器的性能系数</li>
+                        <li>A76 @ 2.4GHz 的计算能力通常为基准的 <strong>40-50 倍</strong></li>
+                        <li>更精确计算：基于 A76 指令集和 SIMD 能力
+                            <ul>
+                                <li>A76 支持 NEON（128-bit SIMD），每周期可执行 2 条 FP32 指令</li>
+                                <li>相对基准单线程处理器，性能系数约 <strong>45-50</strong></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>推荐配置方案</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                <tr style="background: #e8f4f8; border-bottom: 2px solid #007bff;">
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">配置方案</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">machine_params</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">适用场景</th>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>保守方案</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;"><code>4,4194304,45</code></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">只考虑 L3 缓存，避免 L2 竞争，适合复杂算法</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>平衡方案（推荐）</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;"><code>4,8388608,48</code></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>最优选择</strong>：充分利用 L2+L3，性能预测最准确</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>激进方案</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;"><code>4,8388608,50</code></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">充分利用大核性能，追求最大吞吐量</td>
+                </tr>
+                <tr style="background: #f0f8ff;">
+                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>原始参考</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;"><code>4,16777216,40</code></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">原始 16MB 设置偏大（超出实际缓存），compute_capability 偏低</td>
+                </tr>
+            </table>
+
+            <h3>详细分析</h3>
+            <p><strong>为何推荐 4,8388608,48？</strong></p>
+            <ul>
+                <li><strong>cores=4</strong>：只用 A76 大核，避免小核的不规则性</li>
+                <li><strong>memory_size=8388608</strong>（8MB）：
+                    <ul>
+                        <li>等于 L2 + L3 总容量，代价模型会优化数据重用</li>
+                        <li>避免频繁访问主内存（DDR，延迟 ~100ns）</li>
+                        <li>充分利用 A76 的缓存预取能力</li>
+                    </ul>
+                </li>
+                <li><strong>compute_capability=48</strong>：
+                    <ul>
+                        <li>A76 @ 2.4GHz 的相对性能系数</li>
+                        <li>基于：双发射 NEON FP32（每周期 2 ops）× 2.4GHz × SIMD 宽度</li>
+                        <li>相对基准单线程处理器的性能倍数约 48 倍</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
     
 </body>
 </html>
