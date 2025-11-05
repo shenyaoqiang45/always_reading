@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPhone 7 - iPhone 17 技术演进总表</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            line-height: 1.6; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 { 
+            color: #333; 
+            text-align: center;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 15px;
+        }
+        .intro {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+            border-radius: 3px;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        th { 
+            background: #007bff; 
+            color: white; 
+            padding: 12px; 
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid #0056b3;
+        }
+        td { 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+        }
+        tr:nth-child(even) { 
+            background-color: #f9f9f9; 
+        }
+        tr:hover {
+            background-color: #f0f0f0;
+        }
+        .year {
+            background-color: #e8f4f8;
+            font-weight: bold;
+        }
+        .highlight {
+            background-color: #fff3cd;
+        }
+        .improvement {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .new {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>📱 iPhone 7 → iPhone 17 全系列技术演进总表</h1>
+    
+    <div class="intro">
+        <p><strong>概述：</strong>本表从<strong>芯片代系、工艺制程、CPU架构、GPU能力、AI引擎、AI TOPS、内存、主摄像头分辨率</strong>八个维度，全面呈现 iPhone 从第7代到第17代的技术进化轨迹。</p>
+        <p><strong>看点：</strong>通过性能指标（芯片、CPU、GPU、AI）与存储系统、影像系统（摄像头）的对应演进，清晰展现 Apple 在计算能力、内存容量与摄影能力三条主线的创新策略。</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr style="background: #0056b3;">
+                <th>iPhone 型号</th>
+                <th>发布年份</th>
+                <th>芯片</th>
+                <th>工艺制程</th>
+                <th>CPU 架构</th>
+                <th>GPU</th>
+                <th>AI 引擎</th>
+                <th>AI TOPS</th>
+                <th>内存</th>
+                <th>主摄像头分辨率</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- iPhone 7 / 7 Plus -->
+            <tr class="year">
+                <td colspan="10"><strong>iPhone 7 / 7 Plus</strong></td>
+            </tr>
+            <tr>
+                <td>iPhone 7</td>
+                <td>2016</td>
+                <td>A10 Fusion</td>
+                <td>16nm</td>
+                <td>2×性能核 + 2×效率核</td>
+                <td>PowerVR GT7600 (3-core)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>2GB</td>
+                <td>12MP f/1.8</td>
+            </tr>
+            <tr>
+                <td>iPhone 7 Plus</td>
+                <td>2016</td>
+                <td>A10 Fusion</td>
+                <td>16nm</td>
+                <td>2×性能核 + 2×效率核</td>
+                <td>PowerVR GT7600 (3-core)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>3GB</td>
+                <td>12MP f/1.8（双摄像头）</td>
+            </tr>
+
+            <!-- iPhone 8 / 8 Plus / X -->
+            <tr class="year">
+                <td colspan="10"><strong>iPhone 8 / 8 Plus / X</strong></td>
+            </tr>
+            <tr>
+                <td>iPhone 8</td>
+                <td>2017</td>
+                <td>A11 Bionic</td>
+                <td>10nm</td>
+                <td>2×Monsoon + 4×Mistral</td>
+                <td>PowerVR MT7600 (3-core)</td>
+                <td><span class="new">Neural Engine</span>（2核）</td>
+                <td>0.6 TOPS</td>
+                <td>2GB</td>
+                <td>12MP f/1.8</td>
+            </tr>
+            <tr>
+                <td>iPhone X</td>
+                <td>2017</td>
+                <td>A11 Bionic</td>
+                <td>10nm</td>
+                <td>2×Monsoon + 4×Mistral</td>
+                <td>PowerVR MT7600 (3-core)</td>
+                <td>Neural Engine（2核）</td>
+                <td>0.6 TOPS</td>
+                <td>3GB</td>
+                <td>12MP f/1.8（双摄像头）</td>
+            </tr>
+
+            <!-- iPhone XS / XR / 11 -->
+            <tr class="year">
+                <td colspan="10"><strong>iPhone XS / XR / 11</strong></td>
+            </tr>
+            <tr>
+                <td>iPhone XS</td>
+                <td>2018</td>
+                <td>A12 Bionic</td>
+                <td>7nm</td>
+                <td>2×Lightning + 4×Thunder</td>
+                <td>Apple GPU (4-core)</td>
+                <td>Neural Engine（2核）</td>
+                <td>1.0 TOPS</td>
+                <td>4GB</td>
+                <td>12MP f/1.8（双摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone XR</td>
+                <td>2018</td>
+                <td>A12 Bionic</td>
+                <td>7nm</td>
+                <td>2×Lightning + 4×Thunder</td>
+                <td>Apple GPU (4-core)</td>
+                <td>Neural Engine（2核）</td>
+                <td>1.0 TOPS</td>
+                <td>3GB</td>
+                <td>12MP f/2.2（单摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 11</td>
+                <td>2019</td>
+                <td>A13 Bionic</td>
+                <td>7nm</td>
+                <td>2×Vortex + 4×Tempest</td>
+                <td>Apple GPU (4-core)</td>
+                <td>Neural Engine（2核）</td>
+                <td>1.0 TOPS</td>
+                <td>4GB</td>
+                <td>12MP f/1.8 + 12MP f/2.4（双摄像头）</td>
+            </tr>
+
+            <!-- iPhone 12 Series -->
+            <tr class="year">
+                <td colspan="10"><strong>iPhone 12 Series</strong></td>
+            </tr>
+            <tr>
+                <td>iPhone 12 Mini</td>
+                <td>2020</td>
+                <td>A14 Bionic</td>
+                <td><span class="improvement">5nm</span></td>
+                <td>2×Firestorm + 4×Icestorm</td>
+                <td>Apple GPU (4-core)</td>
+                <td><span class="improvement">Neural Engine（8核）</span></td>
+                <td><span class="improvement">11 TOPS</span></td>
+                <td>4GB</td>
+                <td>12MP f/1.6（双摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 12</td>
+                <td>2020</td>
+                <td>A14 Bionic</td>
+                <td>5nm</td>
+                <td>2×Firestorm + 4×Icestorm</td>
+                <td>Apple GPU (4-core)</td>
+                <td>Neural Engine（8核）</td>
+                <td>11 TOPS</td>
+                <td>4GB</td>
+                <td>12MP f/1.6（双摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 12 Pro</td>
+                <td>2020</td>
+                <td>A14 Bionic</td>
+                <td>5nm</td>
+                <td>2×Firestorm + 4×Icestorm</td>
+                <td>Apple GPU (4-core)</td>
+                <td>Neural Engine（8核）</td>
+                <td>11 TOPS</td>
+                <td>6GB</td>
+                <td>12MP f/1.6 + 12MP + 12MP（三摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 12 Pro Max</td>
+                <td>2020</td>
+                <td>A14 Bionic</td>
+                <td>5nm</td>
+                <td>2×Firestorm + 4×Icestorm</td>
+                <td>Apple GPU (4-core)</td>
+                <td>Neural Engine（8核）</td>
+                <td>11 TOPS</td>
+                <td>6GB</td>
+                <td>12MP f/1.6 + 12MP + 12MP（三摄像头）</td>
+            </tr>
+
+            <!-- iPhone 13 Series -->
+            <tr class="year">
+                <td colspan="10"><strong>iPhone 13 Series</strong></td>
+            </tr>
+            <tr>
+                <td>iPhone 13 Mini</td>
+                <td>2021</td>
+                <td>A15 Bionic</td>
+                <td>5nm</td>
+                <td>2×Avalanche + 4×Blizzard</td>
+                <td><span class="improvement">Apple GPU (5-core)</span></td>
+                <td>Neural Engine（8核）</td>
+                <td><span class="improvement">16 TOPS</span></td>
+                <td>4GB</td>
+                <td>12MP f/1.6（双摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 13</td>
+                <td>2021</td>
+                <td>A15 Bionic</td>
+                <td>5nm</td>
+                <td>2×Avalanche + 4×Blizzard</td>
+                <td>Apple GPU (5-core)</td>
+                <td>Neural Engine（8核）</td>
+                <td>16 TOPS</td>
+                <td>4GB</td>
+                <td>12MP f/1.6（双摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 13 Pro</td>
+                <td>2021</td>
+                <td>A15 Bionic</td>
+                <td>5nm</td>
+                <td>2×Avalanche + 4×Blizzard</td>
+                <td>Apple GPU (5-core)</td>
+                <td>Neural Engine（8核）</td>
+                <td>16 TOPS</td>
+                <td>6GB</td>
+                <td><span class="improvement">12MP f/1.5（主摄升级）</span> + 12MP + 12MP（三摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 13 Pro Max</td>
+                <td>2021</td>
+                <td>A15 Bionic</td>
+                <td>5nm</td>
+                <td>2×Avalanche + 4×Blizzard</td>
+                <td>Apple GPU (5-core)</td>
+                <td>Neural Engine（8核）</td>
+                <td>16 TOPS</td>
+                <td>6GB</td>
+                <td>12MP f/1.5 + 12MP + 12MP（三摄像头）</td>
+            </tr>
+
+            <!-- iPhone 14 Series -->
+            <tr class="year">
+                <td colspan="10"><strong>iPhone 14 Series</strong></td>
+            </tr>
+            <tr>
+                <td>iPhone 14</td>
+                <td>2022</td>
+                <td>A15 Bionic</td>
+                <td>5nm</td>
+                <td>2×Avalanche + 4×Blizzard</td>
+                <td>Apple GPU (5-core)</td>
+                <td>Neural Engine（8核）</td>
+                <td>16 TOPS</td>
+                <td>4GB</td>
+                <td>12MP f/1.5（双摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 14 Pro</td>
+                <td>2022</td>
+                <td><span class="new">A16 Bionic</span></td>
+                <td><span class="improvement">5nm</span></td>
+                <td>2×Everest + 4×Sawtooth</td>
+                <td><span class="improvement">Apple GPU (5-core)</span></td>
+                <td>Neural Engine（8核）</td>
+                <td><span class="improvement">17 TOPS</span></td>
+                <td>8GB</td>
+                <td><span class="new">48MP f/1.78（主摄革新）</span> + 12MP + 12MP（三摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 14 Pro Max</td>
+                <td>2022</td>
+                <td>A16 Bionic</td>
+                <td>5nm</td>
+                <td>2×Everest + 4×Sawtooth</td>
+                <td>Apple GPU (5-core)</td>
+                <td>Neural Engine（8核）</td>
+                <td>17 TOPS</td>
+                <td>8GB</td>
+                <td>48MP f/1.78 + 12MP + 12MP（三摄像头）</td>
+            </tr>
+
+            <!-- iPhone 15 Series -->
+            <tr class="year">
+                <td colspan="10"><strong>iPhone 15 Series</strong></td>
+            </tr>
+            <tr>
+                <td>iPhone 15</td>
+                <td>2023</td>
+                <td><span class="new">A17 Pro</span></td>
+                <td><span class="improvement">3nm</span></td>
+                <td>2×性能核 + 4×效率核（第 6 代 ARM ISA）</td>
+                <td><span class="improvement">Apple GPU (5-core)</span></td>
+                <td><span class="improvement">Neural Engine（16核）</span></td>
+                <td><span class="improvement">22 TOPS</span></td>
+                <td>6GB</td>
+                <td>48MP f/1.6（主摄标配）+ 12MP（双摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 15 Pro</td>
+                <td>2023</td>
+                <td>A17 Pro</td>
+                <td>3nm</td>
+                <td>2×性能核 + 4×效率核（第 6 代 ARM ISA）</td>
+                <td>Apple GPU (5-core)</td>
+                <td>Neural Engine（16核）</td>
+                <td>22 TOPS</td>
+                <td>8GB</td>
+                <td><span class="improvement">48MP f/1.78 + 12MP + 12MP（三摄像头）</span></td>
+            </tr>
+            <tr>
+                <td>iPhone 15 Pro Max</td>
+                <td>2023</td>
+                <td>A17 Pro</td>
+                <td>3nm</td>
+                <td>2×性能核 + 4×效率核（第 6 代 ARM ISA）</td>
+                <td>Apple GPU (5-core)</td>
+                <td>Neural Engine（16核）</td>
+                <td>22 TOPS</td>
+                <td>12GB</td>
+                <td><span class="new">48MP f/1.78 + 12MP + 12MP Periscope（三摄像头）</span></td>
+            </tr>
+
+            <!-- iPhone 16 Series -->
+            <tr class="year">
+                <td colspan="10"><strong>iPhone 16 Series</strong></td>
+            </tr>
+            <tr>
+                <td>iPhone 16</td>
+                <td>2024</td>
+                <td><span class="new">A18</span></td>
+                <td>3nm</td>
+                <td>2×性能核 + 4×效率核</td>
+                <td>Apple GPU (5-core)</td>
+                <td>Neural Engine（16核）</td>
+                <td>35 TOPS</td>
+                <td>8GB</td>
+                <td>48MP f/1.6 + 12MP（双摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 16 Plus</td>
+                <td>2024</td>
+                <td>A18</td>
+                <td>3nm</td>
+                <td>2×性能核 + 4×效率核</td>
+                <td>Apple GPU (5-core)</td>
+                <td>Neural Engine（16核）</td>
+                <td>35 TOPS</td>
+                <td>8GB</td>
+                <td>48MP f/1.6 + 12MP（双摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 16 Pro</td>
+                <td>2024</td>
+                <td><span class="new">A18 Pro</span></td>
+                <td><span class="improvement">3nm</span></td>
+                <td>2×性能核 + 4×效率核</td>
+                <td><span class="improvement">Apple GPU (6-core)</span></td>
+                <td>Neural Engine（16核）</td>
+                <td><span class="improvement">35 TOPS</span></td>
+                <td>8GB</td>
+                <td>48MP f/1.78 + 12MP + 12MP（三摄像头）</td>
+            </tr>
+            <tr>
+                <td>iPhone 16 Pro Max</td>
+                <td>2024</td>
+                <td>A18 Pro</td>
+                <td>3nm</td>
+                <td>2×性能核 + 4×效率核</td>
+                <td>Apple GPU (6-core)</td>
+                <td>Neural Engine（16核）</td>
+                <td>35 TOPS</td>
+                <td>12GB</td>
+                <td>48MP f/1.78 + 12MP + 12MP Periscope（三摄像头）</td>
+            </tr>
+
+            <!-- iPhone 17 Series -->
+            <tr class="year">
+                <td colspan="10"><strong>iPhone 17 Series（预测）</strong></td>
+            </tr>
+            <tr>
+                <td>iPhone 17</td>
+                <td>2025</td>
+                <td><span class="new">A19</span></td>
+                <td><span class="improvement">3nm (N3P)</span></td>
+                <td>2×性能核 + 4×效率核（进一步优化功耗）</td>
+                <td>Apple GPU (5-core，<span class="new">硬件光线追踪</span>）</td>
+                <td><span class="improvement">Neural Engine（16核）</span></td>
+                <td><span class="improvement">50+ TOPS</span></td>
+                <td>8GB</td>
+                <td><span class="new">48MP Fusion</span> + <span class="new">48MP Fusion 超广角</span>（双摄升级）</td>
+            </tr>
+            <tr>
+                <td>iPhone 17 Pro</td>
+                <td>2025</td>
+                <td>A19 Pro</td>
+                <td>3nm (N3P)</td>
+                <td>2×性能核 + 4×效率核</td>
+                <td><span class="improvement">Apple GPU (5-core，<span class="new">硬件光线追踪</span>）</span></td>
+                <td>Neural Engine（16核）</td>
+                <td><span class="improvement">50+ TOPS</span></td>
+                <td>12GB</td>
+                <td><span class="new">48MP Fusion + 48MP Fusion 超广角 + 18MP 中央舞台相机</span>（三摄升级）</td>
+            </tr>
+            <tr>
+                <td>iPhone 17 Pro Max</td>
+                <td>2025</td>
+                <td>A19 Pro</td>
+                <td>3nm (N3P)</td>
+                <td>2×性能核 + 4×效率核</td>
+                <td>Apple GPU (5-core，<span class="new">硬件光线追踪</span>）</td>
+                <td>Neural Engine（16核）</td>
+                <td><span class="improvement">50+ TOPS</span></td>
+                <td>12GB</td>
+                <td><span class="new">48MP Fusion + 48MP Fusion 超广角 + 18MP 中央舞台相机 Periscope</span>（三摄升级）</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="intro" style="margin-top: 30px;">
+        <h2>📊 技术演进关键趋势</h2>
+        <ul>
+            <li><strong>工艺制程</strong>：16nm (A10) → 10nm (A11) → 7nm (A12-A13) → 5nm (A14-A16) → 3nm (A17-A18) → <span class="improvement">3nm N3P (A19)</span></li>
+            <li><strong>内存容量演进</strong>：2GB (A10) → <span class="improvement">3-4GB (A11-A13)</span> → <span class="improvement">4-6GB (A14-A15)</span> → <span class="improvement">6-8GB (A16)</span> → <span class="improvement">6-12GB (A17)</span> → <span class="improvement">8-12GB (A18)</span> → <span class="improvement">8-12GB (A19 预测)</span></li>
+            <li><strong>AI 引擎核心数演进</strong>：无 → 2核 → 8核 → <span class="improvement">16核（A17-A19）</span></li>
+            <li><strong>AI TOPS 性能演进</strong>：- → 0.6 TOPS → 1.0 TOPS → <span class="improvement">11 TOPS (A14) → 16 TOPS (A15) → 17 TOPS (A16) → 22 TOPS (A17) → 35 TOPS (A18) → 50+ TOPS (A19)</span></li>
+            <li><strong>GPU 升级路线</strong>：PowerVR（3-4核） → Apple GPU（4-5核） → <span class="improvement">Apple GPU（5核 + 硬件光线追踪 @ A19）</span></li>
+            <li><strong>摄像头革新</strong>：12MP 主摄 → <span class="new">48MP 主摄（A16/iPhone 14 Pro）</span> → <span class="new">48MP Fusion 双摄（A19/iPhone 17）→ 48MP Fusion + 超广角 + 18MP 中央舞台相机（iPhone 17 Pro）</span></li>
+            <li><strong>三主线驱动</strong>：
+                <ul>
+                    <li><strong>性能主线</strong>：芯片制程、CPU/GPU、AI 引擎持续升级</li>
+                    <li><strong>存储主线</strong>：内存容量伴随 Pro 款式分化，普通款稳定在 4-8GB，Pro/Max 则升至 8-12GB</li>
+                    <li><strong>影像主线</strong>：主摄分辨率、镜头光圈、传感器尺寸、算法优化协同演进</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+</body>
+</html>
