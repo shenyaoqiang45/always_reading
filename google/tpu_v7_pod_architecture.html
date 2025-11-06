@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPU v7 (Ironwood) Pod 架构展示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Microsoft YaHei', '宋体';
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .codename {
+            font-size: 0.9em;
+            opacity: 0.85;
+            margin-top: 8px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .architecture-section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            font-weight: 600;
+        }
+        
+        .flow-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 40px 0;
+            padding: 30px;
+            background: #f5f5f5;
+            border-radius: 12px;
+        }
+        
+        .flow-item {
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+            max-width: 200px;
+        }
+        
+        .flow-item-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .flow-item-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .flow-item-desc {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .flow-arrow {
+            font-size: 1.5em;
+            color: #667eea;
+            align-self: center;
+        }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .grid-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 12px;
+            padding: 25px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .grid-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .grid-card h4 {
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .grid-card p {
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .grid-card ul {
+            list-style-position: inside;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .grid-card li {
+            margin: 5px 0;
+        }
+        
+        .card-chip {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-board {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .card-node {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .card-pod {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .volume-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            margin: 40px 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .volume-bar {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .volume-box {
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .volume-box-1 {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .volume-box-12 {
+            width: 75px;
+            height: 95px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .volume-box-96 {
+            width: 90px;
+            height: 125px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .volume-box-9216 {
+            width: 130px;
+            height: 210px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .volume-label {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+        }
+        
+        .detail-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .detail-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border: 2px solid #667eea;
+        }
+        
+        .detail-table td {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .detail-table tbody tr:nth-child(odd) {
+            background-color: #f8f9ff;
+        }
+        
+        .detail-table tbody tr:hover {
+            background-color: #ede7f6;
+        }
+        
+        .level-name {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 100px;
+        }
+        
+        .info-box {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 6px;
+        }
+        
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        
+        .info-box ul {
+            list-style-position: inside;
+            line-height: 1.8;
+        }
+        
+        .info-box li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .comparison-box {
+            background: #fff8f0;
+            border: 2px solid #f5576c;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .comparison-box h3 {
+            color: #f5576c;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .comparison-box ul {
+            list-style-position: inside;
+            line-height: 1.8;
+        }
+        
+        .comparison-box li {
+            color: #555;
+            margin-bottom: 8px;
+        }
+        
+        .improvement {
+            color: #43e97b;
+            font-weight: 600;
+        }
+        
+        footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏗️ TPU v7 (Ironwood) Pod 架构体系</h1>
+            <p class="subtitle">生成式AI时代的终极芯片 - 芯片 → 板卡 → 节点 → Pod 的层级清晰展示</p>
+            <p class="codename">代号: Ironwood (铁木) | 发布时间: 2025年 | 工艺: 3nm | 超级集群: 9216 TPU</p>
+        </header>
+        
+        <div class="content">
+            <!-- 版本对比 -->
+            <div class="architecture-section">
+                <h2 class="section-title">🔄 TPU v7 (Ironwood) vs v6e 对比</h2>
+                <div class="comparison-box">
+                    <h3>💡 生成式AI优化</h3>
+                    <ul>
+                        <li><span class="improvement">✓ 低精度优化</span>：fp8精度原生支持，4614 TFLOPS，大幅提升推理吞吐量</li>
+                        <li><span class="improvement">✓ 内存扩充</span>：192GB HBM3e，支持万亿参数模型部署和推理</li>
+                        <li><span class="improvement">✓ 能效突破</span>：4.7 TFLOPS/W能效，功耗仅980W，全球最高效</li>
+                        <li><span class="improvement">✓ 超级集群</span>：支持9216 TPU超级集群，能够训练和部署最大的生成式AI模型</li>
+                        <li><span class="improvement">✓ 延迟优化</span>：7370GB/s超高带宽，支持低延迟推理</li>
+                        <li><span class="improvement">✓ 生态成熟</span>：与Gemini、其他大模型框架深度集成</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 流程总览 -->
+            <div class="architecture-section">
+                <h2 class="section-title">📊 架构层级总览</h2>
+                <div class="flow-chart">
+                    <div class="flow-item">
+                        <div class="flow-item-icon">🔌</div>
+                        <div class="flow-item-title">芯片层</div>
+                        <div class="flow-item-desc">TPU v7 单芯片</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">
+                        <div class="flow-item-icon">🎛️</div>
+                        <div class="flow-item-title">板卡层</div>
+                        <div class="flow-item-desc">12芯片板卡</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">
+                        <div class="flow-item-icon">🖥️</div>
+                        <div class="flow-item-title">节点层</div>
+                        <div class="flow-item-desc">8块板卡</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">
+                        <div class="flow-item-icon">🏛️</div>
+                        <div class="flow-item-title">超级集群</div>
+                        <div class="flow-item-desc">9216 TPU集群</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3D体积对比 -->
+            <div class="architecture-section">
+                <h2 class="section-title">📈 规模对比展示</h2>
+                <div class="volume-diagram">
+                    <div class="volume-bar">
+                        <div class="volume-box volume-box-1">1</div>
+                        <div class="volume-label">单芯片</div>
+                    </div>
+                    <div class="volume-bar">
+                        <div class="volume-box volume-box-12">12</div>
+                        <div class="volume-label">板卡</div>
+                    </div>
+                    <div class="volume-bar">
+                        <div class="volume-box volume-box-96">96</div>
+                        <div class="volume-label">节点</div>
+                    </div>
+                    <div class="volume-bar">
+                        <div class="volume-box volume-box-9216">9216</div>
+                        <div class="volume-label">超级集群</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 分层详细信息 -->
+            <div class="architecture-section">
+                <h2 class="section-title">🔍 分层详细规格</h2>
+                <div class="grid-layout">
+                    <div class="grid-card card-chip">
+                        <h4>💾 芯片层 (Chip Level)</h4>
+                        <p><strong>单位:</strong> TPU v7 单芯片</p>
+                        <ul>
+                            <li>✓ 工艺: 3 nm</li>
+                            <li>✓ 算力: 4614 TFLOPS (fp8)</li>
+                            <li>✓ 内存: 192 GB HBM3e</li>
+                            <li>✓ 带宽: 7370 GB/s</li>
+                            <li>✓ 功耗: 980 W</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-board">
+                        <h4>📋 板卡层 (Board Level)</h4>
+                        <p><strong>组成:</strong> 12 × TPU v7 + 控制器</p>
+                        <ul>
+                            <li>✓ 包含: 12个TPU芯片</li>
+                            <li>✓ 算力: 55.4 PFLOPS (fp8)</li>
+                            <li>✓ 总内存: 2.3 TB</li>
+                            <li>✓ 互连: 光学可重构</li>
+                            <li>✓ 功耗: 11.76 kW</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-node">
+                        <h4>🖲️ 节点层 (Node Level)</h4>
+                        <p><strong>组成:</strong> 8 × 板卡 = 96 TPU</p>
+                        <ul>
+                            <li>✓ 包含: 8个板卡</li>
+                            <li>✓ 算力: 443 PFLOPS (fp8)</li>
+                            <li>✓ 总内存: 18.4 TB</li>
+                            <li>✓ 互连: 高速网络</li>
+                            <li>✓ 功耗: 94 kW</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-pod">
+                        <h4>🏢 超级集群 (Supercluster)</h4>
+                        <p><strong>组成:</strong> 96 × 节点 = 9216 TPU</p>
+                        <ul>
+                            <li>✓ 包含: 96个节点</li>
+                            <li>✓ 算力: 42.5 EXAFLOPS (fp8)</li>
+                            <li>✓ 总内存: 1.77 EB</li>
+                            <li>✓ 互连: 光学超互连</li>
+                            <li>✓ 功耗: 9.0 MW</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 详细表格 -->
+            <div class="architecture-section">
+                <h2 class="section-title">📋 完整架构参数表</h2>
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>层级</th>
+                            <th>单位定义</th>
+                            <th>TPU数量</th>
+                            <th>总算力 (fp8)</th>
+                            <th>总内存</th>
+                            <th>互连方式</th>
+                            <th>功耗预估</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="level-name">芯片层</td>
+                            <td>单个TPU v7</td>
+                            <td>1</td>
+                            <td>4614 TFLOPS</td>
+                            <td>192 GB</td>
+                            <td>内核集成</td>
+                            <td>980 W</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">板卡层</td>
+                            <td>12芯片板卡</td>
+                            <td>12</td>
+                            <td>55.4 PFLOPS</td>
+                            <td>2.3 TB</td>
+                            <td>光学可重构</td>
+                            <td>11.76 kW</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">节点层</td>
+                            <td>8板卡节点</td>
+                            <td>96</td>
+                            <td>443 PFLOPS</td>
+                            <td>18.4 TB</td>
+                            <td>高速网络</td>
+                            <td>94 kW</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">超级集群</td>
+                            <td>96节点集群</td>
+                            <td>9216</td>
+                            <td>42.5 EXAFLOPS</td>
+                            <td>1.77 EB</td>
+                            <td>光学超互连</td>
+                            <td>9.0 MW</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Ironwood特性 -->
+            <div class="architecture-section">
+                <h2 class="section-title">⭐ Ironwood (v7) 核心特性</h2>
+                <div class="info-box">
+                    <h3>生成式AI优化</h3>
+                    <ul>
+                        <li><strong>fp8精度:</strong> 原生4614 TFLOPS fp8计算，推理吞吐量提升10倍以上</li>
+                        <li><strong>超大内存:</strong> 192GB HBM3e，支持万亿参数模型</li>
+                        <li><strong>低延迟:</strong> 7370GB/s内存带宽，支持实时推理响应</li>
+                        <li><strong>Gemini集成:</strong> 与Google最新大模型框架深度集成</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3>能效革命</h3>
+                    <ul>
+                        <li><strong>单芯片能效:</strong> 4614 TFLOPS / 980W = 4.7 TFLOPS/W</li>
+                        <li><strong>集群效率:</strong> 42.5 EXAFLOPS / 9.0MW = 4.72 TFLOPS/W</li>
+                        <li><strong>成本优势:</strong> 相同算力下成本比H100降低70%+</li>
+                        <li><strong>绿色计算:</strong> 完全符合碳中和目标，能耗业界最低</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 推理加速 -->
+            <div class="architecture-section">
+                <h2 class="section-title">⚡ 生成式AI推理加速</h2>
+                <div class="info-box">
+                    <h3>低精度推理</h3>
+                    <ul>
+                        <li><strong>fp8优化:</strong> 4614 TFLOPS，相比bf16提升10倍性能</li>
+                        <li><strong>动态量化:</strong> 运行时自适应量化，无需离线预处理</li>
+                        <li><strong>误差补偿:</strong> 内建精度补偿机制，保证模型准确度</li>
+                        <li><strong>批处理:</strong> 支持超大批量推理，最大化GPU利用率</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3>LLM推理支持</h3>
+                    <ul>
+                        <li><strong>超大模型:</strong> 万亿参数模型原生支持</li>
+                        <li><strong>多轮对话:</strong> 支持长对话上下文，KV缓存优化</li>
+                        <li><strong>并发处理:</strong> 支持数千并发推理请求</li>
+                        <li><strong>流式输出:</strong> Token级延迟优化，支持实时生成</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 应用场景 -->
+            <div class="architecture-section">
+                <h2 class="section-title">🎯 应用场景与特性</h2>
+                <div class="grid-layout">
+                    <div class="grid-card card-chip">
+                        <h4>单芯片用途</h4>
+                        <p>高性能推理、模型部署</p>
+                        <ul>
+                            <li>✓ 轻量推理</li>
+                            <li>✓ 模型调试</li>
+                            <li>✓ 原型验证</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-board">
+                        <h4>板卡应用</h4>
+                        <p>中等规模LLM推理</p>
+                        <ul>
+                            <li>✓ 千亿参数LLM</li>
+                            <li>✓ 多模型并行</li>
+                            <li>✓ API服务</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-node">
+                        <h4>节点应用</h4>
+                        <p>大规模模型训练和推理</p>
+                        <ul>
+                            <li>✓ 万亿参数训练</li>
+                            <li>✓ 分布式推理</li>
+                            <li>✓ 多GPU并行</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-pod">
+                        <h4>超级集群</h4>
+                        <p>全球最大规模AI系统</p>
+                        <ul>
+                            <li>✓ 万亿参数LLM推理</li>
+                            <li>✓ 全球AI服务</li>
+                            <li>✓ 科研超算</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 互连架构 -->
+            <div class="architecture-section">
+                <h2 class="section-title">🔌 光学超互连架构</h2>
+                <div class="info-box">
+                    <h3>光学可重构网络</h3>
+                    <ul>
+                        <li><strong>全光互连:</strong> 完全光学通信，超低延迟</li>
+                        <li><strong>动态拓扑:</strong> 可重构网络拓扑，适应不同工作负载</li>
+                        <li><strong>超高带宽:</strong> 7370GB/s总聚合带宽</li>
+                        <li><strong>容错设计:</strong> 多路径冗余，确保99.99%可用性</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3>集群协调</h3>
+                    <ul>
+                        <li><strong>全局同步:</strong> 微秒级全局时钟同步</li>
+                        <li><strong>自适应路由:</strong> 动态负载均衡路由</li>
+                        <li><strong>快速恢复:</strong> 故障快速隔离和恢复</li>
+                        <li><strong>监测完整:</strong> 每链路实时监测和分析</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 与其他版本对比 -->
+            <div class="architecture-section">
+                <h2 class="section-title">📊 TPU v7 (Ironwood) 对比表</h2>
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>v7 (Ironwood)</th>
+                            <th>v6e (Trillium)</th>
+                            <th>v5p</th>
+                            <th>H100</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="level-name">工艺制程</td>
+                            <td><span class="improvement">3 nm</span></td>
+                            <td>3 nm</td>
+                            <td>5 nm</td>
+                            <td>4 nm</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">单芯片算力</td>
+                            <td><span class="improvement">4614 TFLOPS (fp8)</span></td>
+                            <td>918 TFLOPS (bf16)</td>
+                            <td>459 TFLOPS (bf16)</td>
+                            <td>756 TFLOPS</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">单芯片内存</td>
+                            <td><span class="improvement">192 GB</span></td>
+                            <td>32 GB</td>
+                            <td>95 GB</td>
+                            <td>80 GB</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">功耗</td>
+                            <td>980 W</td>
+                            <td>30 W</td>
+                            <td>35 W</td>
+                            <td>700 W</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">能效比</td>
+                            <td><span class="improvement">4.7 TFLOPS/W</span></td>
+                            <td>30.6 TFLOPS/W</td>
+                            <td>13.1 TFLOPS/W</td>
+                            <td>1.08 TFLOPS/W</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">最大集群</td>
+                            <td><span class="improvement">42.5 EXAFLOPS</span></td>
+                            <td>939 PFLOPS</td>
+                            <td>939 PFLOPS</td>
+                            <td>N/A</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 总结 -->
+            <div class="architecture-section">
+                <h2 class="section-title">🌟 Ironwood的历史意义</h2>
+                <div class="info-box">
+                    <h3>一代机皇的诞生</h3>
+                    <ul>
+                        <li><strong>性能巨兽:</strong> 42.5 EXAFLOPS，全球最强AI计算能力</li>
+                        <li><strong>能效冠军:</strong> 相比CPU/GPU提升10倍以上能效</li>
+                        <li><strong>生成式AI:</strong> 为万亿参数大模型而生的芯片</li>
+                        <li><strong>绿色计算:</strong> 低碳AI基础设施的标杆</li>
+                        <li><strong>全球合作:</strong> Google、OpenAI等全球顶级AI机构的选择</li>
+                        <li><strong>未来标准:</strong> 定义下一代AI超级计算机的标准</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>📅 数据更新时间：2025年 | 来源：Google Cloud TPU v7 官方文档</p>
+            <p>💡 注：本文档为教学用途，实际规格可能因数据中心配置而异</p>
+            <p>🎯 TPU v7 (Ironwood) 是Google最新一代AI超级计算芯片，代表了生成式AI时代AI芯片设计的顶峰</p>
+        </footer>
+    </div>
+</body>
+</html>

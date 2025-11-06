@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPU v4 Pod 架构展示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Microsoft YaHei', '宋体';
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .architecture-section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            font-weight: 600;
+        }
+        
+        .flow-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 40px 0;
+            padding: 30px;
+            background: #f5f5f5;
+            border-radius: 12px;
+        }
+        
+        .flow-item {
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+            max-width: 200px;
+        }
+        
+        .flow-item-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .flow-item-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .flow-item-desc {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .flow-arrow {
+            font-size: 1.5em;
+            color: #667eea;
+            align-self: center;
+        }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .grid-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 12px;
+            padding: 25px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .grid-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .grid-card h4 {
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .grid-card p {
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .grid-card ul {
+            list-style-position: inside;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .grid-card li {
+            margin: 5px 0;
+        }
+        
+        .card-chip {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-board {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .card-node {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .card-pod {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .volume-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            margin: 40px 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .volume-bar {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .volume-box {
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .volume-box-1 {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .volume-box-12 {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .volume-box-96 {
+            width: 100px;
+            height: 140px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .volume-box-4096 {
+            width: 120px;
+            height: 200px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .volume-label {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+        }
+        
+        .detail-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .detail-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border: 2px solid #667eea;
+        }
+        
+        .detail-table td {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .detail-table tbody tr:nth-child(odd) {
+            background-color: #f8f9ff;
+        }
+        
+        .detail-table tbody tr:hover {
+            background-color: #ede7f6;
+        }
+        
+        .level-name {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 100px;
+        }
+        
+        .info-box {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 6px;
+        }
+        
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        
+        .info-box ul {
+            list-style-position: inside;
+            line-height: 1.8;
+        }
+        
+        .info-box li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .comparison-box {
+            background: #fff8f0;
+            border: 2px solid #f5576c;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .comparison-box h3 {
+            color: #f5576c;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .comparison-box ul {
+            list-style-position: inside;
+            line-height: 1.8;
+        }
+        
+        .comparison-box li {
+            color: #555;
+            margin-bottom: 8px;
+        }
+        
+        .improvement {
+            color: #43e97b;
+            font-weight: 600;
+        }
+        
+        footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        @media (max-width: 768px) {
+            .flow-chart {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏗️ TPU v4 Pod 架构体系</h1>
+            <p class="subtitle">芯片 → 板卡 → 节点 → Pod 的层级清晰展示（支持光学可重构、4096芯片超级集群）</p>
+        </header>
+        
+        <div class="content">
+            <!-- 版本对比 -->
+            <div class="architecture-section">
+                <h2 class="section-title">🔄 TPU v4 vs v3 升级对比</h2>
+                <div class="comparison-box">
+                    <h3>🚀 关键升级点</h3>
+                    <ul>
+                        <li><span class="improvement">✓ 光学可重构</span>：业界首个光学互连架构，支持动态重配置</li>
+                        <li><span class="improvement">✓ 性能翻倍</span>：v3 123 TFLOPS → v4 275 TFLOPS，相比v3性能2.24×</li>
+                        <li><span class="improvement">✓ Pod扩展</span>：从1024 TPU → 4096 TPU，支持4倍规模集群</li>
+                        <li><span class="improvement">✓ 带宽升级</span>：从900GB/s → 1200GB/s，提升33%</li>
+                        <li><span class="improvement">✓ v4i推理版</span>：无需液冷的推理专用版本</li>
+                        <li><span class="improvement">✓ 工艺升级</span>：12nm → 7nm，集成度提升显著</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 流程总览 -->
+            <div class="architecture-section">
+                <h2 class="section-title">📊 架构层级总览</h2>
+                <div class="flow-chart">
+                    <div class="flow-item">
+                        <div class="flow-item-icon">🔌</div>
+                        <div class="flow-item-title">芯片层</div>
+                        <div class="flow-item-desc">TPU v4 单芯片</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">
+                        <div class="flow-item-icon">🎛️</div>
+                        <div class="flow-item-title">板卡层</div>
+                        <div class="flow-item-desc">12芯片板卡</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">
+                        <div class="flow-item-icon">🖥️</div>
+                        <div class="flow-item-title">节点层</div>
+                        <div class="flow-item-desc">8块板卡</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item">
+                        <div class="flow-item-icon">🏛️</div>
+                        <div class="flow-item-title">Pod层</div>
+                        <div class="flow-item-desc">512个节点</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3D体积对比 -->
+            <div class="architecture-section">
+                <h2 class="section-title">📈 规模对比展示</h2>
+                <div class="volume-diagram">
+                    <div class="volume-bar">
+                        <div class="volume-box volume-box-1">1</div>
+                        <div class="volume-label">单芯片</div>
+                    </div>
+                    <div class="volume-bar">
+                        <div class="volume-box volume-box-12">12</div>
+                        <div class="volume-label">板卡</div>
+                    </div>
+                    <div class="volume-bar">
+                        <div class="volume-box volume-box-96">96</div>
+                        <div class="volume-label">节点</div>
+                    </div>
+                    <div class="volume-bar">
+                        <div class="volume-box volume-box-4096">4096</div>
+                        <div class="volume-label">Pod</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 分层详细信息 -->
+            <div class="architecture-section">
+                <h2 class="section-title">🔍 分层详细规格</h2>
+                <div class="grid-layout">
+                    <div class="grid-card card-chip">
+                        <h4>💾 芯片层 (Chip Level)</h4>
+                        <p><strong>单位:</strong> TPU v4 单芯片</p>
+                        <ul>
+                            <li>✓ 工艺: 7 nm</li>
+                            <li>✓ 算力: 275 TFLOPS</li>
+                            <li>✓ 内存: 16 GB HBM2</li>
+                            <li>✓ 频率: 1.6 GHz</li>
+                            <li>✓ 功耗: 40 W</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-board">
+                        <h4>📋 板卡层 (Board Level)</h4>
+                        <p><strong>组成:</strong> 12 × TPU v4 + 控制器</p>
+                        <ul>
+                            <li>✓ 包含: 12个TPU芯片</li>
+                            <li>✓ 总算力: 3.3 PFLOPS</li>
+                            <li>✓ 总内存: 192 GB</li>
+                            <li>✓ 互连: 光学+PCIe混合</li>
+                            <li>✓ 功耗: 480 W</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-node">
+                        <h4>🖲️ 节点层 (Node Level)</h4>
+                        <p><strong>组成:</strong> 8 × 板卡 = 96 TPU</p>
+                        <ul>
+                            <li>✓ 包含: 8个板卡</li>
+                            <li>✓ 总算力: 26.4 PFLOPS</li>
+                            <li>✓ 总内存: 1.5 TB</li>
+                            <li>✓ 互连: 高速光学网络</li>
+                            <li>✓ 功耗: 3.84 kW</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-pod">
+                        <h4>🏢 Pod层 (Pod Level)</h4>
+                        <p><strong>组成:</strong> 512 × 节点 = 4096 TPU</p>
+                        <ul>
+                            <li>✓ 包含: 512个节点</li>
+                            <li>✓ 总算力: 1.1 EXAFLOPS</li>
+                            <li>✓ 总内存: 64 TB</li>
+                            <li>✓ 互连: 1200GB/s光学网络</li>
+                            <li>✓ 功耗: 1.96 MW</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 详细表格 -->
+            <div class="architecture-section">
+                <h2 class="section-title">📋 完整架构参数表</h2>
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>层级</th>
+                            <th>单位定义</th>
+                            <th>TPU数量</th>
+                            <th>总算力</th>
+                            <th>总内存</th>
+                            <th>互连方式</th>
+                            <th>功耗预估</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="level-name">芯片层</td>
+                            <td>单个TPU v4</td>
+                            <td>1</td>
+                            <td>275 TFLOPS</td>
+                            <td>16 GB</td>
+                            <td>内核集成</td>
+                            <td>40 W</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">板卡层</td>
+                            <td>12芯片板卡</td>
+                            <td>12</td>
+                            <td>3.3 PFLOPS</td>
+                            <td>192 GB</td>
+                            <td>光学+PCIe</td>
+                            <td>480 W</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">节点层</td>
+                            <td>8板卡节点</td>
+                            <td>96</td>
+                            <td>26.4 PFLOPS</td>
+                            <td>1.5 TB</td>
+                            <td>光学互连</td>
+                            <td>3.84 kW</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">Pod层</td>
+                            <td>512节点Pod</td>
+                            <td>4096</td>
+                            <td>1.1 EXAFLOPS</td>
+                            <td>64 TB</td>
+                            <td>1200GB/s网络</td>
+                            <td>1.96 MW</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 光学可重构架构 -->
+            <div class="architecture-section">
+                <h2 class="section-title">🌐 光学可重构架构 (Optical Reconfigurable)</h2>
+                <div class="info-box">
+                    <h3>创新互连设计</h3>
+                    <ul>
+                        <li><strong>光学互连:</strong> 使用光学而非电气互连，支持无损、低延迟通信</li>
+                        <li><strong>可重构特性:</strong> 支持动态重新配置网络拓扑，适应不同工作负载</li>
+                        <li><strong>高速传输:</strong> 支持400Gbps+光学链路，比电气互连快5-10倍</li>
+                        <li><strong>低功耗:</strong> 光学互连功耗仅为等效电气互连的1/3</li>
+                        <li><strong>扩展性:</strong> 支持从几百到数千个芯片的无缝扩展</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box" style="border-left-color: #4facfe;">
+                    <h3>动态重配置能力</h3>
+                    <ul>
+                        <li><strong>工作负载适配:</strong> 根据任务类型动态调整网络拓扑</li>
+                        <li><strong>多模式支持:</strong> 支持数据并行、模型并行、流水线并行</li>
+                        <li><strong>容错机制:</strong> 自动绕过故障链路，保证连通性</li>
+                        <li><strong>性能优化:</strong> 实时监测延迟，自动调整路由策略</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 应用场景 -->
+            <div class="architecture-section">
+                <h2 class="section-title">🎯 应用场景与特性</h2>
+                <div class="grid-layout">
+                    <div class="grid-card card-chip">
+                        <h4>单芯片用途</h4>
+                        <p>高性能推理、开发调试</p>
+                        <ul>
+                            <li>✓ 大规模推理</li>
+                            <li>✓ 模型开发</li>
+                            <li>✓ 性能测试</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-board">
+                        <h4>板卡应用</h4>
+                        <p>推理集群、中等规模训练</p>
+                        <ul>
+                            <li>✓ 推理服务</li>
+                            <li>✓ 模型优化</li>
+                            <li>✓ 多模型部署</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-node">
+                        <h4>节点应用</h4>
+                        <p>大规模模型训练</p>
+                        <ul>
+                            <li>✓ 深度学习训练</li>
+                            <li>✓ 分布式训练</li>
+                            <li>✓ 强化学习</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-card card-pod">
+                        <h4>Pod训练</h4>
+                        <p>超大规模AI研究</p>
+                        <ul>
+                            <li>✓ 万亿参数LLM</li>
+                            <li>✓ 多模态基础模型</li>
+                            <li>✓ 突破性AI研究</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 关键特性 -->
+            <div class="architecture-section">
+                <h2 class="section-title">⭐ TPU v4 Pod 核心特性</h2>
+                <div class="info-box">
+                    <h3>架构创新</h3>
+                    <ul>
+                        <li><strong>光学互连:</strong> 业界首个大规模光学可重构架构</li>
+                        <li><strong>超大规模:</strong> 支持4096 TPU，达到EXAFLOPS级算力</li>
+                        <li><strong>灵活部署:</strong> 支持v4训练版和v4i推理版</li>
+                        <li><strong>动态优化:</strong> 根据工作负载自动调整网络配置</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box" style="border-left-color: #f5576c;">
+                    <h3>性能优势</h3>
+                    <ul>
+                        <li><strong>单芯片性能:</strong> 相比v3提升2.24倍（275 vs 123 TFLOPS）</li>
+                        <li><strong>集群性能:</strong> 相比v3提升9倍（1.1EF vs 123PF）</li>
+                        <li><strong>通信延迟:</strong> 光学互连降低50%</li>
+                        <li><strong>互连能效:</strong> 相比电气互连降低70%功耗</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 与v3对比 -->
+            <div class="architecture-section">
+                <h2 class="section-title">📊 TPU v4 vs v3 详细对比</h2>
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>TPU v3</th>
+                            <th>TPU v4</th>
+                            <th>升级倍数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="level-name">单芯片算力</td>
+                            <td>123 TFLOPS</td>
+                            <td>275 TFLOPS</td>
+                            <td><span class="improvement">2.24×</span></td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">工艺</td>
+                            <td>12 nm</td>
+                            <td>7 nm</td>
+                            <td>更先进</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">单Pod规模</td>
+                            <td>1024 TPU</td>
+                            <td>4096 TPU</td>
+                            <td><span class="improvement">4×</span></td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">Pod算力</td>
+                            <td>123 PFLOPS</td>
+                            <td>1.1 EXAFLOPS</td>
+                            <td><span class="improvement">9×</span></td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">互连方式</td>
+                            <td>NVLink+液冷</td>
+                            <td>光学可重构</td>
+                            <td>质的飞跃</td>
+                        </tr>
+                        <tr>
+                            <td class="level-name">互连带宽</td>
+                            <td>900 GB/s</td>
+                            <td>1200 GB/s</td>
+                            <td><span class="improvement">1.33×</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <footer>
+            <p>📅 数据更新时间：2025年 | 来源：Google Cloud TPU v4 官方文档</p>
+            <p>💡 注：本文档为教学用途，实际规格可能因数据中心配置而异</p>
+            <p>🌟 TPU v4支持4096个TPU芯片，采用光学可重构架构，达到1.1 EXAFLOPS超大规模计算能力</p>
+        </footer>
+    </div>
+</body>
+</html>

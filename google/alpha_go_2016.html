@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AlphaGo (2016) — 李世石 对局 说明</title>
+  <style>
+    body{font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; line-height:1.6; padding:24px; color:#111}
+    header{border-bottom:1px solid #eee; padding-bottom:12px; margin-bottom:18px}
+    h1{font-size:1.6rem; margin:0}
+    h2{margin-top:20px}
+    pre{background:#f7f7f7;padding:12px;border-radius:6px;overflow:auto}
+    table{border-collapse:collapse;width:100%;margin:12px 0}
+    th,td{border:1px solid #e2e2e2;padding:8px;text-align:left}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .mono{font-family:monospace}
+    footer{font-size:0.9rem;color:#666;margin-top:28px;border-top:1px solid #f0f0f0;padding-top:12px}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AlphaGo（2016 年对战李世石版本） — 简明技术说明</h1>
+    <p>聚焦原版 AlphaGo（2016 年李世石对局使用的系统）。本文档说明其核心模块、输入输出（以 <code class="mono">N=17</code> 的输入张量为准）、数据流与动作编码。</p>
+  </header>
+
+  <section>
+    <h2>一、快速总览</h2>
+    <p>AlphaGo 的决策由两类深度网络与蒙特卡洛树搜索（MCTS）协同完成：<strong>策略网络（Policy Network）</strong>、<strong>价值网络（Value Network）</strong>与<strong>MCTS</strong>。系统每次接收当前棋盘状态作为输入，输出下一步的概率分布与最终选定落子。</p>
+  </section>
+
+  <section>
+    <h2>二、输入（Input） — N = 17（17×19×19）</h2>
+    <p>AlphaGo 使用 17 个平面（planes）构成输入张量：每层大小为 19×19。</p>
+    <table>
+      <tr><th>通道编号</th><th>含义</th><th>说明</th></tr>
+      <tr><td>1–8</td><td>当前执子方的最近 8 手</td><td>二值平面：若该格在对应手被当前方下子则为 1</td></tr>
+      <tr><td>9–16</td><td>对方的最近 8 手</td><td>二值平面：同上</td></tr>
+      <tr><td>17</td><td>当前落子方指示层</td><td>如果当前为黑方则全 1，否则全 0（或反向表示），用于标识视角</td></tr>
+    </table>
+    <p>形状：<code class="mono">(17, 19, 19)</code>。空位由 0 表示。</p>
+  </section>
+
+  <section>
+    <h2>三、策略网络（Policy Network）</h2>
+    <p><strong>输入：</strong>(17,19,19) 张量。<br>
+       <strong>输出：</strong>长度为 <code class="mono">362</code> 的向量（361 个交叉点 + 1 个 PASS）。通过 softmax 得到先验概率 <code>P(s,a)</code>。</p>
+    <p>输出索引与棋盘坐标的映射：通常按行主序（row-major）将 19×19 展平并保留一个特殊索引表示 PASS。</p>
+  </section>
+
+  <section>
+    <h2>四、价值网络（Value Network）</h2>
+    <p><strong>输入：</strong>相同的 (17,19,19) 张量。<br>
+       <strong>输出：</strong>一个标量 <code>v = V(s)</code>，范围在 <code>[-1, +1]</code>，代表当前执子方的胜率估计。</p>
+  </section>
+
+  <section>
+    <h2>五、蒙特卡洛树搜索（MCTS）与数据流</h2>
+    <p>MCTS 使用策略网络的先验作为拓展优先级（prior P(s,a)），并在拓展时调用价值网络获取评估 v。每次迭代包含选择 → 扩展 → 评估 → 回传。搜索若干次后，得到基于访问次数的最终分布 <code>π(a|s)=N(s,a)/ΣN</code>，以访问次数最多的动作作为系统输出。</p>
+
+    <div class="grid">
+      <div>
+        <h3>输入 → 输出（简化视图）</h3>
+        <pre class="mono">(17,19,19) --Policy--> P(s,a) (362)
+                \                 |
+                 \--MCTS (调用 V)---/ 
+                --> π(a|s) (362) --> a*</pre>
+      </div>
+      <div>
+        <h3>MCTS 节点统计</h3>
+        <table>
+          <tr><th>变量</th><th>含义</th></tr>
+          <tr><td>N(s,a)</td><td>访问次数（计数）</td></tr>
+          <tr><td>Q(s,a)</td><td>平均价值（历史回报）</td></tr>
+          <tr><td>P(s,a)</td><td>策略先验（来自 Policy Network）</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>六、动作编码（Move Encoding）</h2>
+    <p>动作空间包含 361 个交叉点与一个 PASS，总计 362 个动作。常见编码方式为：</p>
+    <pre class="mono">index = row * 19 + col   (0 <= index <= 360)
+index = 361              (PASS)
+行/列从 0 到 18 对应棋谱中的 A1..T19（跳过 I）或常见棋谱坐标。</pre>
+    <p>示例（示意）：</p>
+    <table>
+      <tr><th>动作（棋谱）</th><th>含义</th></tr>
+      <tr><td>D4</td><td>棋盘某一交叉点（示例概率：0.27）</td></tr>
+      <tr><td>Q16</td><td>另一个交叉点（示例概率：0.18）</td></tr>
+      <tr><td>R6</td><td>（示例概率：0.12）</td></tr>
+      <tr><td>PASS</td><td>跳过一手（示例概率：0.01）</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>七、训练与数据来源（简要）</h2>
+    <p>原版 AlphaGo 使用两阶段训练：</p>
+    <ol>
+      <li>监督学习：在人类职业棋谱上训练策略网络（模仿强棋手）</li>
+      <li>强化学习与自我对弈：使用策略梯度等方法通过自我对弈提升策略，并训练价值网络以预测最终胜负。</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>八、常见疑问（FAQ）</h2>
+    <ul>
+      <li><strong>为什么要用历史 8 步？</strong> 历史步提供了局势演化信息（劫、临近手筋），帮助 CNN 捕捉时间上下文。</li>
+      <li><strong>为何有 PASS 动作？</strong> 围棋规则允许玩家放弃一手，系统需将其视为合法动作。</li>
+      <li><strong>Policy 和 Value 为什么都输入相同张量？</strong> 二者从同一局面出发，但解决问题不同：Policy 给出动作分布，Value 给出终局胜率。</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>—— 文档说明仅针对 AlphaGo 2016 年对战李世石的版本（N=17 输入格式）。如需导出为独立 HTML 文件、添加交互棋盘映射（坐标→索引表）或加入图示与 SVG，请回复说明你需要的格式和细节。</p>
+  </footer>
+</body>
+</html>

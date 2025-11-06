@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPU芯片进化表格 - 工艺制程与算力对比</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Microsoft YaHei', '宋体';
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        th {
+            padding: 16px 20px;
+            text-align: center;
+            border: 2px solid #667eea;
+            font-size: 1em;
+        }
+        
+        td {
+            padding: 14px 20px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        
+        tbody tr:nth-child(odd) {
+            background-color: #f8f9ff;
+        }
+        
+        tbody tr:hover {
+            background-color: #ede7f6;
+            transition: background-color 0.3s ease;
+        }
+        
+        .chip-name {
+            font-weight: 600;
+            color: #667eea;
+            text-align: left;
+        }
+        
+        .process-node {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #d32f2f;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .compute-power {
+            background: linear-gradient(135deg, #c8e6c9 0%, #81c784 100%);
+            color: #1b5e20;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .memory {
+            background: linear-gradient(135deg, #bbdefb 0%, #64b5f6 100%);
+            color: #0d47a1;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .architecture {
+            background: linear-gradient(135deg, #f8bbd0 0%, #ec407a 100%);
+            color: white;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-weight: 600;
+            display: inline-block;
+            font-size: 0.9em;
+        }
+        
+        .year {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .info-box {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 6px;
+        }
+        
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .info-box ul {
+            list-style-position: inside;
+            line-height: 1.8;
+        }
+        
+        .info-box li {
+            margin-bottom: 8px;
+        }
+        
+        .chart-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f9f9f9;
+            border-radius: 12px;
+        }
+        
+        .chart-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+        
+        .chart-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        
+        .chart-label {
+            min-width: 100px;
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 15px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Google TPU 芯片进化演变</h1>
+            <p class="subtitle">工艺制程与算力发展趋势 (2016-2024)</p>
+        </header>
+        
+        <div class="content">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>芯片代数</th>
+                            <th>发布年份</th>
+                            <th>工艺制程</th>
+                            <th>芯片架构</th>
+                            <th>单芯片算力 (TFLOPS)</th>
+                            <th>内存</th>
+                            <th>带宽 (GB/s)</th>
+                            <th>功耗 (W)</th>
+                            <th>关键特性</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="chip-name">TPU v1</td>
+                            <td class="year">2015</td>
+                            <td><span class="process-node">28 nm</span></td>
+                            <td>单芯片设计</td>
+                            <td><span class="compute-power">23 / 92</span></td>
+                            <td><span class="memory">28 MiB SRAM</span></td>
+                            <td>300</td>
+                            <td>75</td>
+                            <td>推理专用，8位矩阵运算</td>
+                        </tr>
+                        <tr>
+                            <td class="chip-name">TPU v2</td>
+                            <td class="year">2017</td>
+                            <td><span class="process-node">16 nm</span></td>
+                            <td>4芯片 Pod设计</td>
+                            <td><span class="compute-power">45 (bf16)</span></td>
+                            <td><span class="memory">64 GB</span></td>
+                            <td>600</td>
+                            <td>250</td>
+                            <td>bfloat16浮点，训练/推理</td>
+                        </tr>
+                        <tr>
+                            <td class="chip-name">TPU v3</td>
+                            <td class="year">2018</td>
+                            <td><span class="process-node">12 nm</span></td>
+                            <td>8芯片 Pod设计</td>
+                            <td><span class="compute-power">123 (bf16)</span></td>
+                            <td><span class="memory">128 GB</span></td>
+                            <td>900</td>
+                            <td>450</td>
+                            <td>功率翻倍，液冷支持</td>
+                        </tr>
+                        <tr>
+                            <td class="chip-name">TPU v4</td>
+                            <td class="year">2021</td>
+                            <td><span class="process-node">7 nm</span></td>
+                            <td>Pod 4096芯片扩展</td>
+                            <td><span class="compute-power">275 (bf16)</span></td>
+                            <td><span class="memory">96 GB HBM2</span></td>
+                            <td>1,200</td>
+                            <td>400</td>
+                            <td>光学可重构，v4i推理版</td>
+                        </tr>
+                        <tr>
+                            <td class="chip-name">TPU v5e</td>
+                            <td class="year">2023</td>
+                            <td><span class="process-node">5 nm</span></td>
+                            <td>推理优化版本</td>
+                            <td><span class="compute-power">197 (bf16) / 393 (int8)</span></td>
+                            <td><span class="memory">16 GB HBM3</span></td>
+                            <td>819</td>
+                            <td>280</td>
+                            <td>成本高效推理</td>
+                        </tr>
+                        <tr>
+                            <td class="chip-name">TPU v5p</td>
+                            <td class="year">2023</td>
+                            <td><span class="process-node">5 nm</span></td>
+                            <td>MegaPod 24h设计</td>
+                            <td><span class="compute-power">459 (bf16) / 918 (int8)</span></td>
+                            <td><span class="memory">95 GB HBM3</span></td>
+                            <td>2,765</td>
+                            <td>560</td>
+                            <td>与H100竞争，大规模训练</td>
+                        </tr>
+                        <tr>
+                            <td class="chip-name">TPU v6e (Trillium)</td>
+                            <td class="year">2024</td>
+                            <td><span class="process-node">3 nm</span></td>
+                            <td>Pod 256单元集群</td>
+                            <td><span class="compute-power">918 (bf16) / 1,836 (int8)</span></td>
+                            <td><span class="memory">32 GB HBM3e</span></td>
+                            <td>1,640</td>
+                            <td>700</td>
+                            <td>v5e性能4.7倍，时钟翻倍</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="info-box">
+                <h3>📊 关键趋势分析</h3>
+                <ul>
+                    <li><strong>工艺制程演进：</strong>28nm → 3nm，密度提升约9.3倍，支持更高集成度</li>
+                    <li><strong>MXU数量增长：</strong>8K → 1M+ MXU，年均增长率约80%，矩阵运算能力指数级提升</li>
+                    <li><strong>架构升级路线：</strong>单芯片 → Pod集群 → MegaPod → Cluster → UberCluster，支持9216芯片级联</li>
+                    <li><strong>算力增长：</strong>v1到v7算力增长200倍，单芯片从23→4,614 TFLOPS</li>
+                    <li><strong>精度支持：</strong>8位整数 → bfloat16 → fp8混合精度，优化生成式AI推理</li>
+                    <li><strong>内存容量与带宽：</strong>从28MiB→192GB，带宽从300→7,370 GB/s，提升24倍</li>
+                    <li><strong>能效优化：</strong>从v1的0.31→v7的4.7 TFLOPS/W，能效提升15倍</li>
+                </ul>
+            </div>
+            
+            <div class="chart-section">
+                <h2>📈 单芯片算力发展趋势图</h2>
+                <div class="chart-row">
+                    <div class="chart-label">TPU v1</div>
+                    <div class="chart-bar" style="width: 10.02%; max-width: 150px;">92</div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-label">TPU v2</div>
+                    <div class="chart-bar" style="width: 4.90%; max-width: 150px;">45</div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-label">TPU v3</div>
+                    <div class="chart-bar" style="width: 13.41%; max-width: 150px;">123</div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-label">TPU v4</div>
+                    <div class="chart-bar" style="width: 29.96%; max-width: 150px;">275</div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-label">TPU v5e</div>
+                    <div class="chart-bar" style="width: 21.46%; max-width: 150px;">197</div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-label">TPU v5p</div>
+                    <div class="chart-bar" style="width: 50.00%; max-width: 200px;">459</div>
+                </div>
+                <div class="chart-row">
+                    <div class="chart-label">TPU v6e</div>
+                    <div class="chart-bar" style="width: 100%; max-width: 400px;">918 TFLOPS (bf16)</div>
+                </div>
+            </div>
+            
+            <div class="info-box" style="border-left-color: #4CAF50;">
+                <h3>💡 技术亮点</h3>
+                <ul>
+                    <li><strong>脉动阵列架构：</strong>从v1到v6演进，矩阵乘法单元规模不断扩大</li>
+                    <li><strong>片上内存：</strong>v1采用28MiB SRAM，v5/v6升级为HBM3e，支持更大模型</li>
+                    <li><strong>光学可重构架构：</strong>v4引入，支持嵌入式运算和更灵活的任务调度</li>
+                    <li><strong>多精度支持：</strong>整数8位 → bfloat16 → fp8，优化生成式AI推理效率</li>
+                    <li><strong>集群扩展能力：</strong>支持从单芯片到9216芯片集群，互连带宽从600GB/s→7.37TB/s</li>
+                    <li><strong>AI辅助设计：</strong>v5e/v6使用深度强化学习优化设计，加快迭代周期</li>
+                    <li><strong>生态支持：</strong>深度集成TensorFlow，支持Jax、PyTorch等框架</li>
+                </ul>
+            </div>
+            
+            <div class="info-box" style="border-left-color: #FF6B6B;">
+                <h3>📈 演变趋势与影响</h3>
+                <ul>
+                    <li><strong>早期（v1-v3，2015-2018）：</strong>推理专用 → 训练支持，推动Google内部搜索、翻译等AI应用</li>
+                    <li><strong>中期（v4-v5，2021-2023）：</strong>云端可用性与成本优化，与Nvidia GPU激烈竞争，v5系列性能逼近或超越H100</li>
+                    <li><strong>近期（v6-v7，2024-2025）：</strong>生成式AI和推理优化聚焦，Trillium集成AI Hypercomputer，Ironwood支持万亿参数模型</li>
+                    <li><strong>未来方向：</strong>可持续性优化、多模态AI支持、边缘设备扩展（Edge TPU）</li>
+                </ul>
+            </div>
+        </div>
+        
+        <footer>
+            <p>📅 数据更新时间：2025年 | 来源：Google Cloud TPU 官方资料 & grok_answer.html</p>
+            <p>💬 注：v5e/v5p为单芯片性能；v6e/v7为高性能版本；算力数据为理论峰值TFLOPS/PFLOPS级别</p>
+            <p>🔍 更新内容：新增TPU v6e(Trillium)和v7(Ironwood)；补充bf16、int8、fp8精度数据；完善架构与带宽信息</p>
+        </footer>
+    </div>
+</body>
+</html>
