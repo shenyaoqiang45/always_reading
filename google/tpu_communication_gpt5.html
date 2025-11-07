@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TPU 通信方案（分层与细节）</title>
+  <style>
+    body{font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; line-height:1.6; color:#111; padding:28px; background:#f7f9fb}
+    .container{max-width:980px;margin:0 auto;background:#fff;border-radius:12px;padding:28px;box-shadow:0 6px 24px rgba(18,24,40,0.06)}
+    h1{font-size:28px;margin-bottom:6px}
+    h2{font-size:20px;margin-top:22px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:10px;border:1px solid #e6eef6;text-align:left}
+    th{background:#f1f7ff}
+    pre{background:#0f1724;color:#dbeafe;padding:12px;border-radius:8px;overflow:auto}
+    .note{background:#fffbe6;border-left:4px solid #ffd166;padding:12px;border-radius:6px;margin-top:14px}
+    .badge{display:inline-block;background:#eef2ff;color:#2b3bff;padding:6px 10px;border-radius:999px;font-weight:600;margin-right:8px}
+    ul{margin:8px 0 8px 18px}
+    .footer{font-size:13px;color:#556;padding-top:18px;border-top:1px dashed #eef2f7;margin-top:20px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TPU 通信方案 — 分层概览与实现细节</h1>
+    <p>本页总结了 TPU（Tensor Processing Unit）在芯片内、芯片间、板级与 Pod 级别的主要通信机制、拓扑与软件接口，适用于理解分布式训练时的通信设计与性能权衡。</p>
+
+    <h2>🧩 一、通信层次概览</h2>
+    <table>
+      <thead>
+        <tr><th>层级</th><th>通信方式</th><th>通信对象</th><th>特点</th><th>典型带宽/延迟</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>芯片内 (Intra-Chip)</td><td>Systolic Array 数据流 + On-chip Interconnect</td><td>Core 内矩阵单元 (MAC array)、本地 SRAM</td><td>全硬件流水，近似“零通信代价”</td><td>ns 级延迟</td></tr>
+        <tr><td>芯片间 (Inter-Chip)</td><td>ICN (Interconnect Network)</td><td>相邻 TPU 芯片</td><td>高带宽低延迟点对点互联</td><td>数百 GB/s</td></tr>
+        <tr><td>板间 / 机架内</td><td>TPU Interconnect Bus / Torus Mesh 网络</td><td>同板或同机架 TPU</td><td>Mesh 或 Torus 结构，跳数有限</td><td>μs 级延迟</td></tr>
+        <tr><td>机架间 (Pod-Level)</td><td>Optical Interconnect / ICI</td><td>Pod 内不同主板、机架 TPU</td><td>光纤互联，可扩展到非常大规模</td><td>μs ~ ms 级延迟</td></tr>
+      </tbody>
+    </table>
+
+    <h2>⚙️ 二、TPU 通信架构细节</h2>
+    <h3>1️⃣ 芯片内部通信</h3>
+    <p>每个 TPU 芯片包含：</p>
+    <ul>
+      <li><strong>Systolic Array（脉动阵列）</strong>：用于矩阵乘法运算，输入与权重在阵列中流动。</li>
+      <li><strong>Unified Buffer (UB)</strong>：高速 SRAM，缓存计算所需数据。</li>
+    </ul>
+    <p>典型数据路径：</p>
+    <pre>Host/DRAM → Unified Buffer → Systolic Array → Accumulator → Unified Buffer → Output</pre>
+    <p class="note">特点：数据以流式方式在硬件中传递，通信开销被极大压缩。</p>
+
+    <h3>2️⃣ 芯片间通信（TPU-to-TPU）</h3>
+    <p>在一块 TPU 板上通常有多颗 TPU 芯片，芯片间通过高带宽专线（ICN）互连，逻辑拓扑常见为 <strong>2D Torus</strong>（上/下/左/右四方向）。支持的集合通信包括：</p>
+    <ul>
+      <li>AllReduce（全局梯度求和）</li>
+      <li>Broadcast（广播模型权重）</li>
+      <li>AllGather / ReduceScatter（拼接/拆分张量）</li>
+    </ul>
+
+    <h3>3️⃣ 板级与机架内通信</h3>
+    <p>多个 TPU 板通过高速背板(backplane)连接，形成 TPU Pod slice（如 64/256/512 核规模）。常见拓扑仍以 Torus/mesh 为主，XLA 在此层负责张量分片（sharding）与通信调度。</p>
+
+    <h3>4️⃣ Pod 级通信（大规模分布式训练）</h3>
+    <p>在 Pod 级别，通常使用光纤互联（Optical ICI Fabric）构建 3D Torus，支持数千至上万核的扩展。软件层（如 XLA + Pathways）负责把高层 HLO 指令映射到物理通信链路与路由策略。</p>
+
+    <h2>🧮 三、XLA 与通信指令融合</h2>
+    <p>在 XLA 编译流程里，通信操作会成为显式的 HLO（High Level Optimizer）指令，常见映射如下：</p>
+    <table>
+      <thead><tr><th>通信操作</th><th>HLO 指令</th><th>作用</th></tr></thead>
+      <tbody>
+        <tr><td>AllReduce</td><td>all-reduce</td><td>汇总所有 TPU 芯片梯度</td></tr>
+        <tr><td>AllGather</td><td>all-gather</td><td>汇聚张量分块</td></tr>
+        <tr><td>CollectivePermute</td><td>collective-permute</td><td>点对点传输</td></tr>
+        <tr><td>Send/Recv</td><td>send / recv</td><td>显式的张量传输</td></tr>
+      </tbody>
+    </table>
+    <p class="note">这些 HLO 指令会被 XLA Service 映射到具体的 ICI/背板/光纤链路与硬件路由器上。</p>
+
+    <h2>🧠 四、Pathways 与通信调度（TPU v4/v5）</h2>
+    <p>Pathways 作为调度层，能够跨 Pod 管理大规模计算资源，并自动调整通信粒度与策略：</p>
+    <ul>
+      <li>参数同步频率（本地聚合 vs 全局同步）</li>
+      <li>局部/全局梯度聚合策略</li>
+      <li>动态负载均衡与通信优先级</li>
+    </ul>
+
+    <h2>🚀 五、通信性能示例（代际比较）</h2>
+    <table>
+      <thead><tr><th>TPU 代际</th><th>通信拓扑</th><th>链路带宽（双向）</th><th>集群规模</th><th>特点</th></tr></thead>
+      <tbody>
+        <tr><td>TPU v2</td><td>2D Torus</td><td>~640 Gbps</td><td>~256 核</td><td>适合中等规模训练</td></tr>
+        <tr><td>TPU v3</td><td>2D Torus</td><td>~1024 Gbps</td><td>~1024 核</td><td>更高带宽，液冷</td></tr>
+        <tr><td>TPU v4</td><td>Optical 3D Torus</td><td>~800 Gbps × 多链路</td><td>~4096 核</td><td>能效与扩展性显著提升</td></tr>
+        <tr><td>TPU v5</td><td>3D Torus + Pathways</td><td>>1600 Gbps（示例）</td><td>上万核（示例）</td><td>面向超大规模 LLM 的通信调度</td></tr>
+      </tbody>
+    </table>
+
+    <h2>📘 总结</h2>
+    <p>TPU 的通信方案是一个“多层级、拓扑感知、自动调度”的张量通信网络。目标是在千到万级 TPU 核心规模下尽量维持接近线性的训练加速比。</p>
+
+    <div class="footer">
+      如果你需要：
+      <ul>
+        <li>把这份 HTML 转成 PPT / PDF，我可以在画布里导出成相应文件。</li>
+        <li>或是需要一张示意图（拓扑图 / 数据流图），告诉我偏好的风格（技术拓扑 / 数据流）。</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
