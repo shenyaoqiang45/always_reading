@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>软件著作权 5W2H 分析框架</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #00c853 0%, #1b5e20 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #00c853 0%, #1b5e20 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 20px;
+        }
+        
+        .framework-intro {
+            background: #f1f8e9;
+            padding: 20px;
+            border-left: 4px solid #00c853;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .framework-intro h2 {
+            color: #00c853;
+            margin-bottom: 10px;
+        }
+        
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .question-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .question-card:hover {
+            border-color: #00c853;
+            box-shadow: 0 4px 16px rgba(0, 200, 83, 0.15);
+            transform: translateY(-5px);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .q-letter {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00c853 0%, #1b5e20 100%);
+            color: white;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .q-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #00c853;
+        }
+        
+        .question-content {
+            margin-top: 15px;
+        }
+        
+        .answer-item {
+            background: #f1f8e9;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid #00c853;
+            border-radius: 3px;
+            line-height: 1.8;
+        }
+        
+        .answer-item strong {
+            color: #00c853;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .detail-section {
+            background: #fafafa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .detail-section h3 {
+            color: #00c853;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #00c853;
+            padding-bottom: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        table thead {
+            background: linear-gradient(135deg, #00c853 0%, #1b5e20 100%);
+            color: white;
+        }
+        
+        table th,
+        table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .flow-chart {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f1f8e9;
+            border-radius: 6px;
+        }
+        
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #00c853 0%, #1b5e20 100%);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-content h4 {
+            color: #00c853;
+            margin-bottom: 5px;
+        }
+        
+        .step-content p {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .comparison-item {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #00c853;
+        }
+        
+        .comparison-item h4 {
+            color: #00c853;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        
+        .comparison-item p {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .highlight-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 3px;
+        }
+        
+        .highlight-box strong {
+            color: #ff9800;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 3px;
+        }
+        
+        .success-box strong {
+            color: #4caf50;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 3px;
+        }
+        
+        .info-box strong {
+            color: #2196f3;
+        }
+        
+        .challenge-box {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 3px;
+        }
+        
+        .challenge-box strong {
+            color: #f44336;
+        }
+        
+        footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .footer-text {
+            font-size: 0.9em;
+        }
+        
+        ul {
+            margin-left: 20px;
+            line-height: 2;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .questions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-step {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💾 软件著作权 5W2H 分析框架</h1>
+            <p>系统性分析与决策框架</p>
+        </header>
+        
+        <div class="content">
+            <div class="framework-intro">
+                <h2>📌 什么是软件著作权的5W2H？</h2>
+                <p>软件著作权是对计算机程序及其文档的保护。使用5W2H框架可以帮助软件企业、开发者系统地评估软件著作权的保护价值、登记策略和商业运用。相比专利的高门槛，软件著作权具有申请快、成本低、自动产生等优势。</p>
+            </div>
+            
+            <!-- 5W2H 核心问题卡片 -->
+            <div class="questions-grid">
+                <!-- WHAT -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="q-letter">W</div>
+                        <div class="q-title">WHAT - 是什么？</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="answer-item">
+                            <strong>核心问题：</strong>
+                            软件著作权保护的具体内容是什么？
+                        </div>
+                        <div class="answer-item">
+                            <strong>保护对象：</strong>
+                            <ul>
+                                <li>源代码 - 程序员编写的程序代码</li>
+                                <li>目标代码 - 编译后的可执行程序</li>
+                                <li>相关文档 - 用户手册、设计文档等</li>
+                            </ul>
+                        </div>
+                        <div class="answer-item">
+                            <strong>保护范围：</strong>
+                            只保护代码表现形式，不保护算法思想和原理
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- WHY -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="q-letter">W</div>
+                        <div class="q-title">WHY - 为什么？</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="answer-item">
+                            <strong>核心问题：</strong>
+                            为什么需要申请软件著作权登记？
+                        </div>
+                        <div class="answer-item">
+                            <strong>保护价值：</strong>
+                            <ul>
+                                <li>证明原创性 - 法律证据</li>
+                                <li>防止侵权 - 获得法律追究权</li>
+                                <li>商业利用 - 转让、许可、收益</li>
+                            </ul>
+                        </div>
+                        <div class="answer-item">
+                            <strong>市场需求：</strong>
+                            融资、合作、政府补助的必要条件
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- WHO -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="q-letter">W</div>
+                        <div class="q-title">WHO - 谁来做？</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="answer-item">
+                            <strong>核心问题：</strong>
+                            谁是软件的所有者和权利人？
+                        </div>
+                        <div class="answer-item">
+                            <strong>权利人：</strong>
+                            <ul>
+                                <li>开发者个人</li>
+                                <li>软件公司</li>
+                                <li>团队/机构</li>
+                                <li>委托开发的委托人</li>
+                            </ul>
+                        </div>
+                        <div class="answer-item">
+                            <strong>权利确认：</strong>
+                            需要明确版权所有权和责任分工
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- WHEN -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="q-letter">W</div>
+                        <div class="q-title">WHEN - 何时？</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="answer-item">
+                            <strong>核心问题：</strong>
+                            何时进行著作权登记？何时发布上线？
+                        </div>
+                        <div class="answer-item">
+                            <strong>登记时机：</strong>
+                            <ul>
+                                <li>源代码完成即可登记</li>
+                                <li>产品发布前登记更安全</li>
+                                <li>1-3个月快速完成登记</li>
+                            </ul>
+                        </div>
+                        <div class="answer-item">
+                            <strong>自动产生：</strong>
+                            创作完成时自动产生，登记只是强化证明
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- WHERE -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="q-letter">W</div>
+                        <div class="q-title">WHERE - 何地？</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="answer-item">
+                            <strong>核心问题：</strong>
+                            在哪些地区进行登记和保护？
+                        </div>
+                        <div class="answer-item">
+                            <strong>登记地：</strong>
+                            <ul>
+                                <li>中国 - 中国版权保护中心</li>
+                                <li>国际 - 大多数国家互认</li>
+                                <li>优先 - 国内登记后国际受保护</li>
+                            </ul>
+                        </div>
+                        <div class="answer-item">
+                            <strong>市场应用：</strong>
+                            软件销售、部署的地理范围
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- HOW -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="q-letter">H</div>
+                        <div class="q-title">HOW - 怎样做？</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="answer-item">
+                            <strong>核心问题：</strong>
+                            如何申请和获得软件著作权登记？
+                        </div>
+                        <div class="answer-item">
+                            <strong>登记流程：</strong>
+                            <ul>
+                                <li>准备材料 - 源代码、说明文档</li>
+                                <li>递交申请 - 网上或纸质申请</li>
+                                <li>形式审查 - 1-3个月</li>
+                                <li>颁发证书 - 获得登记证</li>
+                            </ul>
+                        </div>
+                        <div class="answer-item">
+                            <strong>保护手段：</strong>
+                            诉讼维权、侵权取证、行政投诉
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- HOW MUCH -->
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="q-letter">H</div>
+                        <div class="q-title">HOW MUCH - 多少钱？</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="answer-item">
+                            <strong>核心问题：</strong>
+                            申请软件著作权的成本是多少？
+                        </div>
+                        <div class="answer-item">
+                            <strong>成本构成：</strong>
+                            <ul>
+                                <li>登记费 - 250元</li>
+                                <li>代理费 - ¥300-1000</li>
+                                <li>无年费 - 自动保护50年</li>
+                            </ul>
+                        </div>
+                        <div class="answer-item">
+                            <strong>商业价值：</strong>
+                            软件转让、授权许可、诉讼赔偿的收益
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 详细分析表 -->
+            <div class="detail-section">
+                <h3>📊 5W2H 详细分析表</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">维度</th>
+                            <th style="width: 18%;">核心问题</th>
+                            <th style="width: 32%;">具体分析要点</th>
+                            <th style="width: 20%;">输出成果</th>
+                            <th style="width: 20%;">关键文件</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>WHAT<br/>是什么</strong></td>
+                            <td>软件的本质与技术方案</td>
+                            <td>
+                                • 软件功能定义<br/>
+                                • 源代码语言和规模<br/>
+                                • 相关文档清单<br/>
+                                • 创新特色分析
+                            </td>
+                            <td>软件功能说明</td>
+                            <td>技术文档</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td><strong>WHY<br/>为什么</strong></td>
+                            <td>市场需求与保护价值</td>
+                            <td>
+                                • 应用场景分析<br/>
+                                • 用户需求定位<br/>
+                                • 竞争对手分析<br/>
+                                • 商业化前景
+                            </td>
+                            <td>市场分析报告</td>
+                            <td>商业计划书</td>
+                        </tr>
+                        <tr>
+                            <td><strong>WHO<br/>谁来做</strong></td>
+                            <td>开发者与权利所有者</td>
+                            <td>
+                                • 开发人员身份<br/>
+                                • 权利所有权确认<br/>
+                                • 职务作品判定<br/>
+                                • 团队角色分工
+                            </td>
+                            <td>权属确认文件</td>
+                            <td>委托书、证明文件</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td><strong>WHEN<br/>何时</strong></td>
+                            <td>登记时机与发布计划</td>
+                            <td>
+                                • 源代码完成日期<br/>
+                                • 产品发布时间<br/>
+                                • 登记申请时机<br/>
+                                • 版本更新计划
+                            </td>
+                            <td>时间规划表</td>
+                            <td>项目进度表</td>
+                        </tr>
+                        <tr>
+                            <td><strong>WHERE<br/>何地</strong></td>
+                            <td>登记地和应用市场</td>
+                            <td>
+                                • 国内登记计划<br/>
+                                • 国际保护覆盖<br/>
+                                • 软件部署地域<br/>
+                                • 用户分布区域
+                            </td>
+                            <td>地域保护方案</td>
+                            <td>市场分布图</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td><strong>HOW<br/>怎样做</strong></td>
+                            <td>登记方法与应用策略</td>
+                            <td>
+                                • 材料准备清单<br/>
+                                • 申请流程规划<br/>
+                                • 审查应对方案<br/>
+                                • 维权保护策略
+                            </td>
+                            <td>登记方案</td>
+                            <td>登记申请表、源代码清单</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HOW MUCH<br/>多少钱</strong></td>
+                            <td>成本与收益评估</td>
+                            <td>
+                                • 登记成本计算<br/>
+                                • 代理费预算<br/>
+                                • 预期商业收益<br/>
+                                • ROI分析评估
+                            </td>
+                            <td>成本效益报告</td>
+                            <td>财务预测表</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 登记流程 -->
+            <div class="detail-section">
+                <h3>🔄 软件著作权登记流程（与5W2H对应）</h3>
+                
+                <div class="flow-chart">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>软件评估 (WHAT + WHY)</h4>
+                            <p>明确软件的功能定义和市场价值。确定是否值得进行著作权登记</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>权利确认 (WHO)</h4>
+                            <p>确认软件开发者身份和权利所有权。判定是否为职务作品</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>登记策略 (WHEN + WHERE)</h4>
+                            <p>制定登记时间表和地域保护计划。规划国内和国际登记</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>材料准备 (HOW)</h4>
+                            <p>准备源代码、说明文档、权属证明等登记所需材料</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>提交申请 (HOW)</h4>
+                            <p>向中国版权保护中心递交登记申请，获得受理通知书</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>形式审查 (HOW)</h4>
+                            <p>版权中心进行形式审查，一般1-3个月完成。可能需要补正材料</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <h4>颁发证书</h4>
+                            <p>审查通过后颁发软件著作权登记证书，获得法律保护</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">8</div>
+                        <div class="step-content">
+                            <h4>商业运用 (HOW MUCH)</h4>
+                            <p>利用著作权登记进行融资、转让、许可授权等商业活动</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 软件著作权vs发明专利 -->
+            <div class="detail-section">
+                <h3>⚖️ 软件著作权 vs 发明专利</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">对比维度</th>
+                            <th style="width: 40%;">软件著作权</th>
+                            <th style="width: 40%;">发明专利</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>保护对象</strong></td>
+                            <td>代码表现形式、文档</td>
+                            <td>算法思想、技术方案</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td><strong>申请难度</strong></td>
+                            <td>🟢 简单（形式审查）</td>
+                            <td>🔴 困难（实质审查）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>审查周期</strong></td>
+                            <td>1-3个月</td>
+                            <td>2-4年</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td><strong>保护期限</strong></td>
+                            <td>50年（最长）</td>
+                            <td>20年</td>
+                        </tr>
+                        <tr>
+                            <td><strong>费用成本</strong></td>
+                            <td>¥300-1000</td>
+                            <td>¥5000-20000</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td><strong>年费维护</strong></td>
+                            <td>无年费</td>
+                            <td>需年费（递增）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>侵权举证</strong></td>
+                            <td>需代码比对</td>
+                            <td>相对容易</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td><strong>规避难度</strong></td>
+                            <td>容易（修改代码）</td>
+                            <td>困难（原理保护）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>适用场景</strong></td>
+                            <td>应用软件、系统软件、程序</td>
+                            <td>算法创新、技术方案</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td><strong>最佳方案</strong></td>
+                            <td colspan="2">🎯 结合使用：软著保护表现形式，专利保护算法思想</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 关键决策点 -->
+            <div class="detail-section">
+                <h3>🎯 5W2H 关键决策点</h3>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <h4>✅ WHAT - 代码完整</h4>
+                        <p>源代码是否齐全可运行？文档是否完整？清单描述是否准确？</p>
+                    </div>
+                    
+                    <div class="comparison-item">
+                        <h4>✅ WHY - 价值确认</h4>
+                        <p>软件功能是否新颖？市场需求是否存在？商业价值是否明确？</p>
+                    </div>
+                    
+                    <div class="comparison-item">
+                        <h4>✅ WHO - 权利清晰</h4>
+                        <p>所有权是否明确？开发人员身份是否确认？是否存在权属纠纷？</p>
+                    </div>
+                    
+                    <div class="comparison-item">
+                        <h4>✅ WHEN - 时机恰当</h4>
+                        <p>源代码是否已完成？产品是否已定版？是否可以立即登记？</p>
+                    </div>
+                    
+                    <div class="comparison-item">
+                        <h4>✅ WHERE - 地域保护</h4>
+                        <p>国内市场是否充分保护？是否需要国际保护？成本是否可控？</p>
+                    </div>
+                    
+                    <div class="comparison-item">
+                        <h4>✅ HOW - 方案可行</h4>
+                        <p>申请材料是否齐备？流程是否清晰？后续维权策略是否完善？</p>
+                    </div>
+                    
+                    <div class="comparison-item">
+                        <h4>✅ HOW MUCH - 成本合理</h4>
+                        <p>登记成本是否可接受？预期商业收益是否明显？ROI是否值得？</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 实际案例 -->
+            <div class="detail-section">
+                <h3>📚 5W2H 应用案例</h3>
+                
+                <div style="margin-bottom: 30px;">
+                    <h4 style="color: #00c853; margin-bottom: 15px;">🔹 案例1：手机应用软件登记</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold; width: 12%;">WHAT</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">社交通讯App，包含IM、视频、支付等模块</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">WHY</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">满足用户即时通讯需求，融资融资后需要知识产权保护</td>
+                        </tr>
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">WHO</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">科技创业公司，多人开发团队</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">WHEN</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">App上线后立即申请登记，1个月内完成</td>
+                        </tr>
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">WHERE</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">中国版权保护中心登记，国内主要市场</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">HOW</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">提交源代码、功能说明、技术文档等申请材料</td>
+                        </tr>
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">HOW MUCH</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">登记费¥250+代理费¥500=¥750，用于融资加分</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div>
+                    <h4 style="color: #00c853; margin-bottom: 15px;">🔹 案例2：企业管理系统登记</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold; width: 12%;">WHAT</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">ERP管理系统，包含财务、人事、供应链模块</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">WHY</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">为企业客户提供管理工具，需要知识产权保护以防止被复制</td>
+                        </tr>
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">WHO</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">企业软件公司，系统由内部研发团队开发</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">WHEN</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">系统版本定版后登记，每年更新版本重新登记</td>
+                        </tr>
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">WHERE</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">中国版权保护中心，国内B2B市场应用</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">HOW</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">建立完整的代码清单和技术文档，规范申请流程</td>
+                        </tr>
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">HOW MUCH</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">多版本批量登记，每版¥750，支持政府补助申请</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- 最佳实践 -->
+            <div class="detail-section">
+                <h3>⭐ 5W2H 应用最佳实践</h3>
+                
+                <div class="success-box">
+                    <strong>✅ 成功策略：</strong>
+                    <ul>
+                        <li>尽早规划登记 - 产品完成即刻考虑著作权保护</li>
+                        <li>建立完整文档 - 源代码、说明书、功能清单要完善</li>
+                        <li>确保权属清晰 - 明确所有权、避免纠纷</li>
+                        <li>多版本保护 - 重大更新时重新登记新版本</li>
+                        <li>与专利结合 - 算法用专利保护，代码用著作权保护</li>
+                        <li>申报政府补助 - 利用著作权登记证申报高新技术企业等补助</li>
+                        <li>侵权监测 - 定期检测市场上的侵权情况</li>
+                    </ul>
+                </div>
+                
+                <div class="challenge-box">
+                    <strong>⚠️ 常见误区：</strong>
+                    <ul>
+                        <li>只保护代码表现形式，忽视算法思想保护（应配合专利）</li>
+                        <li>权利所有权不清，导致权利纠纷无法解决</li>
+                        <li>代码不完整或文档不清，申请被驳回</li>
+                        <li>忽视版本管理，新版本不登记导致保护断层</li>
+                        <li>认为登记后就完全安全，忽视监测和维权</li>
+                        <li>成本太低而选择不登记，风险大于收益</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <strong>ℹ️ 建议流程：</strong>
+                    <ul>
+                        <li>第1步：软件源代码完成后整理准备登记材料</li>
+                        <li>第2步：确认权利所有权和开发团队身份</li>
+                        <li>第3步：准备功能说明书、技术文档、源代码清单</li>
+                        <li>第4步：向中国版权保护中心提交登记申请</li>
+                        <li>第5步：1-3个月内完成审查，获得登记证书</li>
+                        <li>第6步：保存登记证书，用于融资、转让、诉讼</li>
+                        <li>第7步：定期监测侵权情况，必要时启动法律程序</li>
+                        <li>第8步：新版本发布时重复登记流程</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 登记材料清单 -->
+            <div class="detail-section">
+                <h3>📋 软件著作权登记必需材料</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">材料类别</th>
+                            <th style="width: 30%;">具体要求</th>
+                            <th style="width: 25%;">格式规范</th>
+                            <th style="width: 25%;">备注说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>源代码</strong></td>
+                            <td>程序源代码文本（必须可运行）</td>
+                            <td>前3000行+后3000行</td>
+                            <td>或全部源代码（不超过100页）</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td><strong>功能说明</strong></td>
+                            <td>软件功能、应用场景、主要特点</td>
+                            <td>中文书面文档</td>
+                            <td>200字以上，清晰准确</td>
+                        </tr>
+                        <tr>
+                            <td><strong>技术文档</strong></td>
+                            <td>技术说明书、设计文档</td>
+                            <td>PDF或Word</td>
+                            <td>包含架构、模块、接口说明</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td><strong>使用手册</strong></td>
+                            <td>用户操作手册或安装说明</td>
+                            <td>中文书面文档</td>
+                            <td>可选但建议提供</td>
+                        </tr>
+                        <tr>
+                            <td><strong>权属文件</strong></td>
+                            <td>开发人员身份证复印件</td>
+                            <td>清晰的黑白或彩色复印件</td>
+                            <td>申请人为企业时需营业执照</td>
+                        </tr>
+                        <tr style="background: #f9f9f9;">
+                            <td><strong>权利转移</strong></td>
+                            <td>若涉及转让需提供转让协议</td>
+                            <td>有效的法律文件</td>
+                            <td>需公证或见证</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <footer>
+            <p class="footer-text">📄 软件著作权 5W2H 分析框架 | 2025年</p>
+            <p class="footer-text">本文档提供了系统化的软件著作权分析方法。具体实施时应根据实际情况咨询专业的知识产权律师和版权顾问。</p>
+        </footer>
+    </div>
+</body>
+</html>
