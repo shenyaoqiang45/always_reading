@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taichi 调研报告 - DSL + 编译器 + 运行时系统</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .content { padding: 40px; }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .section h3 {
+            color: #764ba2;
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .section p {
+            color: #333;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .subsection {
+            background: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+        ul, ol {
+            margin: 15px 0 15px 30px;
+            color: #333;
+        }
+        li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .architecture {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .arch-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .arch-box h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .pipeline {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+        .pipeline-step {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+        }
+        .pipeline-step::after {
+            content: '↓';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #667eea;
+        }
+        .pipeline-step:last-child::after {
+            content: '';
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+        .comparison-table thead {
+            background: #667eea;
+            color: white;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .comparison-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .comparison-table tbody tr:hover {
+            background: #f0f0f0;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .feature-item {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        .feature-item strong {
+            color: #667eea;
+        }
+        .code-block {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .toc h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .toc ol {
+            margin-left: 20px;
+        }
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Taichi 调研报告</h1>
+            <p>DSL（领域专用语言）+ 编译器 + 运行时系统的深度分析</p>
+        </header>
+
+        <div class="content">
+            <!-- 目录 -->
+            <div class="toc">
+                <h3>📋 目录</h3>
+                <ol>
+                    <li><a href="#overview">执行摘要</a></li>
+                    <li><a href="#what-is-taichi">Taichi是什么</a></li>
+                    <li><a href="#architecture">核心架构</a></li>
+                    <li><a href="#dsl">DSL设计</a></li>
+                    <li><a href="#compiler">编译器系统</a></li>
+                    <li><a href="#runtime">运行时系统</a></li>
+                    <li><a href="#pipeline">编译管道</a></li>
+                    <li><a href="#comparison">与其他框架对比</a></li>
+                    <li><a href="#applications">应用场景</a></li>
+                    <li><a href="#advantages">优势与不足</a></li>
+                    <li><a href="#future">发展方向</a></li>
+                </ol>
+            </div>
+
+            <!-- 执行摘要 -->
+            <section class="section" id="overview">
+                <h2>📌 执行摘要</h2>
+                <p>Taichi 是由麻省理工学院(MIT)开发的开源编程语言和编译基础设施，专门为物理模拟、图形学计算和科学计算而设计。它通过提供高级的领域专用语言(DSL)、优化的编译器和高效的运行时系统，使开发者能够用简洁的Python代码编写高性能的并行计算程序，自动编译到多种后端(CPU、NVIDIA GPU、AMD GPU、Apple Silicon等)。</p>
+                
+                <div class="highlight">
+                    <strong>核心价值主张：</strong>一次编写，多平台编译运行，性能可与手工优化的CUDA代码媲美
+                </div>
+            </section>
+
+            <!-- Taichi是什么 -->
+            <section class="section" id="what-is-taichi">
+                <h2>🔍 Taichi是什么</h2>
+                
+                <h3>基本定义</h3>
+                <p>Taichi是一个集成了三个关键组件的计算系统：</p>
+                
+                <div class="architecture">
+                    <div class="arch-box">
+                        <h4>DSL(Python-Like)</h4>
+                        <p>高级Python风格的编程语言接口，降低开发难度</p>
+                    </div>
+                    <div class="arch-box">
+                        <h4>编译器(JIT)</h4>
+                        <p>优化的中间表示和代码生成，自动并行化和优化</p>
+                    </div>
+                    <div class="arch-box">
+                        <h4>运行时(Multi-backend)</h4>
+                        <p>统一的运行时接口，支持多种硬件后端执行</p>
+                    </div>
+                </div>
+
+                <h3>设计哲学</h3>
+                <ul>
+                    <li><strong>生产力优先：</strong> 使用简洁的Python语法，降低编程复杂度</li>
+                    <li><strong>性能优先：</strong> 通过JIT编译和自动优化实现高性能</li>
+                    <li><strong>可移植性：</strong> 一份代码支持多个硬件平台</li>
+                    <li><strong>可扩展性：</strong> 模块化设计，易于扩展新的后端和优化</li>
+                </ul>
+            </section>
+
+            <!-- 核心架构 -->
+            <section class="section" id="architecture">
+                <h2>🏗️ 核心架构</h2>
+                
+                <h3>三层架构</h3>
+                <div class="subsection">
+                    <p><strong>第一层 - 用户接口层：</strong> 提供Python-like的DSL API，用户通过装饰器@ti.kernel定义计算核心</p>
+                </div>
+
+                <div class="subsection">
+                    <p><strong>第二层 - 编译优化层：</strong> 包括IR(Intermediate Representation)、IR优化、指令生成等组件</p>
+                </div>
+
+                <div class="subsection">
+                    <p><strong>第三层 - 运行时后端层：</strong> 支持多个后端(LLVM、CUDA、Metal等)，负责内存管理、任务调度、设备通信</p>
+                </div>
+
+                <h3>关键组件</h3>
+                <ol>
+                    <li><strong>Python前端：</strong> AST解析、类型推导、符号表管理</li>
+                    <li><strong>SSA IR：</strong> 中间表示，支持控制流、数据依赖、并行性分析</li>
+                    <li><strong>IR优化：</strong> 死代码消除、常量传播、循环优化、向量化</li>
+                    <li><strong>后端代码生成：</strong> 针对不同硬件的代码生成(LLVM IR、CUDA PTX等)</li>
+                    <li><strong>运行时系统：</strong> 内存管理、GPU调度、同步机制</li>
+                </ol>
+            </section>
+
+            <!-- DSL设计 -->
+            <section class="section" id="dsl">
+                <h2>🎯 DSL设计</h2>
+                
+                <h3>特点</h3>
+                <ul>
+                    <li><strong>Python子集：</strong> 使用熟悉的Python语法，但不支持全部Python特性</li>
+                    <li><strong>静态类型：</strong> 支持类型标注，便于编译优化</li>
+                    <li><strong>数据结构：</strong> 内置SNode（结构化节点）支持稀疏数据结构</li>
+                    <li><strong>并行构造：</strong> 内置并行循环、原子操作、规约操作</li>
+                </ul>
+
+                <h3>核心语法示例</h3>
+                <div class="code-block">
+<span class="keyword">import</span> taichi <span class="keyword">as</span> ti
+
+ti.init(arch=ti.cuda)  <span class="comment"># 初始化，选择后端</span>
+
+<span class="comment"># 定义数据结构</span>
+x = ti.field(dtype=ti.f32, shape=(n, n))
+v = ti.field(dtype=ti.f32, shape=(n, n))
+
+<span class="comment"># 定义计算核心</span>
+@ti.kernel
+<span class="keyword">def</span> compute(dt: ti.f32):
+    <span class="keyword">for</span> i, j <span class="keyword">in</span> x:  <span class="comment"># 自动并行化</span>
+        v[i, j] += dt
+        x[i, j] += v[i, j]
+
+<span class="comment"># 调用核心</span>
+compute(0.01)
+                </div>
+
+                <h3>SNode（稀疏数据结构）</h3>
+                <p>Taichi 引入 SNode 来高效表示和处理稀疏数据：</p>
+                <ul>
+                    <li><strong>Dense：</strong> 密集存储</li>
+                    <li><strong>Sparse：</strong> 稀疏存储（哈希表、八叉树等）</li>
+                    <li><strong>Bit-Packed：</strong> 位压缩存储</li>
+                    <li><strong>Pointer：</strong> 指针存储</li>
+                </ul>
+            </section>
+
+            <!-- 编译器系统 -->
+            <section class="section" id="compiler">
+                <h2>⚙️ 编译器系统</h2>
+                
+                <h3>编译过程</h3>
+                <ol>
+                    <li><strong>Python AST解析：</strong> 解析@ti.kernel装饰的Python函数</li>
+                    <li><strong>类型推导：</strong> 推导变量和表达式的类型</li>
+                    <li><strong>中间表示生成：</strong> 构建SSA IR（Static Single Assignment）</li>
+                    <li><strong>IR优化：</strong> 应用各种编译优化</li>
+                    <li><strong>后端代码生成：</strong> 为目标硬件生成代码</li>
+                    <li><strong>JIT编译：</strong> 在运行时编译，缓存编译结果</li>
+                </ol>
+
+                <h3>主要优化技术</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <strong>循环优化</strong><br/>
+                        循环展开、循环融合、循环平铺
+                    </div>
+                    <div class="feature-item">
+                        <strong>向量化</strong><br/>
+                        自动SIMD向量化
+                    </div>
+                    <div class="feature-item">
+                        <strong>并行化</strong><br/>
+                        自动线程并行、GPU核并行
+                    </div>
+                    <div class="feature-item">
+                        <strong>内存优化</strong><br/>
+                        缓存优化、内存压缩
+                    </div>
+                    <div class="feature-item">
+                        <strong>死代码消除</strong><br/>
+                        移除未使用的代码
+                    </div>
+                    <div class="feature-item">
+                        <strong>常量传播</strong><br/>
+                        编译时计算常量表达式
+                    </div>
+                </div>
+            </section>
+
+            <!-- 运行时系统 -->
+            <section class="section" id="runtime">
+                <h2>🚀 运行时系统</h2>
+                
+                <h3>核心职责</h3>
+                <ul>
+                    <li><strong>内存管理：</strong> 统一的内存分配和释放，支持CPU和GPU内存</li>
+                    <li><strong>设备选择：</strong> 在运行时选择后端(CPU/CUDA/Metal等)</li>
+                    <li><strong>任务调度：</strong> 将计算任务分配到硬件执行单元</li>
+                    <li><strong>同步机制：</strong> 处理CPU-GPU之间的数据同步</li>
+                    <li><strong>性能计数：</strong> 收集性能指标和调试信息</li>
+                </ul>
+
+                <h3>支持的后端</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>后端</th>
+                            <th>平台</th>
+                            <th>特点</th>
+                            <th>成熟度</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>LLVM</td>
+                            <td>CPU (x86, ARM, RISCV)</td>
+                            <td>跨平台CPU计算，广泛支持</td>
+                            <td>★★★★★</td>
+                        </tr>
+                        <tr>
+                            <td>CUDA</td>
+                            <td>NVIDIA GPU</td>
+                            <td>高性能GPU计算</td>
+                            <td>★★★★★</td>
+                        </tr>
+                        <tr>
+                            <td>Metal</td>
+                            <td>Apple Silicon (M系列)</td>
+                            <td>Mac和iOS GPU支持</td>
+                            <td>★★★★</td>
+                        </tr>
+                        <tr>
+                            <td>Vulkan</td>
+                            <td>AMD GPU/通用GPU</td>
+                            <td>跨平台GPU支持</td>
+                            <td>★★★</td>
+                        </tr>
+                        <tr>
+                            <td>OpenGL</td>
+                            <td>跨平台GPU</td>
+                            <td>兼容性强</td>
+                            <td>★★★</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>内存管理模型</h3>
+                <p>Taichi 采用统一的内存管理模型：</p>
+                <ul>
+                    <li><strong>统一访问：</strong> 用户代码无需显式指定数据位置</li>
+                    <li><strong>自动迁移：</strong> 运行时自动在CPU和GPU间迁移数据</li>
+                    <li><strong>缓存一致性：</strong> 确保多个设备间的缓存一致</li>
+                    <li><strong>懒初始化：</strong> 延迟分配内存直到真正使用</li>
+                </ul>
+            </section>
+
+            <!-- 编译管道 -->
+            <section class="section" id="pipeline">
+                <h2>📊 完整编译管道</h2>
+                
+                <p>从Python代码到GPU执行的完整流程：</p>
+
+                <div class="pipeline">
+                    <div class="pipeline-step">
+                        <strong>1. Python Kernel</strong><br/>
+                        @ti.kernel装饰的Python函数
+                    </div>
+                    <div class="pipeline-step">
+                        <strong>2. Python AST解析</strong><br/>
+                        提取AST，构建符号表，类型推导
+                    </div>
+                    <div class="pipeline-step">
+                        <strong>3. Taichi SSA IR</strong><br/>
+                        生成中间表示，包含控制流、数据依赖、SNode信息
+                    </div>
+                    <div class="pipeline-step">
+                        <strong>4. IR优化</strong><br/>
+                        死代码消除、常量传播、循环优化、并行性分析
+                    </div>
+                    <div class="pipeline-step">
+                        <strong>5. 后端代码生成</strong><br/>
+                        根据后端类型生成代码(LLVM IR、CUDA PTX等)
+                    </div>
+                    <div class="pipeline-step">
+                        <strong>6. 后端编译</strong><br/>
+                        后端编译器编译为机器码或GPU指令
+                    </div>
+                    <div class="pipeline-step">
+                        <strong>7. 运行时执行</strong><br/>
+                        运行时调度执行，处理内存、同步等
+                    </div>
+                    <div class="pipeline-step">
+                        <strong>8. 硬件执行</strong><br/>
+                        CPU或GPU执行任务
+                    </div>
+                </div>
+
+                <h3>CUDA编译管道详解</h3>
+                <div class="subsection">
+                    <p><strong>Python Kernel</strong> → <strong>Python AST</strong> → <strong>Taichi IR</strong> → <strong>IR Optimization</strong> → <strong>CUDA PTX Codegen</strong> → <strong>PTX → GPU ISA (SASS)</strong> → <strong>Runtime Dispatch</strong> → <strong>GPU Execution</strong></p>
+                </div>
+            </section>
+
+            <!-- 与其他框架对比 -->
+            <section class="section" id="comparison">
+                <h2>⚖️ 与其他框架对比</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>Taichi</th>
+                            <th>CUDA/HIP</th>
+                            <th>SYCL</th>
+                            <th>OpenMP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>编程语言</td>
+                            <td>Python DSL</td>
+                            <td>C++/CUDA C</td>
+                            <td>C++</td>
+                            <td>C/C++</td>
+                        </tr>
+                        <tr>
+                            <td>学习曲线</td>
+                            <td>低(Python-like)</td>
+                            <td>高(需学习CUDA)</td>
+                            <td>中(C++基础)</td>
+                            <td>中</td>
+                        </tr>
+                        <tr>
+                            <td>性能</td>
+                            <td>高(接近手工优化)</td>
+                            <td>很高(完全控制)</td>
+                            <td>高(编译器优化)</td>
+                            <td>中-高</td>
+                        </tr>
+                        <tr>
+                            <td>跨平台</td>
+                            <td>优秀(自动编译)</td>
+                            <td>有限(NVIDIA专有)</td>
+                            <td>优秀(多厂商)</td>
+                            <td>好(CPU only)</td>
+                        </tr>
+                        <tr>
+                            <td>稀疏数据</td>
+                            <td>一流(SNode)</td>
+                            <td>手工实现</td>
+                            <td>手工实现</td>
+                            <td>无</td>
+                        </tr>
+                        <tr>
+                            <td>自动优化</td>
+                            <td>高度优化</td>
+                            <td>手工优化</td>
+                            <td>编译器优化</td>
+                            <td>编译器优化</td>
+                        </tr>
+                        <tr>
+                            <td>调试</td>
+                            <td>中等(支持print)</td>
+                            <td>困难</td>
+                            <td>中(依赖实现)</td>
+                            <td>中等</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Taichi vs CUDA</h3>
+                <ul>
+                    <li><strong>Taichi：</strong> 高层Python-like语法，编译器自动优化，跨平台支持</li>
+                    <li><strong>CUDA：</strong> 低层细粒度控制，最大化性能，但需要学习CUDA编程</li>
+                </ul>
+
+                <h3>Taichi vs SYCL</h3>
+                <ul>
+                    <li><strong>Taichi：</strong> Python DSL，学习曲线低，更专注物理模拟和科学计算，自动稀疏数据结构支持</li>
+                    <li><strong>SYCL：</strong> C++标准化方案，厂商中立，适合通用并行计算，性能细节控制更细致</li>
+                    <li><strong>共同点：</strong> 都支持跨平台多后端编译，都有编译器自动优化</li>
+                    <li><strong>Taichi优势：</strong> SNode稀疏数据结构、JIT编译、Python友好</li>
+                    <li><strong>SYCL优势：</strong> ISO C++标准、生态成熟、企业支持强</li>
+                </ul>
+            </section>
+
+            <!-- 应用场景 -->
+            <section class="section" id="applications">
+                <h2>🎮 应用场景</h2>
+                
+                <h3>物理模拟</h3>
+                <ul>
+                    <li>流体模拟(水、烟、气体)</li>
+                    <li>刚体动力学</li>
+                    <li>粒子系统</li>
+                    <li>布料模拟</li>
+                    <li>碰撞检测</li>
+                </ul>
+
+                <h3>图形学</h3>
+                <ul>
+                    <li>光线追踪</li>
+                    <li>光栅化渲染</li>
+                    <li>体积渲染</li>
+                    <li>拓扑优化</li>
+                </ul>
+
+                <h3>科学计算</h3>
+                <ul>
+                    <li>有限元分析(FEM)</li>
+                    <li>有限差分法(FDM)</li>
+                    <li>稀疏矩阵运算</li>
+                    <li>数值求解器</li>
+                </ul>
+
+                <h3>机器学习相关</h3>
+                <ul>
+                    <li>神经网络渲染</li>
+                    <li>物理神经网络(Physics-informed Neural Networks)</li>
+                    <li>差分渲染</li>
+                </ul>
+
+                <h3>实际案例</h3>
+                <div class="subsection">
+                    <ul>
+                        <li><strong>MIT Physics Engine：</strong> 使用Taichi实现的物理引擎，支持复杂物理模拟</li>
+                        <li><strong>DiffTaichi：</strong> 可微物理模拟框架，用于逆向问题求解</li>
+                        <li><strong>Taichi 3D：</strong> 完整的3D图形和物理系统</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 优势与不足 -->
+            <section class="section" id="advantages">
+                <h2>✅ 优势与 ⚠️ 不足</h2>
+                
+                <h3>优势</h3>
+                <ul>
+                    <li><strong>易用性：</strong> Python-like语法，学习成本低，快速原型开发</li>
+                    <li><strong>高性能：</strong> JIT编译和自动优化，性能接近手工优化的C++/CUDA</li>
+                    <li><strong>跨平台：</strong> 一份代码支持多种硬件(CPU/CUDA/Metal等)</li>
+                    <li><strong>稀疏数据：</strong> SNode提供优雅的稀疏数据结构支持</li>
+                    <li><strong>自动微分：</strong> 支持自动微分，用于可微编程</li>
+                    <li><strong>开源：</strong> 活跃的开源社区，持续维护和改进</li>
+                </ul>
+
+                <h3>不足</h3>
+                <ul>
+                    <li><strong>语言限制：</strong> 不支持完整Python特性，学习Taichi DSL有一定成本</li>
+                    <li><strong>生态较小：</strong> 与TensorFlow/PyTorch相比，生态和库较少</li>
+                    <li><strong>调试困难：</strong> GPU调试相对困难，print调试能力有限</li>
+                    <li><strong>编译时间：</strong> JIT编译会增加首次调用的延迟</li>
+                    <li><strong>成熟度：</strong> 部分功能和后端仍在完善中</li>
+                    <li><strong>文档：</strong> 文档相对较少，学习资源有限</li>
+                    <li><strong>社区规模：</strong> 用户和贡献者基数较小</li>
+                </ul>
+            </section>
+
+            <!-- 发展方向 -->
+            <section class="section" id="future">
+                <h2>🚀 发展方向</h2>
+                
+                <h3>当前努力方向</h3>
+                <ul>
+                    <li><strong>编译优化：</strong> 进一步提升编译优化能力，追赶手工优化</li>
+                    <li><strong>后端扩展：</strong> 支持更多后端(AMD MI系列、Intel GPU等)</li>
+                    <li><strong>调试工具：</strong> 开发更好的调试和性能分析工具</li>
+                    <li><strong>生态建设：</strong> 积累更多高质量的库和示例</li>
+                    <li><strong>异构计算：</strong> 支持更复杂的CPU-GPU协作模式</li>
+                    <li><strong>可微编程：</strong> 完善自动微分和可微物理模拟</li>
+                </ul>
+
+                <h3>长期愿景</h3>
+                <ul>
+                    <li>成为科学计算和物理模拟领域的标准编程模型</li>
+                    <li>与深度学习框架无缝整合，支持端到端可微系统</li>
+                    <li>在计算机图形学、游戏引擎等领域获得广泛应用</li>
+                    <li>建立完整的高性能计算生态</li>
+                </ul>
+
+                <h3>技术突破</h3>
+                <div class="subsection">
+                    <ul>
+                        <li><strong>Taichi C API：</strong> 提供C接口，支持与其他语言集成</li>
+                        <li><strong>Taichi Compiler Optimization：</strong> 引入更先进的编译优化技术</li>
+                        <li><strong>Graph Neural Networks：</strong> 对图神经网络的更好支持</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 总结 -->
+            <section class="section">
+                <h2>📚 总结</h2>
+                
+                <p>Taichi 是一个精心设计的系统，完美结合了DSL、编译器和运行时的力量：</p>
+                
+                <ul>
+                    <li><strong>DSL层：</strong> 提供友好的Python-like接口，降低编程难度</li>
+                    <li><strong>编译器层：</strong> 通过IR优化和自动并行化，实现高性能</li>
+                    <li><strong>运行时层：</strong> 提供统一的多后端支持，实现跨平台</li>
+                </ul>
+
+                <p>相比CUDA等低层框架，Taichi 大幅降低了编程难度，同时维持可竞争的性能。相比TensorFlow/PyTorch，Taichi 提供了对物理模拟和科学计算更精细的控制。</p>
+
+                <div class="highlight">
+                    <strong>结论：</strong> Taichi 是物理模拟、科学计算和高性能图形学应用的理想选择，特别适合需要跨平台运行和快速原型开发的项目。
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>Taichi 调研报告 | 生成日期：2025年 | 基于Taichi官方文档和源代码分析</p>
+            <p>Taichi 官网: <a href="https://taichi-lang.org" style="color: #667eea;">https://taichi-lang.org</a></p>
+        </footer>
+    </div>
+</body>
+</html>
