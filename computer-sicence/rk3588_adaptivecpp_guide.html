@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RK3588平台 AdaptiveCpp 源码编译指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        h2 {
+            color: #2a5298;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            color: #444;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .code-block code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+        
+        .code-title {
+            background: #1e1e1e;
+            color: #61dafb;
+            padding: 8px 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+            border-radius: 6px 6px 0 0;
+            margin-bottom: -20px;
+            display: inline-block;
+        }
+        
+        .tab-container {
+            margin: 30px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 0;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: #f5f5f5;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .tab:hover {
+            background: #e0e0e0;
+        }
+        
+        .tab.active {
+            background: #2a5298;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 0 8px 8px 8px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .step {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background: #2a5298;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        footer {
+            background: #2d2d2d;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .code-block {
+                padding: 15px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 RK3588 AdaptiveCpp 编译指南</h1>
+            <p>适用于Mali-G610 GPU的SYCL运行时环境搭建</p>
+        </header>
+        
+        <div class="content">
+            <div class="info">
+                <strong>📋 适用平台：</strong>RK3588系列开发板（Orange Pi 5/5+, Rock 5B, 等）<br>
+                <strong>🔧 系统要求：</strong>Ubuntu 20.04/22.04 或 Debian 11/12<br>
+                <strong>💾 内存要求：</strong>至少4GB（推荐8GB以上）
+            </div>
+
+            <h2>📦 系统要求检查</h2>
+            <div class="code-block">
+                <div class="code-title">检查系统信息</div>
+                <code># 检查架构
+uname -m  # 应显示 aarch64
+
+# 检查内存
+free -h
+
+# 检查磁盘空间
+df -h  # 建议至少20GB可用空间</code>
+            </div>
+
+            <h2>🛠️ 编译方案选择</h2>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('tab1')">4GB内存方案</button>
+                    <button class="tab" onclick="showTab('tab2')">8GB+内存方案</button>
+                    <button class="tab" onclick="showTab('tab3')">交叉编译方案</button>
+                </div>
+                
+                <div id="tab1" class="tab-content active">
+                    <h3>适用于4GB内存的RK3588板子</h3>
+                    
+                    <div class="warning">
+                        <strong>⚠️ 注意：</strong>4GB内存需要创建Swap空间，编译时间约3-6小时
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <strong>创建Swap空间</strong>
+                    </div>
+                    <div class="code-block">
+                        <code># 创建8GB Swap文件
+sudo fallocate -l 8G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+# 验证
+free -h
+
+# 永久启用
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab</code>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <strong>安装依赖包</strong>
+                    </div>
+                    <div class="code-block">
+                        <code>sudo apt update
+sudo apt install -y git
+sudo apt install -y cmake
+sudo apt install -y build-essential
+sudo apt install -y ninja-build
+sudo apt install -y libboost-all-dev
+sudo apt install -y python3
+sudo apt install -y python3-pip
+sudo apt install -y clang</code>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <strong>克隆源码</strong>
+                    </div>
+                    <div class="code-block">
+                        <code>git clone --recurse-submodules https://github.com/AdaptiveCpp/AdaptiveCpp.git
+cd AdaptiveCpp</code>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        <strong>配置和编译（使用screen防止断线）</strong>
+                    </div>
+                    <div class="code-block">
+                        <code># 安装screen
+sudo apt install screen
+
+# 启动screen会话
+screen -S compile
+
+# 创建构建目录
+mkdir build && cd build
+
+# 配置
+cmake .. -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/adaptivecpp \
+    -DWITH_OPENCL_BACKEND=ON \
+    -DWITH_LEVEL_ZERO_BACKEND=OFF \
+    -DWITH_CUDA_BACKEND=OFF -DWITH_ROCM_BACKEND=OFF \
+    -DCLANG_EXECUTABLE_PATH=/usr/bin/clang-14 \
+    -DLLVM_DIR=/usr/lib/llvm-14/cmake -GNinja
+
+# 编译（仅使用1个线程）
+nice -n 19 ninja -j1
+
+# 断开screen: Ctrl+A 然后按 D
+# 重新连接: screen -r compile</code>
+                    </div>
+                </div>
+                
+                <div id="tab2" class="tab-content">
+                    <h3>适用于8GB及以上内存</h3>
+                    
+                    <div class="success">
+                        <strong>✅ 优势：</strong>编译速度快，约1-2小时完成
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <strong>安装依赖</strong>
+                    </div>
+                    <div class="code-block">
+                        <code>sudo apt update
+sudo apt install -y git
+sudo apt install -y cmake
+sudo apt install -y build-essential
+sudo apt install -y ninja-build
+sudo apt install -y libboost-all-dev
+sudo apt install -y python3
+sudo apt install -y python3-pip
+sudo apt install -y clang-14
+sudo apt install -y llvm-14
+sudo apt install -y llvm-14-dev
+sudo apt install -y libomp-14-dev
+sudo apt install -y libclang-14-dev
+sudo apt install -y lld-14</code>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <strong>下载和配置</strong>
+                    </div>
+                    <div class="code-block">
+                        <code>git clone --recurse-submodules \
+    https://github.com/AdaptiveCpp/AdaptiveCpp.git
+cd AdaptiveCpp
+mkdir build && cd build
+
+cmake .. -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/adaptivecpp \
+    -DWITH_OPENCL_BACKEND=ON \
+    -DWITH_LEVEL_ZERO_BACKEND=OFF \
+    -DWITH_CUDA_BACKEND=OFF -DWITH_ROCM_BACKEND=OFF \
+    -DCLANG_EXECUTABLE_PATH=/usr/bin/clang-14 \
+    -DLLVM_DIR=/usr/lib/llvm-14/cmake -GNinja</code>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <strong>编译（可用多线程）</strong>
+                    </div>
+                    <div class="code-block">
+                        <code># 使用4个线程编译
+ninja -j4
+
+# 或根据CPU核心数自动选择
+ninja -j$(nproc)</code>
+                    </div>
+                </div>
+                
+                <div id="tab3" class="tab-content">
+                    <h3>在x86_64 PC上交叉编译</h3>
+                    
+                    <div class="info">
+                        <strong>💡 推荐场景：</strong>RK3588内存不足或想快速编译
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <strong>安装交叉编译工具链（在PC上）</strong>
+                    </div>
+                    <div class="code-block">
+                        <code>sudo apt update
+sudo apt install -y gcc-aarch64-linux-gnu
+sudo apt install -y g++-aarch64-linux-gnu
+sudo apt install -y binutils-aarch64-linux-gnu
+sudo apt install -y git
+sudo apt install -y cmake
+sudo apt install -y ninja-build
+sudo apt install -y clang
+sudo apt install -y libboost-all-dev</code>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <strong>配置交叉编译</strong>
+                    </div>
+                    <div class="code-block">
+                        <code>git clone --recurse-submodules \
+    https://github.com/AdaptiveCpp/AdaptiveCpp.git
+cd AdaptiveCpp
+mkdir build-arm64 && cd build-arm64
+
+cmake .. -DCMAKE_SYSTEM_NAME=Linux \
+    -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+    -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
+    -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ \
+    -DCMAKE_FIND_ROOT_PATH=/usr/aarch64-linux-gnu \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/adaptivecpp \
+    -DWITH_OPENCL_BACKEND=ON \
+    -DWITH_CUDA_BACKEND=OFF \
+    -DWITH_ROCM_BACKEND=OFF \
+    -DCLANG_EXECUTABLE_PATH=/usr/bin/clang-14 \
+    -GNinja
+
+ninja -j$(nproc)
+
+# 打包
+DESTDIR=$PWD/install ninja install
+cd install
+tar czf adaptivecpp-rk3588.tar.gz opt/</code>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <strong>传输到RK3588</strong>
+                    </div>
+                    <div class="code-block">
+                        <code># 在PC上
+scp adaptivecpp-rk3588.tar.gz user@rk3588-ip:~/
+
+# 在RK3588上解压
+cd ~
+sudo tar xzf adaptivecpp-rk3588.tar.gz -C /</code>
+                    </div>
+                </div>
+            </div>
+
+            <h2>📥 安装和配置</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>安装编译好的文件</strong>
+            </div>
+            <div class="code-block">
+                <code># 从build目录安装
+cd AdaptiveCpp/build
+sudo ninja install</code>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>配置环境变量</strong>
+            </div>
+            <div class="code-block">
+                <code>echo 'export PATH=/opt/adaptivecpp/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/opt/adaptivecpp/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc</code>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>验证安装</strong>
+            </div>
+            <div class="code-block">
+                <code># 检查版本
+acpp --version
+
+# 查看支持的后端
+acpp --acpp-targets
+
+# 检查OpenCL
+clinfo</code>
+            </div>
+
+            <h2>🎯 Mali GPU配置</h2>
+            
+            <div class="warning">
+                <strong>重要：</strong>RK3588使用Mali-G610 GPU，需要安装OpenCL驱动
+            </div>
+            
+            <div class="code-block">
+                <div class="code-title">安装Mali驱动</div>
+                <code># 检查是否已安装
+ls /usr/lib/aarch64-linux-gnu/libmali*
+
+# 如果没有，根据你的系统安装
+# Armbian/Orange Pi系统:
+sudo apt install mali-g610-firmware
+
+# 或从板卡厂商获取libmali库
+# 通常在 /usr/lib 或 /usr/lib/aarch64-linux-gnu 目录</code>
+            </div>
+
+            <h2>🧪 测试程序</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>创建测试文件</strong>
+            </div>
+            <div class="code-block">
+                <div class="code-title">test.cpp</div>
+                <code>cat > test.cpp << 'EOF'
+#include &lt;sycl/sycl.hpp&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    try {
+        sycl::queue q;
+        std::cout << "运行设备: " 
+                  << q.get_device().get_info&lt;sycl::info::device::name&gt;() 
+                  << std::endl;
+        
+        // 简单的向量加法测试
+        const int N = 1024;
+        std::vector&lt;float&gt; a(N, 1.0f);
+        std::vector&lt;float&gt; b(N, 2.0f);
+        std::vector&lt;float&gt; c(N, 0.0f);
+        
+        {
+            sycl::buffer&lt;float&gt; buf_a(a.data(), sycl::range&lt;1&gt;(N));
+            sycl::buffer&lt;float&gt; buf_b(b.data(), sycl::range&lt;1&gt;(N));
+            sycl::buffer&lt;float&gt; buf_c(c.data(), sycl::range&lt;1&gt;(N));
+            
+            q.submit([&](sycl::handler& h) {
+                auto acc_a = buf_a.get_access&lt;sycl::access::mode::read&gt;(h);
+                auto acc_b = buf_b.get_access&lt;sycl::access::mode::read&gt;(h);
+                auto acc_c = buf_c.get_access&lt;sycl::access::mode::write&gt;(h);
+                
+                h.parallel_for(sycl::range&lt;1&gt;(N), [=](sycl::id&lt;1&gt; i) {
+                    acc_c[i] = acc_a[i] + acc_b[i];
+                });
+            });
+        }
+        
+        std::cout << "测试通过! 结果: " << c[0] << std::endl;
+        
+    } catch (sycl::exception& e) {
+        std::cerr << "SYCL错误: " << e.what() << std::endl;
+        return 1;
+    }
+    
+    return 0;
+}
+EOF</code>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>编译和运行</strong>
+            </div>
+            <div class="code-block">
+                <code># CPU后端测试
+acpp -o test test.cpp --acpp-targets=omp
+./test
+
+# GPU后端测试（需要OpenCL驱动）
+acpp -o test_gpu test.cpp --acpp-targets=opencl
+./test_gpu</code>
+            </div>
+
+            <h2>❓ 常见问题</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>问题</th>
+                        <th>解决方案</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>编译时内存不足</td>
+                        <td>创建Swap空间，使用 <span class="highlight">ninja -j1</span></td>
+                    </tr>
+                    <tr>
+                        <td>OpenCL不可用</td>
+                        <td>安装Mali驱动，检查 <span class="highlight">clinfo</span> 输出</td>
+                    </tr>
+                    <tr>
+                        <td>编译时间太长</td>
+                        <td>考虑使用交叉编译方案</td>
+                    </tr>
+                    <tr>
+                        <td>找不到 acpp 命令</td>
+                        <td>检查环境变量，执行 <span class="highlight">source ~/.bashrc</span></td>
+                    </tr>
+                    <tr>
+                        <td>链接错误</td>
+                        <td>检查 LD_LIBRARY_PATH 是否正确设置</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>📊 性能建议</h2>
+            
+            <div class="info">
+                <h3>编译时间对比</h3>
+                <ul>
+                    <li><strong>4GB内存 + ninja -j1：</strong>3-6小时</li>
+                    <li><strong>8GB内存 + ninja -j4：</strong>1-2小时</li>
+                    <li><strong>PC交叉编译：</strong>30分钟-1小时</li>
+                </ul>
+            </div>
+
+            <h2>🔗 参考资源</h2>
+            
+            <ul>
+                <li><a href="https://github.com/AdaptiveCpp/AdaptiveCpp" target="_blank">AdaptiveCpp GitHub仓库</a></li>
+                <li><a href="https://github.com/AdaptiveCpp/AdaptiveCpp/blob/develop/doc/install.md" target="_blank">官方安装文档</a></li>
+                <li><a href="https://www.khronos.org/opencl/" target="_blank">OpenCL官方网站</a></li>
+                <li><a href="https://www.khronos.org/sycl/" target="_blank">SYCL标准文档</a></li>
+            </ul>
+
+            <div class="success">
+                <strong>🎉 完成！</strong>现在你可以在RK3588平台上使用SYCL进行异构并行编程了！
+            </div>
+        </div>
+        
+        <footer>
+            <p>RK3588 AdaptiveCpp 编译指南 | 最后更新: 2024年12月</p>
+            <p>适用于Orange Pi 5/5+, Rock 5B等RK3588开发板</p>
+        </footer>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // 隐藏所有标签内容
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // 移除所有标签的active状态
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // 显示选中的标签内容
+            document.getElementById(tabId).classList.add('active');
+            
+            // 设置对应按钮为active
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

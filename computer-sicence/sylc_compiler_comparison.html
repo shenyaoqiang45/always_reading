@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SYCL 编译器 / 实现对比总览表（含硬件矩阵） - 已更新（AdaptiveCpp 合并）</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa6bd;--accent:#3b82f6;--table-head:#e6eefc}
+    body{font-family:Inter,Segoe UI,Roboto,system-ui,Arial;background:linear-gradient(180deg,#071023 0%, #071726 100%);color:#E6EEF8;padding:28px}
+    .container{max-width:1100px;margin:0 auto}
+    h1{font-size:20px;margin:0 0 8px}
+    p.lead{color:var(--muted);margin-top:0}
+    .card{background:rgba(255,255,255,0.02);border-radius:12px;padding:18px;margin:18px 0;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    thead th{background:linear-gradient(90deg,#0b1730, #081224);color:var(--table-head);text-align:left;padding:10px;border-bottom:1px solid rgba(255,255,255,0.04)}
+    tbody td{padding:10px;border-bottom:1px dashed rgba(255,255,255,0.03);color:#d7e6ff}
+    .muted{color:var(--muted);font-size:13px}
+    .badge{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(59,130,246,0.12);color:var(--accent);font-weight:600;font-size:13px}
+    .matrix{overflow:auto}
+    @media (max-width:760px){thead th:nth-child(n+4){display:none};tbody td:nth-child(n+4){display:none}}
+    footer{color:var(--muted);font-size:13px;margin-top:8px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SYCL 编译器 / 实现对比总览表（含硬件矩阵）</h1>
+    <p class="lead">本页已更新：hipSYCL / OpenSYCL 的主线项目已合并并以 <strong>AdaptiveCpp</strong> 名义维护。表格反映这一变更，并保留其他实现的对比信息（截止 2025 年底）。</p>
+
+    <div class="card">
+      <h2 style="font-size:16px;margin-bottom:6px">对比总览表</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>实现 / 编译器</th>
+            <th>Windows 支持</th>
+            <th>Linux 支持</th>
+            <th>支持硬件后端</th>
+            <th>标准支持度</th>
+            <th>生态成熟度</th>
+            <th>推荐场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>DPC++ (oneAPI)</strong></td>
+            <td>⭐⭐⭐⭐ 强</td>
+            <td>⭐⭐⭐⭐⭐ 非常强</td>
+            <td>Intel CPU / Intel GPU；部分 NVIDIA / AMD（插件）</td>
+            <td>⭐⭐⭐⭐⭐</td>
+            <td>⭐⭐⭐⭐⭐</td>
+            <td>工业级、商用部署、Intel 平台优化</td>
+          </tr>
+          <tr>
+            <td><strong>AdaptiveCpp (含原 hipSYCL / OpenSYCL)</strong></td>
+            <td>⭐⭐⭐ 中等（Windows 支持逐步增强）</td>
+            <td>⭐⭐⭐⭐⭐ 非常强（社区主力）</td>
+            <td>Intel / AMD / NVIDIA GPU；CPU (OpenMP)；通过 OpenCL/Vulkan 可覆盖 Arm Mali</td>
+            <td>⭐⭐⭐⭐</td>
+            <td>⭐⭐⭐⭐（活跃开发 / 社区驱动）</td>
+            <td>多厂商 GPU、跨平台部署、灵活后端选择（推荐首选）</td>
+          </tr>
+          <tr>
+            <td><strong>ComputeCpp</strong></td>
+            <td>⭐⭐ 中等</td>
+            <td>⭐⭐ 中等</td>
+            <td>CPU / OpenCL GPU</td>
+            <td>⭐⭐（旧标准）</td>
+            <td>⭐⭐ 已减弱</td>
+            <td>遗留项目支持</td>
+          </tr>
+          <tr>
+            <td><strong>triSYCL</strong></td>
+            <td>⭐⭐ 测试为主</td>
+            <td>⭐⭐ 测试为主</td>
+            <td>部分 CPU / 研究平台</td>
+            <td>⭐⭐⭐（学术）</td>
+            <td>⭐⭐ 小众</td>
+            <td>研究 / 原型验证</td>
+          </tr>
+          <tr>
+            <td><strong>neoSYCL</strong></td>
+            <td>❓ 依硬件而异</td>
+            <td>⭐⭐ 有限</td>
+            <td>特定加速器 / 定制硬件</td>
+            <td>⭐⭐</td>
+            <td>⭐⭐</td>
+            <td>特定硬件定制适配</td>
+          </tr>
+          <tr>
+            <td><strong>SimSYCL</strong></td>
+            <td>⭐⭐⭐</td>
+            <td>⭐⭐⭐</td>
+            <td>CPU 模拟（用于功能测试）</td>
+            <td>⭐⭐⭐⭐</td>
+            <td>⭐⭐</td>
+            <td>正确性模拟 / 学习</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="muted">注：AdaptiveCpp 为 hipSYCL / OpenSYCL 的合并/重命名主线；星级与成熟度为相对评估，基于 2025 年公开资料与社区活跃度。</p>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size:16px;margin-bottom:6px">支持硬件矩阵（汇总视图）</h2>
+      <div class="matrix">
+        <table>
+          <thead>
+            <tr>
+              <th>实现</th>
+              <th>Intel CPU</th>
+              <th>Intel GPU</th>
+              <th>NVIDIA GPU</th>
+              <th>AMD GPU</th>
+              <th>FPGA</th>
+              <th>Arm Mali</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>DPC++</strong></td>
+              <td>✓✓✓</td>
+              <td>✓✓✓</td>
+              <td>插件（有限）</td>
+              <td>插件（有限）</td>
+              <td>✓✓✓（Intel FPGA / oneAPI）</td>
+              <td>⭐（理论通过 OpenCL，但不推荐）</td>
+            </tr>
+            <tr>
+              <td><strong>AdaptiveCpp</strong></td>
+              <td>✓✓✓</td>
+              <td>✓✓✓</td>
+              <td>✓✓✓</td>
+              <td>✓✓✓</td>
+              <td>在路上</td>
+              <td>⭐⭐（通过 OpenCL / Vulkan 路线；Linux 上有案例）</td>
+            </tr>
+            <tr>
+              <td><strong>ComputeCpp</strong></td>
+              <td>✓✓</td>
+              <td>✓（OpenCL）</td>
+              <td>有限</td>
+              <td>有限</td>
+              <td>可行</td>
+              <td>⭐⭐⭐（OpenCL 后端，常见友好）</td>
+            </tr>
+            <tr>
+              <td><strong>triSYCL</strong></td>
+              <td>✓</td>
+              <td>部分</td>
+              <td>✗</td>
+              <td>✗</td>
+              <td>研究中</td>
+              <td>⭐（学术实验）</td>
+            </tr>
+            <tr>
+              <td><strong>neoSYCL</strong></td>
+              <td>有限</td>
+              <td>有限</td>
+              <td>限定环境</td>
+              <td>限定环境</td>
+              <td>特定支持</td>
+              <td>❓（视硬件而定）</td>
+            </tr>
+            <tr>
+              <td><strong>SimSYCL</strong></td>
+              <td>CPU 模拟</td>
+              <td>CPU 模拟</td>
+              <td>CPU 模拟</td>
+              <td>CPU 模拟</td>
+              <td>✗</td>
+              <td>✗</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">提示：Arm Mali 的支持受驱动（OpenCL / Vulkan）影响很大；以 Linux + AArch64 的 open‑source 驱动（例如 Panfrost）为最佳实验平台。</p>
+    </div>
+
+    <footer>如果你需要，我可以把这个 HTML 导出为 .html 文件供你下载，或把表格转换为 Markdown/CSV/Excel 格式。</footer>
+  </div>
+</body>
+</html>
