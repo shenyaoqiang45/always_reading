@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>RK3588 Mali GPU 上 USM 不可用分析</title>
+<style>
+  body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; background: #f9f9f9; color: #333; }
+  h1 { color: #0055aa; }
+  h2 { color: #0077cc; }
+  ul { margin-bottom: 20px; }
+  li { margin-bottom: 10px; }
+  .note { color: #aa0000; font-weight: bold; }
+  .code { background: #eee; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+</style>
+</head>
+<body>
+<h1>RK3588 + Mali GPU 上 USM 不可用分析</h1>
+
+<h2>1. 系统层次关系</h2>
+<ul>
+  <li><strong>内核驱动（Kernel Driver）</strong>：<code>mali.ko</code>，管理硬件资源、GPU 内存和上下文，已成功加载。</li>
+  <li><strong>Vendor Driver（厂商驱动 / OpenCL Runtime）</strong>：ARM 提供的 Mali OpenCL runtime，负责将 OpenCL kernel 调度到 GPU。</li>
+  <li><strong>ICD Loader / libOpenCL.so</strong>：统一接口库，应用程序（SYCL / AdaptiveCpp）通过它调用 vendor driver。</li>
+  <li><strong>应用层（SYCL / AdaptiveCpp）</strong>：调用 USM 或 buffer 接口进行 GPU 计算。</li>
+</ul>
+
+<h2>2. USM 不可用的原因</h2>
+<ul>
+  <li><span class="note">内核驱动限制</span>：虽然 <code>mali.ko</code> 加载成功，但不支持 USM 所需的内存管理特性（如 unified memory、large page allocation、memory group manager）。</li>
+  <li><span class="note">Vendor driver 限制</span>：Mali OpenCL runtime 对 ARM Mali GPU（尤其是 Valhall 架构 G610）尚未实现完整 USM 支持，只能使用 buffer + accessor。</li>
+  <li><span class="note">AdaptiveCpp / SYCL 依赖</span>：USM 功能要求 OpenCL runtime 支持统一内存（Shared / Host / Device），当前 runtime 不支持，因此 <code>malloc_shared</code> 调用会失败。</li>
+  <li><span class="note">硬件特性</span>：部分嵌入式 GPU（如 Mali G610）受限于内存架构和驱动设计，不提供全功能统一共享内存。</li>
+</ul>
+
+<h2>3. 结论</h2>
+<ul>
+  <li>在 RK3588 + Mali G610 平台上，GPU 驱动和 OpenCL runtime 已加载，可用 buffer + accessor 进行 SYCL / AdaptiveCpp 编程。</li>
+  <li>USM（<code>malloc_shared</code> / <code>malloc_device</code> 等）不可用，因为 vendor driver 和内核驱动都不支持该特性。</li>
+  <li>解决办法：
+    <ul>
+      <li>使用 buffer + accessor 替代 USM</li>
+      <li>或换用支持完整 USM 的 GPU（如 NVIDIA / AMD / Intel）</li>
+    </ul>
+  </li>
+</ul>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>OpenCL 运行时与版本关系分析</title>
+<style>
+  body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; background: #f9f9f9; color: #333; }
+  h1 { color: #0055aa; }
+  h2 { color: #0077cc; }
+  ul { margin-bottom: 20px; }
+  li { margin-bottom: 10px; }
+  .note { color: #aa0000; font-weight: bold; }
+  .code { background: #eee; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  th { background-color: #eee; }
+</style>
+</head>
+<body>
+<h1>OpenCL 运行时与版本关系分析</h1>
+
+<h2>1. OpenCL 版本定义</h2>
+<ul>
+  <li>OpenCL 版本（如 1.2、2.0、2.2、3.0）定义了 API、内存模型和功能特性。</li>
+  <li>不同版本提供的功能示例：
+    <ul>
+      <li>OpenCL 1.2：基础 kernel、buffer/accessor、基本同步</li>
+      <li>OpenCL 2.0：引入 Unified Shared Memory (USM)、SVM、动态并行、队列内核</li>
+      <li>OpenCL 2.1 / 2.2：SPIR-V 编译、内核调度改进</li>
+      <li>OpenCL 3.0：统一模型，可选功能模块，向下兼容</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>2. OpenCL 运行时作用</h2>
+<ul>
+  <li>OpenCL 运行时（Runtime）是厂商提供的 API 实现 + 硬件接口。</li>
+  <li>主要功能：
+    <ul>
+      <li>提供 OpenCL API 给应用程序（SYCL / AdaptiveCpp / PyOpenCL）</li>
+      <li>将 kernel 编译为 GPU 可执行指令</li>
+      <li>管理内存（包括 Unified Memory / USM）、同步、队列调度</li>
+    </ul>
+  </li>
+  <li>每个运行时只支持特定 OpenCL 版本，因为底层驱动和硬件功能必须匹配版本特性。</li>
+</ul>
+
+<h2>3. 版本和功能关系示例</h2>
+<table>
+  <tr>
+    <th>OpenCL 版本</th>
+    <th>典型功能</th>
+    <th>USM 支持</th>
+  </tr>
+  <tr>
+    <td>1.2</td>
+    <td>buffer/accessor, kernel launch, events</td>
+    <td>❌</td>
+  </tr>
+  <tr>
+    <td>2.0</td>
+    <td>SVM (Shared Virtual Memory), kernel enqueue, atomics</td>
+    <td>✅</td>
+  </tr>
+  <tr>
+    <td>2.1 / 2.2</td>
+    <td>SPIR-V, device-side enqueue, pipe</td>
+    <td>⚠️ 部分</td>
+  </tr>
+  <tr>
+    <td>3.0</td>
+    <td>可选特性模块，向下兼容</td>
+    <td>✅/⚠️ 取决厂商 runtime</td>
+  </tr>
+</table>
+
+<h2>4. RK3588 + Mali GPU 情况</h2>
+<ul>
+  <li>Mali 官方 OpenCL runtime 通常支持 OpenCL 1.2 / 部分 2.0 特性</li>
+  <li>USM（Unified Shared Memory）不可用，因为 runtime 不支持 OpenCL 2.0 的 SVM 特性</li>
+  <li>Mesa + Rusticl 可以部分模拟 USM，但性能和完整性受底层 GPU 驱动限制</li>
+</ul>
+
+<h2>5. 总结</h2>
+<ul>
+  <li>OpenCL runtime 决定了可用的 OpenCL 版本和功能</li>
+  <li>应用层调用的 OpenCL / SYCL API 必须在 runtime 支持范围内</li>
+  <li>USM 功能强烈依赖 runtime 支持 OpenCL 2.0+，否则不可用</li>
+</ul>
+</body>
+</html>
