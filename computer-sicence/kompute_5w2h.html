@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kompute 5W2H 深度分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .content { padding: 40px; }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .section h3 {
+            color: #764ba2;
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        .section p {
+            color: #333;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .w5h2-box {
+            background: #f3f0ff;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .w5h2-item {
+            margin-bottom: 20px;
+        }
+        .w5h2-question {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .w5h2-answer {
+            color: #333;
+            line-height: 1.6;
+            padding-left: 20px;
+            border-left: 3px solid #764ba2;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+        .comparison-table thead {
+            background: #667eea;
+            color: white;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .comparison-table tbody tr:nth-child(even) {
+            background: #f3f0ff;
+        }
+        .comparison-table tbody tr:hover {
+            background: #e6e0ff;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .feature-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .feature-card p {
+            color: #666;
+            font-size: 0.95em;
+            text-align: justify;
+        }
+        ul, ol {
+            margin: 15px 0 15px 30px;
+            color: #333;
+        }
+        li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .code-block {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        .keyword { color: #ff79c6; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        footer {
+            background: #f3f0ff;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #667eea;
+        }
+        .toc {
+            background: #f3f0ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .toc h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .toc ol {
+            margin-left: 20px;
+        }
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Kompute 5W2H 深度分析</h1>
+            <p>轻量级GPU计算框架的设计与应用</p>
+        </header>
+
+        <div class="content">
+            <!-- 目录 -->
+            <div class="toc">
+                <h3>📋 目录</h3>
+                <ol>
+                    <li><a href="#overview">概述</a></li>
+                    <li><a href="#5w2h">5W2H 详细分析</a></li>
+                    <li><a href="#architecture">核心架构</a></li>
+                    <li><a href="#features">主要特性</a></li>
+                    <li><a href="#usage">使用示例</a></li>
+                    <li><a href="#comparison">与竞品对比</a></li>
+                    <li><a href="#future">发展展望</a></li>
+                </ol>
+            </div>
+
+            <!-- 概述 -->
+            <section class="section" id="overview">
+                <h2>📌 概述</h2>
+                <p>Kompute是一个轻量级的、跨平台的GPU计算框架，提供了简洁的Python和C++ API，用于快速开发和部署GPU加速应用。它通过Vulkan计算着色器作为后端，提供了一种简化的方式来访问GPU计算能力，无需深入学习复杂的Vulkan API或CUDA编程。Kompute适合于需要快速原型设计、教学、以及轻量级GPU计算需求的场景。</p>
+                
+                <div class="highlight">
+                    <strong>核心理念：</strong> 轻量级、易用、跨平台、基于Vulkan的GPU计算框架，使非图形应用能够快速利用GPU计算能力
+                </div>
+            </section>
+
+            <!-- 5W2H 分析 -->
+            <section class="section" id="5w2h">
+                <h2>🎯 5W2H 详细分析</h2>
+
+                <div class="w5h2-box">
+                    <div class="w5h2-item">
+                        <div class="w5h2-question">❓ WHAT - Kompute是什么？</div>
+                        <div class="w5h2-answer">
+                            <p><strong>定义：</strong> Kompute是一个开源的、轻量级GPU计算框架，提供简洁的高层API抽象，基于Vulkan计算着色器实现跨平台GPU计算。</p>
+                            <p><strong>核心特点：</strong></p>
+                            <ul>
+                                <li><strong>轻量级设计：</strong> 代码体积小，依赖少，易于集成</li>
+                                <li><strong>跨平台支持：</strong> Windows、Linux、macOS、Android等多个平台</li>
+                                <li><strong>多语言绑定：</strong> 原生C++，提供Python、Rust等语言绑定</li>
+                                <li><strong>Vulkan后端：</strong> 基于Vulkan计算着色器，而非传统的图形管线</li>
+                                <li><strong>易用API：</strong> 简化的内存管理、计算提交和同步机制</li>
+                                <li><strong>开源项目：</strong> Apache 2.0许可证，活跃的社区维护</li>
+                            </ul>
+                            <p><strong>核心组件：</strong></p>
+                            <ul>
+                                <li><strong>Kompute Core：</strong> 核心运行时，管理GPU资源和计算执行</li>
+                                <li><strong>着色器编译：</strong> 支持GLSL编译为SPIR-V字节码</li>
+                                <li><strong>内存管理：</strong> 统一的主机-设备内存管理接口</li>
+                                <li><strong>同步机制：</strong> 自动化的计算依赖和内存同步</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="w5h2-item">
+                        <div class="w5h2-question">🎯 WHY - 为什么需要Kompute？</div>
+                        <div class="w5h2-answer">
+                            <p><strong>问题背景：</strong></p>
+                            <ul>
+                                <li><strong>Vulkan学习曲线陡峭：</strong> Vulkan API复杂，需要大量的初始化和资源管理代码</li>
+                                <li><strong>CUDA局限性：</strong> 仅支持NVIDIA硬件，不具备跨平台通用性</li>
+                                <li><strong>计算框架过重：</strong> TensorFlow、PyTorch等框架对于简单计算任务过于庞大</li>
+                                <li><strong>移动平台GPU计算：</strong> Android等平台缺乏便捷的GPU计算框架</li>
+                                <li><strong>教学和原型设计：</strong> 需要简单但功能完整的GPU编程接口</li>
+                            </ul>
+                            <p><strong>核心价值：</strong></p>
+                            <ul>
+                                <li>降低GPU计算的使用门槛</li>
+                                <li>提供真正跨平台的GPU计算能力</li>
+                                <li>适合快速原型和教学应用</li>
+                                <li>轻量级部署，适合边缘计算和移动端</li>
+                                <li>摆脱特定硬件厂商的依赖</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="w5h2-item">
+                        <div class="w5h2-question">🏪 WHERE - Kompute应用在哪些领域？</div>
+                        <div class="w5h2-answer">
+                            <p><strong>主要应用领域：</strong></p>
+                            <ul>
+                                <li><strong>科学计算：</strong> 矩阵运算、数值模拟等计算密集型任务</li>
+                                <li><strong>机器学习推理：</strong> 模型推理加速，特别是移动端和边缘设备</li>
+                                <li><strong>图像处理：</strong> 图像滤波、特征提取等计算密集操作</li>
+                                <li><strong>实时数据处理：</strong> 流数据处理、信号处理等</li>
+                                <li><strong>游戏开发：</strong> 计算相关的游戏物理、粒子系统等</li>
+                                <li><strong>移动应用：</strong> Android应用中的GPU加速计算</li>
+                                <li><strong>教育和研究：</strong> GPU编程教学、算法研究原型</li>
+                                <li><strong>边缘计算：</strong> IoT设备和嵌入式系统的GPU加速</li>
+                            </ul>
+                            <p><strong>适用场景：</strong></p>
+                            <ul>
+                                <li>计算数据量中等（MB到GB级别）</li>
+                                <li>不需要复杂的深度学习框架支持</li>
+                                <li>需要跨平台兼容性</li>
+                                <li>对代码复杂度和库大小敏感</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="w5h2-item">
+                        <div class="w5h2-question">👥 WHO - 谁在开发和使用Kompute？</div>
+                        <div class="w5h2-answer">
+                            <p><strong>开发者：</strong></p>
+                            <ul>
+                                <li><strong>创始人：</strong> Axel Lopez（主要维护者）</li>
+                                <li><strong>开源社区：</strong> GitHub上的贡献者和维护者</li>
+                                <li><strong>企业赞助：</strong> Kompute背后有技术公司的支持</li>
+                            </ul>
+                            <p><strong>使用者：</strong></p>
+                            <ul>
+                                <li><strong>研究团队：</strong> 大学和研究机构的GPU计算研究</li>
+                                <li><strong>创业公司：</strong> 需要快速原型化的AI/计算创业团队</li>
+                                <li><strong>游戏开发者：</strong> 使用Vulkan的游戏引擎和开发者</li>
+                                <li><strong>移动开发者：</strong> Android应用开发者</li>
+                                <li><strong>教育工作者：</strong> GPU编程教学用途</li>
+                                <li><strong>技术爱好者：</strong> 学习GPU计算和Vulkan的学生</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="w5h2-item">
+                        <div class="w5h2-question">⏰ WHEN - 什么时候使用Kompute？</div>
+                        <div class="w5h2-answer">
+                            <p><strong>适用时机：</strong></p>
+                            <ul>
+                                <li><strong>快速原型阶段：</strong> 需要快速验证GPU计算思路</li>
+                                <li><strong>跨平台需求：</strong> 应用需要在多个平台（Windows/Linux/macOS/Android）运行</li>
+                                <li><strong>轻量级项目：</strong> 项目规模中等，不需要大型深度学习框架</li>
+                                <li><strong>教学和学习：</strong> 学习GPU编程和Vulkan计算</li>
+                                <li><strong>边缘计算：</strong> 在资源受限的设备上部署</li>
+                                <li><strong>移动应用：</strong> Android应用需要GPU加速</li>
+                            </ul>
+                            <p><strong>不适用场景：</strong></p>
+                            <ul>
+                                <li>需要深度学习框架的完整生态</li>
+                                <li>超大规模数据处理（PB级别）</li>
+                                <li>需要厂商优化的专有硬件加速（如NVIDIA CUDA优化）</li>
+                                <li>对性能有极端要求的场景</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="w5h2-item">
+                        <div class="w5h2-question">❓ HOW - 如何使用Kompute？</div>
+                        <div class="w5h2-answer">
+                            <p><strong>基本工作流程：</strong></p>
+                            <ul>
+                                <li><strong>1. 初始化：</strong> 创建Kompute管理器（Manager）和计算序列（Sequence）</li>
+                                <li><strong>2. 数据准备：</strong> 创建张量（Tensor）对象，分配GPU内存</li>
+                                <li><strong>3. 编写着色器：</strong> 使用GLSL编写计算着色器</li>
+                                <li><strong>4. 创建操作：</strong> 创建Algorithm对象，关联着色器和数据</li>
+                                <li><strong>5. 执行计算：</strong> 提交计算操作到GPU队列</li>
+                                <li><strong>6. 同步和回收：</strong> 等待计算完成，回收结果数据</li>
+                            </ul>
+                            <p><strong>编程范式：</strong></p>
+                            <ul>
+                                <li><strong>声明式：</strong> 定义计算图，由运行时执行</li>
+                                <li><strong>简化的内存管理：</strong> 自动处理主机-设备数据同步</li>
+                                <li><strong>链式操作：</strong> 支持多个计算操作的链式执行</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="w5h2-item">
+                        <div class="w5h2-question">💡 HOW MUCH - 性能和成本如何？</div>
+                        <div class="w5h2-answer">
+                            <p><strong>性能特点：</strong></p>
+                            <ul>
+                                <li><strong>开销低：</strong> 相比TensorFlow/PyTorch轻量得多</li>
+                                <li><strong>Vulkan开销：</strong> Vulkan初始化比OpenGL更重，但更适合计算</li>
+                                <li><strong>着色器编译：</strong> 首次运行需要着色器编译，可以预编译优化</li>
+                                <li><strong>内存效率：</strong> 自动管理主机-设备内存转换</li>
+                                <li><strong>跨平台差异：</strong> 不同GPU驱动实现可能有性能差异</li>
+                            </ul>
+                            <p><strong>成本分析：</strong></p>
+                            <ul>
+                                <li><strong>开发成本：</strong> 低，学习曲线平缓</li>
+                                <li><strong>部署成本：</strong> 轻量级，包体积小</li>
+                                <li><strong>运行成本：</strong> 依赖目标硬件，通常较低</li>
+                                <li><strong>维护成本：</strong> 开源社区维护，无许可证费用</li>
+                            </ul>
+                            <p><strong>性能对标：</strong></p>
+                            <ul>
+                                <li><strong>vs CUDA：</strong> 性能接近，但跨平台性更好</li>
+                                <li><strong>vs OpenCL：</strong> API更简洁，性能相当</li>
+                                <li><strong>vs TensorFlow：</strong> 轻量级任务上Kompute更快</li>
+                                <li><strong>vs 原生Vulkan：</strong> 少量开销换取易用性</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 核心架构 -->
+            <section class="section" id="architecture">
+                <h2>🏗️ 核心架构</h2>
+                <p>Kompute采用分层架构设计，从上到下分别是高层API层、运行时层和Vulkan后端。</p>
+
+                <div style="background: #f3f0ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <h4 style="color: #667eea; margin-bottom: 15px;">架构分层：</h4>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Python/C++ API层：</strong> 用户接触的高层接口（Manager、Tensor、Algorithm等）</li>
+                        <li><strong>运行时层：</strong> 序列管理、操作调度、内存管理</li>
+                        <li><strong>Vulkan封装层：</strong> Vulkan API的C++封装</li>
+                        <li><strong>硬件层：</strong> GPU驱动和硬件设备</li>
+                    </ul>
+                </div>
+
+                <h3>关键组件详解</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Manager（管理器）</h4>
+                        <p>Kompute的核心管理器，负责Vulkan实例创建、设备选择、内存分配和释放。所有GPU操作都通过Manager协调。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Tensor（张量）</h4>
+                        <p>数据容器，可以在主机（CPU）和设备（GPU）之间存储。支持自动的内存同步和类型转换。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Algorithm（算法）</h4>
+                        <p>计算核心，关联着色器代码和张量数据。通过指定工作组大小定义并行计算规模。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Sequence（序列）</h4>
+                        <p>操作序列容器，记录一系列计算和同步操作，支持链式执行和自动依赖管理。</p>
+                    </div>
+                </div>
+
+                <h3>数据流</h3>
+                <p>Kompute的典型数据流：</p>
+                <div style="background: #f9f9f9; padding: 15px; border-radius: 4px; margin: 15px 0;">
+                    <p style="font-family: monospace; text-align: center;">
+                        Host Data → Tensor → GPU Memory → Compute Shader → GPU Output → Tensor → Host Data
+                    </p>
+                </div>
+            </section>
+
+            <!-- 主要特性 -->
+            <section class="section" id="features">
+                <h2>✨ 主要特性</h2>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>描述</th>
+                            <th>优势</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>跨平台</td>
+                            <td>Windows、Linux、macOS、Android</td>
+                            <td>一套代码运行多个平台</td>
+                        </tr>
+                        <tr>
+                            <td>轻量级</td>
+                            <td>代码体积小，依赖少</td>
+                            <td>易于集成，快速启动</td>
+                        </tr>
+                        <tr>
+                            <td>易用API</td>
+                            <td>简化的Python和C++ API</td>
+                            <td>学习曲线平缓，快速上手</td>
+                        </tr>
+                        <tr>
+                            <td>多硬件支持</td>
+                            <td>GPU厂商独立，基于Vulkan</td>
+                            <td>不受单一厂商限制</td>
+                        </tr>
+                        <tr>
+                            <td>SPIR-V编译</td>
+                            <td>支持GLSL→SPIR-V编译</td>
+                            <td>安全的着色器部署</td>
+                        </tr>
+                        <tr>
+                            <td>自动同步</td>
+                            <td>内存同步、依赖管理自动化</td>
+                            <td>减少手动配置，降低错误</td>
+                        </tr>
+                        <tr>
+                            <td>开源</td>
+                            <td>Apache 2.0 开源许可</td>
+                            <td>无许可证成本，社区驱动</td>
+                        </tr>
+                        <tr>
+                            <td>活跃社区</td>
+                            <td>持续维护和功能增强</td>
+                            <td>问题解决快，技术支持好</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 与竞品对比 -->
+            <section class="section" id="comparison">
+                <h2>⚖️ 与竞品对比</h2>
+
+                <h3>Kompute vs 主流GPU计算框架</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>Kompute</th>
+                            <th>CUDA</th>
+                            <th>OpenCL</th>
+                            <th>TensorFlow</th>
+                            <th>PyTorch</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>平台支持</strong></td>
+                            <td>Windows/Linux/macOS/Android</td>
+                            <td>仅NVIDIA</td>
+                            <td>多平台</td>
+                            <td>多平台</td>
+                            <td>多平台</td>
+                        </tr>
+                        <tr>
+                            <td><strong>学习曲线</strong></td>
+                            <td>低</td>
+                            <td>中等</td>
+                            <td>中等</td>
+                            <td>高</td>
+                            <td>高</td>
+                        </tr>
+                        <tr>
+                            <td><strong>库大小</strong></td>
+                            <td>极小（MB）</td>
+                            <td>中等（GB）</td>
+                            <td>小（MB）</td>
+                            <td>大（GB）</td>
+                            <td>大（GB）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>开发速度</strong></td>
+                            <td>快</td>
+                            <td>中等</td>
+                            <td>中等</td>
+                            <td>快</td>
+                            <td>快</td>
+                        </tr>
+                        <tr>
+                            <td><strong>性能</strong></td>
+                            <td>良好</td>
+                            <td>优秀</td>
+                            <td>良好</td>
+                            <td>优秀</td>
+                            <td>优秀</td>
+                        </tr>
+                        <tr>
+                            <td><strong>生态支持</strong></td>
+                            <td>社区</td>
+                            <td>企业级</td>
+                            <td>社区</td>
+                            <td>企业级</td>
+                            <td>企业级</td>
+                        </tr>
+                        <tr>
+                            <td><strong>适合场景</strong></td>
+                            <td>轻量级、教学、移动</td>
+                            <td>高性能计算</td>
+                            <td>通用GPU计算</td>
+                            <td>深度学习</td>
+                            <td>深度学习</td>
+                        </tr>
+                        <tr>
+                            <td><strong>许可证</strong></td>
+                            <td>Apache 2.0</td>
+                            <td>专有</td>
+                            <td>开源</td>
+                            <td>开源</td>
+                            <td>开源</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Kompute优势场景</h3>
+                <ul>
+                    <li>需要轻量级跨平台GPU计算</li>
+                    <li>快速原型和MVP开发</li>
+                    <li>GPU编程教学和学习</li>
+                    <li>移动端（Android）GPU加速</li>
+                    <li>边缘计算设备部署</li>
+                </ul>
+
+                <h3>Kompute劣势场景</h3>
+                <ul>
+                    <li>超大规模深度学习训练</li>
+                    <li>对NVIDIA GPU优化要求高</li>
+                    <li>需要完整的ML框架生态</li>
+                    <li>极端性能要求（需要手动优化）</li>
+                </ul>
+            </section>
+
+            <!-- 发展展望 -->
+            <section class="section" id="future">
+                <h2>🚀 发展展望</h2>
+
+                <h3>现状与挑战</h3>
+                <ul>
+                    <li><strong>Vulkan驱动成熟度：</strong> 不同平台和GPU的Vulkan实现差异大</li>
+                    <li><strong>性能优化空间：</strong> 与专用框架相比仍有优化空间</li>
+                    <li><strong>学习资源：</strong> 文档和教程资源相对较少</li>
+                    <li><strong>库生态：</strong> 数学库、算法库生态不如TensorFlow/PyTorch</li>
+                    <li><strong>企业支持：</strong> 缺乏企业级的支持和维护</li>
+                </ul>
+
+                <h3>发展方向</h3>
+                <ul>
+                    <li><strong>库生态扩展：</strong> 加强数学库、信号处理库等支持</li>
+                    <li><strong>移动端优化：</strong> 深化Android和iOS支持</li>
+                    <li><strong>着色器优化：</strong> 自动化着色器代码生成和优化</li>
+                    <li><strong>工具链完善：</strong> 调试器、性能分析工具等</li>
+                    <li><strong>文档和教育：</strong> 丰富的教程和学习资源</li>
+                    <li><strong>国际化：</strong> 更多语言绑定（Rust、Go等）</li>
+                </ul>
+
+                <h3>长期前景</h3>
+                <p>随着Vulkan的广泛采用和GPU计算需求的增加，Kompute作为轻量级、跨平台的GPU计算框架，具有以下发展前景：</p>
+                <ul>
+                    <li>成为轻量级GPU计算的首选框架</li>
+                    <li>在移动和边缘计算领域占据重要地位</li>
+                    <li>推动Vulkan在非图形领域的应用</li>
+                    <li>为学生和研究人员提供理想的学习平台</li>
+                    <li>可能被集成到大型ML框架中作为后端选项</li>
+                </ul>
+            </section>
+
+            <!-- 总结 -->
+            <section class="section">
+                <h2>📊 总结</h2>
+                <div class="highlight">
+                    <p><strong>Kompute的核心价值：</strong></p>
+                    <ul style="margin-top: 15px;">
+                        <li>✅ 轻量级和易用的GPU计算框架</li>
+                        <li>✅ 真正的跨平台支持（包括移动端）</li>
+                        <li>✅ 摆脱特定硬件厂商依赖</li>
+                        <li>✅ 快速原型和教学的理想选择</li>
+                        <li>✅ 开源、活跃社区、无许可证成本</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>适合用户：</strong> 需要轻量级、跨平台GPU计算的研究者、开发者、教育工作者和移动应用开发者。</p>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>Kompute 5W2H 深度分析 | 最后更新: 2025年12月 | 基于Kompute开源项目</p>
+            <p>更多信息: <a href="https://github.com/KomputeProject/kompute" style="color: #667eea;">Kompute GitHub仓库</a></p>
+        </footer>
+    </div>
+</body>
+</html>

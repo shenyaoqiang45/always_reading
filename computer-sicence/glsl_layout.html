@@ -1,0 +1,81 @@
+<table border="1" cellspacing="0" cellpadding="6">
+  <thead>
+    <tr>
+      <th>GLSL layout 用法</th>
+      <th>GLSL 示例</th>
+      <th>C/C++ 类比</th>
+      <th>本质含义（给 C++ 程序员）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>layout(location = N)</td>
+      <td>layout(location=0) in vec3 aPos;</td>
+      <td>struct 成员 offset / 函数参数序号</td>
+      <td>显式指定接口位置，等价“ABI 固定”</td>
+    </tr>
+
+    <tr>
+      <td>layout(binding = N)</td>
+      <td>layout(binding=1) uniform sampler2D tex;</td>
+      <td>数组索引 / 资源句柄槽位</td>
+      <td>显式指定资源绑定点</td>
+    </tr>
+
+    <tr>
+      <td>layout(set = X, binding = Y)</td>
+      <td>layout(set=0,binding=0) uniform UBO {...}</td>
+      <td>struct namespace + index</td>
+      <td>Vulkan descriptor set / 分组资源表</td>
+    </tr>
+
+    <tr>
+      <td>layout(std140)</td>
+      <td>layout(std140) uniform Block {...}</td>
+      <td>ABI 对齐规则（16B）</td>
+      <td>类似固定 padding 的 C struct</td>
+    </tr>
+
+    <tr>
+      <td>layout(std430)</td>
+      <td>layout(std430) buffer SSBO {...}</td>
+      <td>#pragma pack / 紧凑 struct</td>
+      <td>更接近 C struct 的内存布局</td>
+    </tr>
+
+    <tr>
+      <td>layout(offset = N)</td>
+      <td>layout(offset=64) uniform float x;</td>
+      <td>offsetof(struct, member)</td>
+      <td>手动指定字段内存偏移</td>
+    </tr>
+
+    <tr>
+      <td>layout(rgba32f)</td>
+      <td>layout(rgba32f) uniform image2D img;</td>
+      <td>struct Pixel { float r,g,b,a; }</td>
+      <td>显式指定内存像素格式</td>
+    </tr>
+
+    <tr>
+      <td>layout(local_size_x = 8)</td>
+      <td>layout(local_size_x=8) in;</td>
+      <td>thread block size</td>
+      <td>CUDA/OpenCL work-group 规模</td>
+    </tr>
+
+    <tr>
+      <td>layout(row_major)</td>
+      <td>layout(row_major) uniform mat4 m;</td>
+      <td>矩阵存储顺序</td>
+      <td>行优先 vs 列优先</td>
+    </tr>
+
+    <tr>
+      <td>layout(early_fragment_tests)</td>
+      <td>layout(early_fragment_tests) in;</td>
+      <td>编译期优化指令</td>
+      <td>强制提前深度/模板测试</td>
+    </tr>
+  </tbody>
+</table>
