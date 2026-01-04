@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenManus 核心机制详解</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+        }
+        ul, ol {
+            margin: 20px 0;
+            padding-left: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        code {
+            background-color: #eee;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #eee;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<h1>OpenManus 核心机制详解</h1>
+
+<div class="section">
+    <h2>1. OpenManus 概述</h2>
+    <p>OpenManus 是对闭源 Manus AI 的开源复现项目，由 MetaGPT 团队主导开发（原型仅用 3 小时完成）。它是一个模块化的多代理（multi-agent）AI Agent 框架，支持本地部署、多模型集成（如 Claude、GPT-4o、Qwen、Ollama 本地模型），无需邀请码即可使用。</p>
+    <p>核心目标：实现自主执行复杂任务（如旅行规划、股票分析、网站构建、数据处理），通过工具调用和迭代循环模拟人类操作。</p>
+    <p>主要仓库：https://github.com/FoundationAgents/OpenManus</p>
+</div>
+
+<div class="section">
+    <h2>2. 整体架构</h2>
+    <p>OpenManus 采用<strong>模块化 + 分层 + 多代理</strong>设计，主要组件包括：</p>
+    <ul>
+        <li><strong>Agent 层</strong>：各种代理（BaseAgent、ReActAgent、ToolCallAgent、PlanningAgent 等）</li>
+        <li><strong>LLM 层</strong>：大语言模型接口，支持多提供商</li>
+        <li><strong>Memory 层</strong>：上下文记忆管理</li>
+        <li><strong>Tool 层</strong>：工具集（浏览器自动化、代码执行、搜索、文件操作等）</li>
+        <li><strong>Flow 层</strong>：工作流编排（协调代理执行顺序）</li>
+        <li><strong>Prompt 层</strong>：提示模板管理</li>
+    </ul>
+    <p>层次化代理结构：从基础代理逐步扩展到专项代理，形成“团队”协作。</p>
+</div>
+
+<div class="section">
+    <h2>3. 两种执行模式（核心创新）</h2>
+    <table>
+        <tr>
+            <th>模式</th>
+            <th>入口</th>
+            <th>适用场景</th>
+            <th>特点</th>
+        </tr>
+        <tr>
+            <td>Direct Agent Mode（直接代理模式）</td>
+            <td>main.py</td>
+            <td>简单任务</td>
+            <td>灵活、快速，直接由主代理处理</td>
+        </tr>
+        <tr>
+            <td>Flow Orchestration Mode（流程编排模式）</td>
+            <td>run_flow.py</td>
+            <td>复杂任务</td>
+            <td>结构化规划、多代理协作、更可靠</td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <h2>4. 多代理协作机制</h2>
+    <p>类似于“项目团队”：</p>
+    <ul>
+        <li><strong>主代理（Main Agent / Manus Agent）</strong>：接收用户任务、整体协调、决定执行模式</li>
+        <li><strong>规划代理（PlanningAgent）</strong>：任务分解、生成计划（e.g., todo.md）</li>
+        <li><strong>工具调用代理（ToolCallAgent）</strong>：执行具体行动、调用工具</li>
+        <li><strong>其他专项代理</strong>：如 Browser Agent、Coder Agent、Reporter Agent（可扩展）</li>
+    </ul>
+    <p>协作方式：通过 Flow 工作流定义角色、工具权限、执行顺序、结果传递。支持动态分配代理，提高效率。</p>
+</div>
+
+<div class="section">
+    <h2>5. 执行循环（Agent Loop）</h2>
+    <p>基于 ReAct / CodeAct 风格的迭代循环：</p>
+    <ol>
+        <li>分析任务：理解用户输入</li>
+        <li>规划：分解子任务、生成步骤计划</li>
+        <li>执行：调用工具（写代码执行、浏览网页等）</li>
+        <li>观察：获取工具输出、评估结果</li>
+        <li>迭代/验证：不满意则反馈重试或调整计划</li>
+        <li>最终输出：汇总结果（报告、文件等）</li>
+    </ol>
+    <p>支持实时反馈：用户可查看代理思考过程、进度、生成文件。</p>
+</div>
+
+<div class="section">
+    <h2>6. 工具集成与行动机制</h2>
+    <p>采用 <strong>CodeAct</strong> 风格：代理生成可执行 Python 代码来交互环境。</p>
+    <p>核心工具：</p>
+    <ul>
+        <li>浏览器自动化（BrowserUseTool，基于 Playwright 等）</li>
+        <li>代码执行器（PythonExecute）</li>
+        <li>Web 搜索（GoogleSearch）</li>
+        <li>文件读写、规划工具等</li>
+    </ul>
+    <p>工具统一 BaseTool 接口，便于扩展。</p>
+</div>
+
+<div class="section">
+    <h2>7. 优势与扩展</h2>
+    <ul>
+        <li>开源免费、本地运行、无云依赖（支持 Ollama）</li>
+        <li>实时可视化进度、错误重试机制</li>
+        <li>扩展项目：OpenManus-RL（强化学习优化）</li>
+        <li>局限：早期版本稳定性不如原 Manus，但社区迭代迅速</li>
+    </ul>
+</div>
+
+<div class="section">
+    <p>参考日期：2025 年底，信息基于最新社区与仓库更新。</p>
+    <p>如需部署或二次开发，直接 clone 仓库配置 config.toml 即可运行！</p>
+</div>
+
+</body>
+</html>

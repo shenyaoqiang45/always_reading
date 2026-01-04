@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoGen、OpenManus、CrewAI、MetaGPT 的 Agent 交互方式对比</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 14px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #4a6da7;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f6fc;
+        }
+        tr:hover {
+            background-color: #e8f0fe;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .section {
+            margin-bottom: 50px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<h1>AutoGen、OpenManus、CrewAI、MetaGPT 的 Agent 交互方式对比</h1>
+
+<div class="section">
+    <p>以下表格从 <strong>Agent 交互方式</strong> 的角度对比四个主流多代理框架，帮助你快速理解它们在协作机制上的核心差异。</p>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>框架</th>
+            <th>主要交互方式</th>
+            <th>核心特点</th>
+            <th>适合场景</th>
+            <th>与 AutoGen 的区别</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="highlight">AutoGen<br>(Microsoft)</td>
+            <td><strong>对话式（Conversable Agents）</strong></td>
+            <td>
+                <ul>
+                    <li>代理之间像群聊一样，通过自然语言消息相互发送、回复</li>
+                    <li>支持 GroupChatManager、动态交互、嵌套聊天</li>
+                    <li>可随时提问、澄清、终止，支持人类介入</li>
+                    <li>高度灵活，但可能出现循环或偏题</li>
+                </ul>
+            </td>
+            <td>开放式、探索性任务（如脑暴、代码调试、复杂对话协作）</td>
+            <td>—（基准：最自由的聊天式交互）</td>
+        </tr>
+        <tr>
+            <td class="highlight">CrewAI</td>
+            <td><strong>任务委托 + 角色协作<br>(Delegation + Role-based)</strong></td>
+            <td>
+                <ul>
+                    <li>通过 Task 和 Crew 定义顺序/层次执行</li>
+                    <li>支持 delegation（代理可自动或手动委托子任务）</li>
+                    <li>代理像团队成员一样“提问”和“求助”</li>
+                    <li>可选 hierarchical 模式（经理代理监督）</li>
+                </ul>
+            </td>
+            <td>结构化工作流（如内容创作、研究报告、自动化流程）</td>
+            <td>比 AutoGen 更结构化，有明确任务分配和委托机制，而非纯聊天</td>
+        </tr>
+        <tr>
+            <td class="highlight">MetaGPT</td>
+            <td><strong>SOP 流水线 + 角色协作<br>(Assembly Line + Structured Messages)</strong></td>
+            <td>
+                <ul>
+                    <li>模拟软件公司：固定角色（PM、Architect、Engineer 等）</li>
+                    <li>通过标准操作规程（SOP）流水线式传递结构化消息</li>
+                    <li>代理发布消息到共享 Environment，其他代理订阅/观察</li>
+                    <li>强调模块化输出、知识共享，减少幻觉</li>
+                </ul>
+            </td>
+            <td>高度结构化、重复性任务（如软件开发、代码生成）</td>
+            <td>最刚性：结构化消息 + 流水线，而非 AutoGen 的自由对话</td>
+        </tr>
+        <tr>
+            <td class="highlight">OpenManus<br>(MetaGPT 团队复现 Manus)</td>
+            <td><strong>Flow 编排 + 模块化多代理协作<br>(Flow Orchestration)</strong></td>
+            <td>
+                <ul>
+                    <li>两种模式：Direct（单代理） vs Flow（多代理工作流）</li>
+                    <li>Flow 中通过 Coordinator 或节点定义代理顺序/协作</li>
+                    <li>专项代理（Planning、ToolCall、Browser、Coder 等）通过共享上下文、消息传递协作</li>
+                    <li>继承 MetaGPT 部分机制，更注重工具调用和迭代循环</li>
+                </ul>
+            </td>
+            <td>通用自主任务（如研究、网站构建、数据分析），类似 Manus 的复杂执行</td>
+            <td>更偏向工作流编排 + 工具驱动协作；比 AutoGen 更模块化、可视化进度</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="section">
+    <h2>选择建议</h2>
+    <ul>
+        <li>如果你觉得 <strong>AutoGen 的聊天式太乱、难以控制</strong> → 推荐 <strong>CrewAI</strong>（上手快，委托直观）或 <strong>OpenManus</strong>（Flow 模式提供清晰工作流）</li>
+        <li>如果任务高度结构化（如写代码、软件开发） → <strong>MetaGPT</strong> 的流水线最可靠</li>
+        <li>如果想复现 Manus AI 的自主代理体验 → <strong>OpenManus</strong> 是目前最接近的开源方案</li>
+    </ul>
+</div>
+
+<div class="footer">
+    <p>更新日期：2025年12月30日</p>
+    <p>如需进一步代码示例、实际任务对比或某个框架的深入分析，欢迎继续提问！</p>
+</div>
+
+</body>
+</html>
